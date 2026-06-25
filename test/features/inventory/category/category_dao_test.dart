@@ -42,8 +42,8 @@ void main() {
 
   test('duplicate (org, name) throws', () async {
     await db.categoryDao.insertRow(row('c1', 'Apparel'));
-    expect(
-      () => db.categoryDao.insertRow(row('c2', 'Apparel')),
+    await expectLater(
+      db.categoryDao.insertRow(row('c2', 'Apparel')),
       throwsA(isA<Exception>()),
     );
   });
