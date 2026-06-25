@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../domain/product.dart';
+import '../../stock_movement/presentation/product_history_view.dart';
+import '../../stock_movement/presentation/record_movement_screen.dart';
 import 'add_edit_product_screen.dart';
 import 'product_providers.dart';
 
@@ -49,7 +51,30 @@ class ProductDetailScreen extends ConsumerWidget {
                   child: Text('⚠ Low stock',
                       style: TextStyle(color: Colors.deepOrange)),
                 ),
-              // Phase 5 (Task 19) adds "Record movement" and "View history" here.
+              const SizedBox(height: 24),
+              FilledButton.icon(
+                icon: const Icon(Icons.swap_vert),
+                label: const Text('Record stock movement'),
+                onPressed: () async {
+                  final recorded = await Navigator.of(context).push<bool>(
+                    MaterialPageRoute(
+                      builder: (_) => RecordMovementScreen(
+                          productId: p.id, productName: p.name),
+                    ),
+                  );
+                  if (recorded == true) {
+                    ref.invalidate(productProvider(productId));
+                  }
+                },
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.history),
+                label: const Text('View stock history'),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ProductHistoryView(productId: p.id),
+                )),
+              ),
             ],
           );
         },
