@@ -14,8 +14,12 @@ void main() {
 
     expect(first.organizationId, second.organizationId);
     expect(first.userId, second.userId);
+    expect(first.defaultUnitId, second.defaultUnitId);
     expect(await db.select(db.organizations).get(), hasLength(1));
     expect(await db.select(db.users).get(), hasLength(1));
+    final unitRows = await db.select(db.units).get();
+    expect(unitRows, hasLength(1));
+    expect(unitRows.single.isBaseUnit, isTrue);
     await db.close();
   });
 }

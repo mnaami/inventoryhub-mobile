@@ -4,10 +4,15 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'core_tables.dart';
 import '../../features/inventory/category/data/category_table.dart';
 import '../../features/inventory/category/data/category_dao.dart';
+import '../../features/inventory/unit/data/unit_table.dart';
+import '../../features/inventory/unit/data/unit_dao.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Organizations, Users, Categories], daos: [CategoryDao])
+@DriftDatabase(
+  tables: [Organizations, Users, Categories, Units],
+  daos: [CategoryDao, UnitDao],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
