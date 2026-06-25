@@ -8,13 +8,16 @@ class CategoryService {
     required CategoryRepository repository,
     required IdGenerator ids,
     required String organizationId,
+    Future<int> Function(String categoryId)? productsInCategory,
   })  : _repo = repository,
         _ids = ids,
-        _orgId = organizationId;
+        _orgId = organizationId,
+        _productsInCategory = productsInCategory;
 
   final CategoryRepository _repo;
   final IdGenerator _ids;
   final String _orgId;
+  final Future<int> Function(String categoryId)? _productsInCategory;
 
   Future<List<CategoryNode>> tree() async {
     final all = await _repo.listActive(_orgId);
@@ -69,8 +72,11 @@ class CategoryService {
       throw const ConflictException(
           'Cannot delete a category that still has sub-categories.');
     }
-    // NOTE: Task 14 extends this to also block deletion when products
-    // reference the category.
+    final productCount = await (_productsInCategory?.call(id) ?? Future.value(0));
+    if (productCount > 0) {
+      throw const ConflictException(
+          'Cannot delete a category that still has products.');
+    }
     await _repo.softDelete(id);
   }
 }

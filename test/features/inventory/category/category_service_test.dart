@@ -4,6 +4,9 @@ import 'package:inventoryhub_mobile/core/result/app_exception.dart';
 import 'package:inventoryhub_mobile/features/inventory/category/data/category_dao.dart';
 import 'package:inventoryhub_mobile/features/inventory/category/data/category_repository_impl.dart';
 import 'package:inventoryhub_mobile/features/inventory/category/domain/category_usecases.dart';
+import 'package:inventoryhub_mobile/features/inventory/product/data/product_dao.dart';
+import 'package:inventoryhub_mobile/features/inventory/product/data/product_repository_impl.dart';
+import 'package:inventoryhub_mobile/features/inventory/product/domain/product_usecases.dart';
 import '../../../helpers/test_db.dart';
 
 void main() {
@@ -44,5 +47,23 @@ void main() {
     await service.create(name: 'Food');
     await expectLater(service.create(name: 'Food'),
         throwsA(isA<ConflictException>()));
+  });
+
+  test('delete blocks a category that has products', () async {
+    final products = ProductRepositoryImpl(ProductDao(db));
+    final guarded = CategoryService(
+      repository: CategoryRepositoryImpl(CategoryDao(db)),
+      ids: const IdGenerator(),
+      organizationId: 'org1',
+      productsInCategory: (id) => products.countActiveByCategory('org1', id),
+    );
+    final cat = await guarded.create(name: 'Food');
+    await ProductService(
+      repository: products,
+      ids: const IdGenerator(),
+      organizationId: 'org1',
+    ).create(name: 'Apple', unitId: 'pc', categoryId: cat.id);
+
+    await expectLater(guarded.delete(cat.id), throwsA(isA<ConflictException>()));
   });
 }
