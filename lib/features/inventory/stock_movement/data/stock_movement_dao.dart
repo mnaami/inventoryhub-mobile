@@ -43,7 +43,10 @@ class StockMovementDao extends DatabaseAccessor<AppDatabase>
     return (select(stockMovements)
           ..where((m) => m.productId.equals(productId))
           ..orderBy([
-            (m) => OrderingTerm(expression: m.createdAt, mode: OrderingMode.desc)
+            (m) => OrderingTerm(expression: m.createdAt, mode: OrderingMode.desc),
+            (m) => OrderingTerm(
+                expression: const CustomExpression<int>('rowid'),
+                mode: OrderingMode.desc),
           ]))
         .get();
   }
