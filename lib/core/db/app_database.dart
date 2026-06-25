@@ -6,12 +6,14 @@ import '../../features/inventory/category/data/category_table.dart';
 import '../../features/inventory/category/data/category_dao.dart';
 import '../../features/inventory/unit/data/unit_table.dart';
 import '../../features/inventory/unit/data/unit_dao.dart';
+import '../../features/inventory/product/data/product_table.dart';
+import '../../features/inventory/product/data/product_dao.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [Organizations, Users, Categories, Units],
-  daos: [CategoryDao, UnitDao],
+  tables: [Organizations, Users, Categories, Units, Products],
+  daos: [CategoryDao, UnitDao, ProductDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);

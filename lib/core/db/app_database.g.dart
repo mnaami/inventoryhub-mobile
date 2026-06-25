@@ -1925,6 +1925,979 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
   }
 }
 
+class $ProductsTable extends Products
+    with TableInfo<$ProductsTable, ProductRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProductsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _organizationIdMeta = const VerificationMeta(
+    'organizationId',
+  );
+  @override
+  late final GeneratedColumn<String> organizationId = GeneratedColumn<String>(
+    'organization_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
+    'category_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _unitIdMeta = const VerificationMeta('unitId');
+  @override
+  late final GeneratedColumn<String> unitId = GeneratedColumn<String>(
+    'unit_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _purchasePriceMeta = const VerificationMeta(
+    'purchasePrice',
+  );
+  @override
+  late final GeneratedColumn<double> purchasePrice = GeneratedColumn<double>(
+    'purchase_price',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _sellingPriceMeta = const VerificationMeta(
+    'sellingPrice',
+  );
+  @override
+  late final GeneratedColumn<double> sellingPrice = GeneratedColumn<double>(
+    'selling_price',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _currentStockMeta = const VerificationMeta(
+    'currentStock',
+  );
+  @override
+  late final GeneratedColumn<double> currentStock = GeneratedColumn<double>(
+    'current_stock',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _minimumStockMeta = const VerificationMeta(
+    'minimumStock',
+  );
+  @override
+  late final GeneratedColumn<double> minimumStock = GeneratedColumn<double>(
+    'minimum_stock',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _barcodeMeta = const VerificationMeta(
+    'barcode',
+  );
+  @override
+  late final GeneratedColumn<String> barcode = GeneratedColumn<String>(
+    'barcode',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _imagePathMeta = const VerificationMeta(
+    'imagePath',
+  );
+  @override
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+    'image_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _supplierIdMeta = const VerificationMeta(
+    'supplierId',
+  );
+  @override
+  late final GeneratedColumn<String> supplierId = GeneratedColumn<String>(
+    'supplier_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    organizationId,
+    name,
+    description,
+    categoryId,
+    unitId,
+    purchasePrice,
+    sellingPrice,
+    currentStock,
+    minimumStock,
+    barcode,
+    imagePath,
+    supplierId,
+    isActive,
+    isSample,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'products';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProductRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('organization_id')) {
+      context.handle(
+        _organizationIdMeta,
+        organizationId.isAcceptableOrUnknown(
+          data['organization_id']!,
+          _organizationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_organizationIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    }
+    if (data.containsKey('unit_id')) {
+      context.handle(
+        _unitIdMeta,
+        unitId.isAcceptableOrUnknown(data['unit_id']!, _unitIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_unitIdMeta);
+    }
+    if (data.containsKey('purchase_price')) {
+      context.handle(
+        _purchasePriceMeta,
+        purchasePrice.isAcceptableOrUnknown(
+          data['purchase_price']!,
+          _purchasePriceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('selling_price')) {
+      context.handle(
+        _sellingPriceMeta,
+        sellingPrice.isAcceptableOrUnknown(
+          data['selling_price']!,
+          _sellingPriceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('current_stock')) {
+      context.handle(
+        _currentStockMeta,
+        currentStock.isAcceptableOrUnknown(
+          data['current_stock']!,
+          _currentStockMeta,
+        ),
+      );
+    }
+    if (data.containsKey('minimum_stock')) {
+      context.handle(
+        _minimumStockMeta,
+        minimumStock.isAcceptableOrUnknown(
+          data['minimum_stock']!,
+          _minimumStockMeta,
+        ),
+      );
+    }
+    if (data.containsKey('barcode')) {
+      context.handle(
+        _barcodeMeta,
+        barcode.isAcceptableOrUnknown(data['barcode']!, _barcodeMeta),
+      );
+    }
+    if (data.containsKey('image_path')) {
+      context.handle(
+        _imagePathMeta,
+        imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta),
+      );
+    }
+    if (data.containsKey('supplier_id')) {
+      context.handle(
+        _supplierIdMeta,
+        supplierId.isAcceptableOrUnknown(data['supplier_id']!, _supplierIdMeta),
+      );
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ProductRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProductRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      organizationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}organization_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category_id'],
+      ),
+      unitId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}unit_id'],
+      )!,
+      purchasePrice: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}purchase_price'],
+      )!,
+      sellingPrice: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}selling_price'],
+      )!,
+      currentStock: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}current_stock'],
+      )!,
+      minimumStock: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}minimum_stock'],
+      )!,
+      barcode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}barcode'],
+      ),
+      imagePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_path'],
+      ),
+      supplierId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}supplier_id'],
+      ),
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProductsTable createAlias(String alias) {
+    return $ProductsTable(attachedDatabase, alias);
+  }
+}
+
+class ProductRow extends DataClass implements Insertable<ProductRow> {
+  final String id;
+  final String organizationId;
+  final String name;
+  final String? description;
+  final String? categoryId;
+  final String unitId;
+  final double purchasePrice;
+  final double sellingPrice;
+  final double currentStock;
+  final double minimumStock;
+  final String? barcode;
+  final String? imagePath;
+  final String? supplierId;
+  final bool isActive;
+  final bool isSample;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const ProductRow({
+    required this.id,
+    required this.organizationId,
+    required this.name,
+    this.description,
+    this.categoryId,
+    required this.unitId,
+    required this.purchasePrice,
+    required this.sellingPrice,
+    required this.currentStock,
+    required this.minimumStock,
+    this.barcode,
+    this.imagePath,
+    this.supplierId,
+    required this.isActive,
+    required this.isSample,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['organization_id'] = Variable<String>(organizationId);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || categoryId != null) {
+      map['category_id'] = Variable<String>(categoryId);
+    }
+    map['unit_id'] = Variable<String>(unitId);
+    map['purchase_price'] = Variable<double>(purchasePrice);
+    map['selling_price'] = Variable<double>(sellingPrice);
+    map['current_stock'] = Variable<double>(currentStock);
+    map['minimum_stock'] = Variable<double>(minimumStock);
+    if (!nullToAbsent || barcode != null) {
+      map['barcode'] = Variable<String>(barcode);
+    }
+    if (!nullToAbsent || imagePath != null) {
+      map['image_path'] = Variable<String>(imagePath);
+    }
+    if (!nullToAbsent || supplierId != null) {
+      map['supplier_id'] = Variable<String>(supplierId);
+    }
+    map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  ProductsCompanion toCompanion(bool nullToAbsent) {
+    return ProductsCompanion(
+      id: Value(id),
+      organizationId: Value(organizationId),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      categoryId: categoryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryId),
+      unitId: Value(unitId),
+      purchasePrice: Value(purchasePrice),
+      sellingPrice: Value(sellingPrice),
+      currentStock: Value(currentStock),
+      minimumStock: Value(minimumStock),
+      barcode: barcode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(barcode),
+      imagePath: imagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imagePath),
+      supplierId: supplierId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(supplierId),
+      isActive: Value(isActive),
+      isSample: Value(isSample),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory ProductRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProductRow(
+      id: serializer.fromJson<String>(json['id']),
+      organizationId: serializer.fromJson<String>(json['organizationId']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      categoryId: serializer.fromJson<String?>(json['categoryId']),
+      unitId: serializer.fromJson<String>(json['unitId']),
+      purchasePrice: serializer.fromJson<double>(json['purchasePrice']),
+      sellingPrice: serializer.fromJson<double>(json['sellingPrice']),
+      currentStock: serializer.fromJson<double>(json['currentStock']),
+      minimumStock: serializer.fromJson<double>(json['minimumStock']),
+      barcode: serializer.fromJson<String?>(json['barcode']),
+      imagePath: serializer.fromJson<String?>(json['imagePath']),
+      supplierId: serializer.fromJson<String?>(json['supplierId']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'organizationId': serializer.toJson<String>(organizationId),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'categoryId': serializer.toJson<String?>(categoryId),
+      'unitId': serializer.toJson<String>(unitId),
+      'purchasePrice': serializer.toJson<double>(purchasePrice),
+      'sellingPrice': serializer.toJson<double>(sellingPrice),
+      'currentStock': serializer.toJson<double>(currentStock),
+      'minimumStock': serializer.toJson<double>(minimumStock),
+      'barcode': serializer.toJson<String?>(barcode),
+      'imagePath': serializer.toJson<String?>(imagePath),
+      'supplierId': serializer.toJson<String?>(supplierId),
+      'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  ProductRow copyWith({
+    String? id,
+    String? organizationId,
+    String? name,
+    Value<String?> description = const Value.absent(),
+    Value<String?> categoryId = const Value.absent(),
+    String? unitId,
+    double? purchasePrice,
+    double? sellingPrice,
+    double? currentStock,
+    double? minimumStock,
+    Value<String?> barcode = const Value.absent(),
+    Value<String?> imagePath = const Value.absent(),
+    Value<String?> supplierId = const Value.absent(),
+    bool? isActive,
+    bool? isSample,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => ProductRow(
+    id: id ?? this.id,
+    organizationId: organizationId ?? this.organizationId,
+    name: name ?? this.name,
+    description: description.present ? description.value : this.description,
+    categoryId: categoryId.present ? categoryId.value : this.categoryId,
+    unitId: unitId ?? this.unitId,
+    purchasePrice: purchasePrice ?? this.purchasePrice,
+    sellingPrice: sellingPrice ?? this.sellingPrice,
+    currentStock: currentStock ?? this.currentStock,
+    minimumStock: minimumStock ?? this.minimumStock,
+    barcode: barcode.present ? barcode.value : this.barcode,
+    imagePath: imagePath.present ? imagePath.value : this.imagePath,
+    supplierId: supplierId.present ? supplierId.value : this.supplierId,
+    isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  ProductRow copyWithCompanion(ProductsCompanion data) {
+    return ProductRow(
+      id: data.id.present ? data.id.value : this.id,
+      organizationId: data.organizationId.present
+          ? data.organizationId.value
+          : this.organizationId,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      unitId: data.unitId.present ? data.unitId.value : this.unitId,
+      purchasePrice: data.purchasePrice.present
+          ? data.purchasePrice.value
+          : this.purchasePrice,
+      sellingPrice: data.sellingPrice.present
+          ? data.sellingPrice.value
+          : this.sellingPrice,
+      currentStock: data.currentStock.present
+          ? data.currentStock.value
+          : this.currentStock,
+      minimumStock: data.minimumStock.present
+          ? data.minimumStock.value
+          : this.minimumStock,
+      barcode: data.barcode.present ? data.barcode.value : this.barcode,
+      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
+      supplierId: data.supplierId.present
+          ? data.supplierId.value
+          : this.supplierId,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProductRow(')
+          ..write('id: $id, ')
+          ..write('organizationId: $organizationId, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('unitId: $unitId, ')
+          ..write('purchasePrice: $purchasePrice, ')
+          ..write('sellingPrice: $sellingPrice, ')
+          ..write('currentStock: $currentStock, ')
+          ..write('minimumStock: $minimumStock, ')
+          ..write('barcode: $barcode, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('supplierId: $supplierId, ')
+          ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    organizationId,
+    name,
+    description,
+    categoryId,
+    unitId,
+    purchasePrice,
+    sellingPrice,
+    currentStock,
+    minimumStock,
+    barcode,
+    imagePath,
+    supplierId,
+    isActive,
+    isSample,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProductRow &&
+          other.id == this.id &&
+          other.organizationId == this.organizationId &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.categoryId == this.categoryId &&
+          other.unitId == this.unitId &&
+          other.purchasePrice == this.purchasePrice &&
+          other.sellingPrice == this.sellingPrice &&
+          other.currentStock == this.currentStock &&
+          other.minimumStock == this.minimumStock &&
+          other.barcode == this.barcode &&
+          other.imagePath == this.imagePath &&
+          other.supplierId == this.supplierId &&
+          other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class ProductsCompanion extends UpdateCompanion<ProductRow> {
+  final Value<String> id;
+  final Value<String> organizationId;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<String?> categoryId;
+  final Value<String> unitId;
+  final Value<double> purchasePrice;
+  final Value<double> sellingPrice;
+  final Value<double> currentStock;
+  final Value<double> minimumStock;
+  final Value<String?> barcode;
+  final Value<String?> imagePath;
+  final Value<String?> supplierId;
+  final Value<bool> isActive;
+  final Value<bool> isSample;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const ProductsCompanion({
+    this.id = const Value.absent(),
+    this.organizationId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.unitId = const Value.absent(),
+    this.purchasePrice = const Value.absent(),
+    this.sellingPrice = const Value.absent(),
+    this.currentStock = const Value.absent(),
+    this.minimumStock = const Value.absent(),
+    this.barcode = const Value.absent(),
+    this.imagePath = const Value.absent(),
+    this.supplierId = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ProductsCompanion.insert({
+    required String id,
+    required String organizationId,
+    required String name,
+    this.description = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    required String unitId,
+    this.purchasePrice = const Value.absent(),
+    this.sellingPrice = const Value.absent(),
+    this.currentStock = const Value.absent(),
+    this.minimumStock = const Value.absent(),
+    this.barcode = const Value.absent(),
+    this.imagePath = const Value.absent(),
+    this.supplierId = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       organizationId = Value(organizationId),
+       name = Value(name),
+       unitId = Value(unitId),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<ProductRow> custom({
+    Expression<String>? id,
+    Expression<String>? organizationId,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? categoryId,
+    Expression<String>? unitId,
+    Expression<double>? purchasePrice,
+    Expression<double>? sellingPrice,
+    Expression<double>? currentStock,
+    Expression<double>? minimumStock,
+    Expression<String>? barcode,
+    Expression<String>? imagePath,
+    Expression<String>? supplierId,
+    Expression<bool>? isActive,
+    Expression<bool>? isSample,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (organizationId != null) 'organization_id': organizationId,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (categoryId != null) 'category_id': categoryId,
+      if (unitId != null) 'unit_id': unitId,
+      if (purchasePrice != null) 'purchase_price': purchasePrice,
+      if (sellingPrice != null) 'selling_price': sellingPrice,
+      if (currentStock != null) 'current_stock': currentStock,
+      if (minimumStock != null) 'minimum_stock': minimumStock,
+      if (barcode != null) 'barcode': barcode,
+      if (imagePath != null) 'image_path': imagePath,
+      if (supplierId != null) 'supplier_id': supplierId,
+      if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ProductsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? organizationId,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<String?>? categoryId,
+    Value<String>? unitId,
+    Value<double>? purchasePrice,
+    Value<double>? sellingPrice,
+    Value<double>? currentStock,
+    Value<double>? minimumStock,
+    Value<String?>? barcode,
+    Value<String?>? imagePath,
+    Value<String?>? supplierId,
+    Value<bool>? isActive,
+    Value<bool>? isSample,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return ProductsCompanion(
+      id: id ?? this.id,
+      organizationId: organizationId ?? this.organizationId,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      categoryId: categoryId ?? this.categoryId,
+      unitId: unitId ?? this.unitId,
+      purchasePrice: purchasePrice ?? this.purchasePrice,
+      sellingPrice: sellingPrice ?? this.sellingPrice,
+      currentStock: currentStock ?? this.currentStock,
+      minimumStock: minimumStock ?? this.minimumStock,
+      barcode: barcode ?? this.barcode,
+      imagePath: imagePath ?? this.imagePath,
+      supplierId: supplierId ?? this.supplierId,
+      isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (organizationId.present) {
+      map['organization_id'] = Variable<String>(organizationId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<String>(categoryId.value);
+    }
+    if (unitId.present) {
+      map['unit_id'] = Variable<String>(unitId.value);
+    }
+    if (purchasePrice.present) {
+      map['purchase_price'] = Variable<double>(purchasePrice.value);
+    }
+    if (sellingPrice.present) {
+      map['selling_price'] = Variable<double>(sellingPrice.value);
+    }
+    if (currentStock.present) {
+      map['current_stock'] = Variable<double>(currentStock.value);
+    }
+    if (minimumStock.present) {
+      map['minimum_stock'] = Variable<double>(minimumStock.value);
+    }
+    if (barcode.present) {
+      map['barcode'] = Variable<String>(barcode.value);
+    }
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
+    }
+    if (supplierId.present) {
+      map['supplier_id'] = Variable<String>(supplierId.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProductsCompanion(')
+          ..write('id: $id, ')
+          ..write('organizationId: $organizationId, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('unitId: $unitId, ')
+          ..write('purchasePrice: $purchasePrice, ')
+          ..write('sellingPrice: $sellingPrice, ')
+          ..write('currentStock: $currentStock, ')
+          ..write('minimumStock: $minimumStock, ')
+          ..write('barcode: $barcode, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('supplierId: $supplierId, ')
+          ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1932,8 +2905,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $UsersTable users = $UsersTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $UnitsTable units = $UnitsTable(this);
+  late final $ProductsTable products = $ProductsTable(this);
   late final CategoryDao categoryDao = CategoryDao(this as AppDatabase);
   late final UnitDao unitDao = UnitDao(this as AppDatabase);
+  late final ProductDao productDao = ProductDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1943,6 +2918,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     users,
     categories,
     units,
+    products,
   ];
 }
 
@@ -2917,6 +3893,447 @@ typedef $$UnitsTableProcessedTableManager =
       UnitRow,
       PrefetchHooks Function()
     >;
+typedef $$ProductsTableCreateCompanionBuilder =
+    ProductsCompanion Function({
+      required String id,
+      required String organizationId,
+      required String name,
+      Value<String?> description,
+      Value<String?> categoryId,
+      required String unitId,
+      Value<double> purchasePrice,
+      Value<double> sellingPrice,
+      Value<double> currentStock,
+      Value<double> minimumStock,
+      Value<String?> barcode,
+      Value<String?> imagePath,
+      Value<String?> supplierId,
+      Value<bool> isActive,
+      Value<bool> isSample,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$ProductsTableUpdateCompanionBuilder =
+    ProductsCompanion Function({
+      Value<String> id,
+      Value<String> organizationId,
+      Value<String> name,
+      Value<String?> description,
+      Value<String?> categoryId,
+      Value<String> unitId,
+      Value<double> purchasePrice,
+      Value<double> sellingPrice,
+      Value<double> currentStock,
+      Value<double> minimumStock,
+      Value<String?> barcode,
+      Value<String?> imagePath,
+      Value<String?> supplierId,
+      Value<bool> isActive,
+      Value<bool> isSample,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$ProductsTableFilterComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get organizationId => $composableBuilder(
+    column: $table.organizationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get unitId => $composableBuilder(
+    column: $table.unitId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get purchasePrice => $composableBuilder(
+    column: $table.purchasePrice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sellingPrice => $composableBuilder(
+    column: $table.sellingPrice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get currentStock => $composableBuilder(
+    column: $table.currentStock,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get minimumStock => $composableBuilder(
+    column: $table.minimumStock,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get barcode => $composableBuilder(
+    column: $table.barcode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imagePath => $composableBuilder(
+    column: $table.imagePath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get supplierId => $composableBuilder(
+    column: $table.supplierId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ProductsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get organizationId => $composableBuilder(
+    column: $table.organizationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get unitId => $composableBuilder(
+    column: $table.unitId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get purchasePrice => $composableBuilder(
+    column: $table.purchasePrice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sellingPrice => $composableBuilder(
+    column: $table.sellingPrice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get currentStock => $composableBuilder(
+    column: $table.currentStock,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get minimumStock => $composableBuilder(
+    column: $table.minimumStock,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get barcode => $composableBuilder(
+    column: $table.barcode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+    column: $table.imagePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get supplierId => $composableBuilder(
+    column: $table.supplierId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProductsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get organizationId => $composableBuilder(
+    column: $table.organizationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get unitId =>
+      $composableBuilder(column: $table.unitId, builder: (column) => column);
+
+  GeneratedColumn<double> get purchasePrice => $composableBuilder(
+    column: $table.purchasePrice,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get sellingPrice => $composableBuilder(
+    column: $table.sellingPrice,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get currentStock => $composableBuilder(
+    column: $table.currentStock,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get minimumStock => $composableBuilder(
+    column: $table.minimumStock,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get barcode =>
+      $composableBuilder(column: $table.barcode, builder: (column) => column);
+
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
+
+  GeneratedColumn<String> get supplierId => $composableBuilder(
+    column: $table.supplierId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$ProductsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProductsTable,
+          ProductRow,
+          $$ProductsTableFilterComposer,
+          $$ProductsTableOrderingComposer,
+          $$ProductsTableAnnotationComposer,
+          $$ProductsTableCreateCompanionBuilder,
+          $$ProductsTableUpdateCompanionBuilder,
+          (
+            ProductRow,
+            BaseReferences<_$AppDatabase, $ProductsTable, ProductRow>,
+          ),
+          ProductRow,
+          PrefetchHooks Function()
+        > {
+  $$ProductsTableTableManager(_$AppDatabase db, $ProductsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProductsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProductsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProductsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> organizationId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> categoryId = const Value.absent(),
+                Value<String> unitId = const Value.absent(),
+                Value<double> purchasePrice = const Value.absent(),
+                Value<double> sellingPrice = const Value.absent(),
+                Value<double> currentStock = const Value.absent(),
+                Value<double> minimumStock = const Value.absent(),
+                Value<String?> barcode = const Value.absent(),
+                Value<String?> imagePath = const Value.absent(),
+                Value<String?> supplierId = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ProductsCompanion(
+                id: id,
+                organizationId: organizationId,
+                name: name,
+                description: description,
+                categoryId: categoryId,
+                unitId: unitId,
+                purchasePrice: purchasePrice,
+                sellingPrice: sellingPrice,
+                currentStock: currentStock,
+                minimumStock: minimumStock,
+                barcode: barcode,
+                imagePath: imagePath,
+                supplierId: supplierId,
+                isActive: isActive,
+                isSample: isSample,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String organizationId,
+                required String name,
+                Value<String?> description = const Value.absent(),
+                Value<String?> categoryId = const Value.absent(),
+                required String unitId,
+                Value<double> purchasePrice = const Value.absent(),
+                Value<double> sellingPrice = const Value.absent(),
+                Value<double> currentStock = const Value.absent(),
+                Value<double> minimumStock = const Value.absent(),
+                Value<String?> barcode = const Value.absent(),
+                Value<String?> imagePath = const Value.absent(),
+                Value<String?> supplierId = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ProductsCompanion.insert(
+                id: id,
+                organizationId: organizationId,
+                name: name,
+                description: description,
+                categoryId: categoryId,
+                unitId: unitId,
+                purchasePrice: purchasePrice,
+                sellingPrice: sellingPrice,
+                currentStock: currentStock,
+                minimumStock: minimumStock,
+                barcode: barcode,
+                imagePath: imagePath,
+                supplierId: supplierId,
+                isActive: isActive,
+                isSample: isSample,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProductsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProductsTable,
+      ProductRow,
+      $$ProductsTableFilterComposer,
+      $$ProductsTableOrderingComposer,
+      $$ProductsTableAnnotationComposer,
+      $$ProductsTableCreateCompanionBuilder,
+      $$ProductsTableUpdateCompanionBuilder,
+      (ProductRow, BaseReferences<_$AppDatabase, $ProductsTable, ProductRow>),
+      ProductRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2929,4 +4346,6 @@ class $AppDatabaseManager {
       $$CategoriesTableTableManager(_db, _db.categories);
   $$UnitsTableTableManager get units =>
       $$UnitsTableTableManager(_db, _db.units);
+  $$ProductsTableTableManager get products =>
+      $$ProductsTableTableManager(_db, _db.products);
 }
