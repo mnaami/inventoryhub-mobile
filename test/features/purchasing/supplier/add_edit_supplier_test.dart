@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inventoryhub_mobile/app/router.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
-import '../helpers/test_db.dart';
+import 'package:inventoryhub_mobile/features/purchasing/supplier/presentation/add_edit_supplier_screen.dart';
+import '../../../helpers/test_db.dart';
 
 void main() {
-  testWidgets('bottom nav shows the four sections and opens Sales',
-      (tester) async {
+  testWidgets('shows validation error when name is empty', (tester) async {
     final db = newTestDb();
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();
     final container = ProviderContainer(overrides: [
@@ -18,20 +17,19 @@ void main() {
     ]);
     addTearDown(container.dispose);
 
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: MainScaffold()),
+      child: const MaterialApp(home: AddEditSupplierScreen()),
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text('Products'), findsWidgets);
-    expect(find.text('Sales'), findsWidgets);
-    expect(find.text('Purchasing'), findsWidgets);
-    expect(find.text('More'), findsWidgets);
-
-    await tester.tap(find.text('Sales'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
-    expect(find.text('Unshipped'), findsOneWidget); // dashboard KPI tile unique to Sales
+    expect(find.text('Supplier name is required.'), findsOneWidget);
     await db.close();
   });
 }

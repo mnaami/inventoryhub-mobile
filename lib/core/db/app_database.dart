@@ -18,6 +18,12 @@ import '../../features/sales/sale_order/data/sale_order_tables.dart';
 import '../../features/sales/sale_order/data/sale_order_dao.dart';
 import '../../features/sales/sale_order/data/sale_order_payment_dao.dart';
 import '../../features/sales/sale_order/data/sale_order_shipping_dao.dart';
+import '../../features/purchasing/supplier/data/supplier_table.dart';
+import '../../features/purchasing/supplier/data/supplier_dao.dart';
+import '../../features/purchasing/purchase_order/data/purchase_order_tables.dart';
+import '../../features/purchasing/purchase_order/data/purchase_order_dao.dart';
+import '../../features/purchasing/purchase_order/data/purchase_order_payment_dao.dart';
+import '../../features/purchasing/purchase_order/data/purchase_order_receipt_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -26,8 +32,10 @@ part 'app_database.g.dart';
     Organizations, Users, Categories, Units, Products, StockMovements,
     Customers, DocumentCounters, SaleOrders, SaleOrderItems,
     SaleOrderPayments, SaleOrderShippings, SaleOrderShippingItems,
+    Suppliers, PurchaseOrders, PurchaseOrderItems, PurchaseOrderReceipts,
+    PurchaseOrderReceiptItems, PurchaseOrderPayments,
   ],
-  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao, SaleOrderDao, SaleOrderPaymentDao, SaleOrderShippingDao],
+  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao, SaleOrderDao, SaleOrderPaymentDao, SaleOrderShippingDao, SupplierDao, PurchaseOrderDao, PurchaseOrderPaymentDao, PurchaseOrderReceiptDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
@@ -40,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
       AppDatabase(driftDatabase(name: 'inventoryhub'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -54,6 +62,14 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(saleOrderPayments);
             await m.createTable(saleOrderShippings);
             await m.createTable(saleOrderShippingItems);
+          }
+          if (from < 3) {
+            await m.createTable(suppliers);
+            await m.createTable(purchaseOrders);
+            await m.createTable(purchaseOrderItems);
+            await m.createTable(purchaseOrderReceipts);
+            await m.createTable(purchaseOrderReceiptItems);
+            await m.createTable(purchaseOrderPayments);
           }
         },
       );

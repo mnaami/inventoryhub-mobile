@@ -7,6 +7,8 @@ import '../features/inventory/stock_movement/presentation/stock_movements_screen
 import '../features/inventory/unit/presentation/units_management_screen.dart';
 import '../features/sales/customer/presentation/customer_list_screen.dart';
 import '../features/sales/sale_order/presentation/sale_order_dashboard_screen.dart';
+import '../features/purchasing/purchase_order/presentation/purchase_order_dashboard_screen.dart';
+import '../features/purchasing/supplier/presentation/supplier_list_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -29,8 +31,13 @@ class _MainScaffoldState extends State<MainScaffold> {
   static const _tabs = [
     ProductListScreen(),
     SaleOrderDashboardScreen(),
-    StockMovementsScreen(),
+    PurchaseOrderDashboardScreen(),
   ];
+
+  void _push(Widget screen) {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => screen));
+  }
 
   void _openMore() {
     showModalBottomSheet(
@@ -40,12 +47,27 @@ class _MainScaffoldState extends State<MainScaffold> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
+              leading: const Icon(Icons.swap_vert),
+              title: const Text('Stock'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _push(const StockMovementsScreen());
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.local_shipping_outlined),
+              title: const Text('Suppliers'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _push(const SupplierListScreen());
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.people_outline),
               title: const Text('Customers'),
               onTap: () {
                 Navigator.pop(ctx);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const CustomerListScreen()));
+                _push(const CustomerListScreen());
               },
             ),
             ListTile(
@@ -53,8 +75,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               title: const Text('Categories'),
               onTap: () {
                 Navigator.pop(ctx);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const CategoryManagementScreen()));
+                _push(const CategoryManagementScreen());
               },
             ),
             ListTile(
@@ -62,8 +83,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               title: const Text('Units'),
               onTap: () {
                 Navigator.pop(ctx);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const UnitsManagementScreen()));
+                _push(const UnitsManagementScreen());
               },
             ),
             ListTile(
@@ -71,8 +91,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               title: const Text('Settings'),
               onTap: () {
                 Navigator.pop(ctx);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const SettingsScreen()));
+                _push(const SettingsScreen());
               },
             ),
           ],
@@ -99,7 +118,8 @@ class _MainScaffoldState extends State<MainScaffold> {
               icon: Icon(Icons.inventory_2_outlined), label: 'Products'),
           NavigationDestination(
               icon: Icon(Icons.point_of_sale_outlined), label: 'Sales'),
-          NavigationDestination(icon: Icon(Icons.swap_vert), label: 'Stock'),
+          NavigationDestination(
+              icon: Icon(Icons.shopping_cart_outlined), label: 'Purchasing'),
           NavigationDestination(icon: Icon(Icons.more_horiz), label: 'More'),
         ],
       ),
