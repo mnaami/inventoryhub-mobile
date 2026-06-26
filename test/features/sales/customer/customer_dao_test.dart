@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/features/sales/customer/data/customer_dao.dart';
-import 'package:inventoryhub_mobile/features/sales/customer/data/customer_mapper.dart';
 import 'package:inventoryhub_mobile/features/sales/customer/data/customer_repository_impl.dart';
 import 'package:inventoryhub_mobile/features/sales/customer/domain/customer.dart';
 import '../../../helpers/test_db.dart';

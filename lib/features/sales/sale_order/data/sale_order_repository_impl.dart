@@ -1,4 +1,3 @@
-import '../../../../core/db/app_database.dart';
 import '../domain/sale_order.dart';
 import '../domain/sale_order_enums.dart';
 import '../domain/sale_order_repository.dart';
