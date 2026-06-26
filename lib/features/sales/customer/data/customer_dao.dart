@@ -29,7 +29,9 @@ class CustomerDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<CustomerRow?> byId(String id) =>
-      (select(customers)..where((c) => c.id.equals(id))).getSingleOrNull();
+      (select(customers)
+            ..where((c) => c.id.equals(id) & c.isActive.equals(true)))
+          .getSingleOrNull();
 
   Future<void> insertRow(CustomersCompanion c) => into(customers).insert(c);
 
