@@ -1,7 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/quantity_format.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
+import '../../../../core/widgets/section_header.dart';
+import '../../../../core/widgets/stat_tile.dart';
+import '../../../../app/theme/app_tokens.dart';
 import '../domain/product.dart';
 import '../../stock_movement/presentation/product_history_view.dart';
 import '../../stock_movement/presentation/record_movement_screen.dart';
@@ -15,6 +20,9 @@ class ProductDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final product = ref.watch(productProvider(productId));
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product'),
@@ -32,26 +40,119 @@ class ProductDetailScreen extends ConsumerWidget {
             return const Center(child: Text('Product not found.'));
           }
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppTokens.space16),
             children: [
-              if (p.imagePath != null)
-                Image.file(File(p.imagePath!), height: 180, fit: BoxFit.cover),
-              const SizedBox(height: 12),
-              Text(p.name, style: Theme.of(context).textTheme.headlineSmall),
-              if (p.description != null) Text(p.description!),
-              const Divider(height: 32),
-              _row('Current stock', '${p.currentStock}'),
-              _row('Minimum stock', '${p.minimumStock}'),
-              _row('Purchase price', p.purchasePrice.toStringAsFixed(2)),
-              _row('Selling price', p.sellingPrice.toStringAsFixed(2)),
-              if (p.barcode != null) _row('Barcode', p.barcode!),
-              if (p.isLowStock)
-                const Padding(
-                  padding: EdgeInsets.only(top: 12),
-                  child: Text('⚠ Low stock',
-                      style: TextStyle(color: Colors.deepOrange)),
+              // Header card: image or icon + name + price
+              AppCard(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(AppTokens.radiusSm),
+                      child: p.imagePath != null
+                          ? Image.file(
+                              File(p.imagePath!),
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              width: 72,
+                              height: 72,
+                              color: scheme.primaryContainer,
+                              child: Icon(
+                                Icons.inventory_2_outlined,
+                                size: 36,
+                                color: scheme.onPrimaryContainer,
+                              ),
+                            ),
+                    ),
+                    const SizedBox(width: AppTokens.space16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(p.name,
+                              style: theme.textTheme.titleLarge,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis),
+                          const SizedBox(height: AppTokens.space4),
+                          Text(
+                            p.sellingPrice.toStringAsFixed(2),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                                color: scheme.onSurfaceVariant),
+                          ),
+                          if (p.description != null) ...[
+                            const SizedBox(height: AppTokens.space4),
+                            Text(
+                              p.description!,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                  color: scheme.onSurfaceVariant),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              const SizedBox(height: 24),
+              ),
+
+              const SizedBox(height: AppTokens.space16),
+
+              // Stats row
+              const SectionHeader('Stock'),
+              Row(
+                children: [
+                  Expanded(
+                    child: StatTile(
+                      label: 'Stock',
+                      value: formatQty(p.currentStock),
+                    ),
+                  ),
+                  const SizedBox(width: AppTokens.space12),
+                  Expanded(
+                    child: StatTile(
+                      label: 'Minimum',
+                      value: formatQty(p.minimumStock),
+                    ),
+                  ),
+                  const SizedBox(width: AppTokens.space12),
+                  Expanded(
+                    child: StatTile(
+                      label: 'Value',
+                      value: (p.currentStock * p.purchasePrice)
+                          .toStringAsFixed(2),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: AppTokens.space16),
+
+              // Additional info
+              const SectionHeader('Pricing'),
+              AppCard(
+                child: Column(
+                  children: [
+                    _infoRow(context, 'Purchase price',
+                        p.purchasePrice.toStringAsFixed(2)),
+                    _divider(context),
+                    _infoRow(context, 'Selling price',
+                        p.sellingPrice.toStringAsFixed(2)),
+                    if (p.barcode != null) ...[
+                      _divider(context),
+                      _infoRow(context, 'Barcode', p.barcode!),
+                    ],
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: AppTokens.space24),
+
+              // Actions
               FilledButton.icon(
                 icon: const Icon(Icons.swap_vert),
                 label: const Text('Record stock movement'),
@@ -67,7 +168,7 @@ class ProductDetailScreen extends ConsumerWidget {
                   }
                 },
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppTokens.space8),
               OutlinedButton.icon(
                 icon: const Icon(Icons.history),
                 label: const Text('View stock history'),
@@ -82,12 +183,25 @@ class ProductDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _row(String label, String value) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text(label), Text(value)],
-        ),
+  Widget _infoRow(BuildContext context, String label, String value) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppTokens.space8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(value, style: theme.textTheme.bodyMedium),
+        ],
+      ),
+    );
+  }
+
+  Widget _divider(BuildContext context) => Divider(
+        height: 1,
+        color: Theme.of(context).colorScheme.outlineVariant,
       );
 
   Future<void> _edit(BuildContext context, WidgetRef ref) async {

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
+import '../../../../core/widgets/empty_state.dart';
 import '../domain/stock_movement.dart';
 import 'stock_providers.dart';
 
@@ -10,26 +13,76 @@ class StockMovementsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ledger = ref.watch(stockLedgerProvider);
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Stock movements')),
       body: AsyncValueView<List<StockMovement>>(
         value: ledger,
         data: (list) => list.isEmpty
-            ? const Center(child: Text('No stock movements yet.'))
+            ? const EmptyState(
+                icon: Icons.swap_vert,
+                title: 'No stock movements yet',
+                subtitle: 'Record stock in or out to see the ledger.',
+              )
             : ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppTokens.space16,
+                  vertical: AppTokens.space12,
+                ),
                 itemCount: list.length,
                 itemBuilder: (_, i) {
                   final m = list[i];
                   final positive = m.quantity >= 0;
-                  return ListTile(
-                    leading: Icon(
-                      positive ? Icons.arrow_downward : Icons.arrow_upward,
-                      color: positive ? Colors.green : Colors.red,
+                  final color = positive ? AppTokens.inFg : AppTokens.outFg;
+                  final icon =
+                      positive ? Icons.arrow_downward : Icons.arrow_upward;
+                  return Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: AppTokens.space8),
+                    child: AppCard(
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: positive ? AppTokens.inBg : AppTokens.outBg,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(icon, color: color, size: 18),
+                          ),
+                          const SizedBox(width: AppTokens.space12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${m.type.name} · ${m.quantity}',
+                                  style: theme.textTheme.bodyMedium
+                                      ?.copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                if (m.notes != null) ...[
+                                  const SizedBox(height: AppTokens.space2),
+                                  Text(
+                                    m.notes!,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: AppTokens.space8),
+                          Text(
+                            '${m.createdAt.toLocal()}'.split('.').first,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    title: Text('${m.type.name} · ${m.quantity}'),
-                    subtitle: m.notes == null ? null : Text(m.notes!),
-                    trailing:
-                        Text('${m.createdAt.toLocal()}'.split('.').first),
                   );
                 },
               ),

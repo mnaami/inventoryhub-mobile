@@ -6,6 +6,8 @@ import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/inventory/product/presentation/product_list_screen.dart';
 import 'package:inventoryhub_mobile/features/inventory/product/presentation/product_providers.dart';
+import 'package:inventoryhub_mobile/features/inventory/stock_movement/domain/stock_movement.dart';
+import 'package:inventoryhub_mobile/features/inventory/stock_movement/presentation/stock_providers.dart';
 import '../../../helpers/test_db.dart';
 
 void main() {
@@ -25,16 +27,23 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('No products yet'), findsOneWidget);
 
-    await container.read(productServiceProvider).create(
+    final product = await container.read(productServiceProvider).create(
           name: 'Widget',
           unitId: session.defaultUnitId,
           minimumStock: 5,
+        );
+    // Record a stock-IN of +2 so stock (2) is positive but below minimum (5),
+    // which triggers the Low badge rather than the Out badge.
+    await container.read(stockServiceProvider).record(
+          productId: product.id,
+          type: MovementType.inbound,
+          quantity: 2,
         );
     await container.read(productListProvider.notifier).refresh();
     await tester.pumpAndSettle();
 
     expect(find.text('Widget'), findsOneWidget);
-    expect(find.text('Low'), findsOneWidget); // stock 0 ≤ min 5
+    expect(find.text('Low'), findsOneWidget); // stock 2 < min 5 → Low
     await db.close();
   });
 }

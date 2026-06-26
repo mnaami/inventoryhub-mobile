@@ -27,7 +27,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Products'), findsWidgets); // app bar + nav label
-    expect(find.text('Settings'), findsOneWidget); // nav label
+    expect(find.text('More'), findsOneWidget); // nav label
     expect(find.textContaining('No products yet'), findsOneWidget);
     await db.close();
   });

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/quantity_format.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
+import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/widgets/status_badge.dart';
+import '../../../../app/theme/app_tokens.dart';
 import '../domain/product.dart';
 import 'add_edit_product_screen.dart';
 import 'product_detail_screen.dart';
@@ -44,7 +49,7 @@ class _State extends ConsumerState<ProductListScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(AppTokens.space16, AppTokens.space12, AppTokens.space16, AppTokens.space4),
             child: TextField(
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.search),
@@ -58,10 +63,21 @@ class _State extends ConsumerState<ProductListScreen> {
             child: AsyncValueView<List<Product>>(
               value: products,
               data: (list) => list.isEmpty
-                  ? const Center(child: Text('No products yet. Tap + to add one.'))
-                  : ListView.builder(
+                  ? EmptyState(
+                      icon: Icons.inventory_2_outlined,
+                      title: 'No products yet',
+                      subtitle:
+                          'Add your first product to start tracking stock.',
+                      actionLabel: 'Add product',
+                      onAction: () => _add(context),
+                    )
+                  : ListView.separated(
                       controller: _scroll,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppTokens.space16, vertical: AppTokens.space8),
                       itemCount: list.length,
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(height: AppTokens.space8),
                       itemBuilder: (_, i) => _tile(context, list[i]),
                     ),
             ),
@@ -72,19 +88,77 @@ class _State extends ConsumerState<ProductListScreen> {
   }
 
   Widget _tile(BuildContext context, Product p) {
-    return ListTile(
-      title: Text(p.name),
-      subtitle: Text('Stock: ${p.currentStock}'),
-      trailing: p.isLowStock
-          ? const Chip(
-              label: Text('Low'),
-              backgroundColor: Color(0xFFFFE0B2),
-              visualDensity: VisualDensity.compact,
-            )
-          : null,
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    Widget trailing;
+    if (p.currentStock <= 0) {
+      trailing = const StatusBadge.out();
+    } else if (p.isLowStock) {
+      trailing = const StatusBadge.low();
+    } else {
+      trailing = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            formatQty(p.currentStock),
+            style: textTheme.titleMedium,
+          ),
+          Text(
+            'pcs',
+            style: textTheme.bodySmall
+                ?.copyWith(color: scheme.onSurfaceVariant),
+          ),
+        ],
+      );
+    }
+
+    return AppCard(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => ProductDetailScreen(productId: p.id),
       )),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: scheme.primaryContainer,
+              borderRadius: BorderRadius.circular(AppTokens.radiusSm),
+            ),
+            child: Icon(
+              Icons.inventory_2_outlined,
+              color: scheme.onPrimaryContainer,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: AppTokens.space12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  p.name,
+                  style: textTheme.titleMedium,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: AppTokens.space2),
+                Text(
+                  p.sellingPrice.toStringAsFixed(2),
+                  style: textTheme.bodySmall
+                      ?.copyWith(color: scheme.onSurfaceVariant),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppTokens.space12),
+          trailing,
+        ],
+      ),
     );
   }
 
