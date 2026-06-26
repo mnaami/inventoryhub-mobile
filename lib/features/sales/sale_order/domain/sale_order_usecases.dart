@@ -122,7 +122,89 @@ class SaleOrderService {
     await _repo.softDeleteOrder(order.id);
   }
 
-  // Tasks 12 (payments) and 13 (shipments) will append methods here.
+  Future<List<SaleOrderPayment>> payments(String orderId) =>
+      _repo.paymentsFor(orderId);
+
+  Future<void> addPayment(
+    SaleOrder order, {
+    required double amount,
+    required PaymentMethod method,
+    PaymentRecordStatus status = PaymentRecordStatus.completed,
+    DateTime? paymentDate,
+  }) async {
+    _assertPayable(order);
+    if (amount <= 0) {
+      throw const ValidationException('Payment amount must be positive.');
+    }
+    await _assertNoOverpay(order, addedCompleted: status, addedAmount: amount);
+    final now = DateTime.now().toUtc();
+    final number = await _repo.nextNumber(_orgId, 'so_payment', 'PAY');
+    await _repo.recordPayment(SaleOrderPayment(
+      id: _ids.newId(),
+      organizationId: _orgId,
+      saleOrderId: order.id,
+      paymentNumber: number,
+      amount: amount,
+      method: method,
+      status: status,
+      paymentDate: paymentDate ?? now,
+      isActive: true,
+      createdAt: now,
+      updatedAt: now,
+    ));
+  }
+
+  Future<void> editPayment(
+    SaleOrder order,
+    SaleOrderPayment payment, {
+    required double amount,
+    required PaymentMethod method,
+    required PaymentRecordStatus status,
+    DateTime? paymentDate,
+  }) async {
+    if (amount <= 0) {
+      throw const ValidationException('Payment amount must be positive.');
+    }
+    await _assertNoOverpay(order,
+        addedCompleted: status,
+        addedAmount: amount,
+        excludingPayment: payment);
+    await _repo.editPayment(payment.id,
+        amount: amount,
+        method: method,
+        status: status,
+        paymentDate: paymentDate ?? payment.paymentDate);
+  }
+
+  Future<void> deletePayment(SaleOrderPayment payment) =>
+      _repo.deletePayment(payment.id);
+
+  void _assertPayable(SaleOrder order) {
+    if (order.status == OrderStatus.draft ||
+        order.status == OrderStatus.cancelled) {
+      throw const ValidationException(
+          'Payments can only be recorded on a confirmed order.');
+    }
+  }
+
+  Future<void> _assertNoOverpay(
+    SaleOrder order, {
+    required PaymentRecordStatus addedCompleted,
+    required double addedAmount,
+    SaleOrderPayment? excludingPayment,
+  }) async {
+    var completed = await _repo.completedTotal(order.id);
+    if (excludingPayment != null &&
+        excludingPayment.status == PaymentRecordStatus.completed) {
+      completed -= excludingPayment.amount;
+    }
+    final projected = completed +
+        (addedCompleted == PaymentRecordStatus.completed ? addedAmount : 0);
+    if (projected > order.totalAmount) {
+      throw const ValidationException(
+          'Total payments cannot exceed the order total.');
+    }
+  }
 
   Future<void> _transition(SaleOrder order,
       {required Set<OrderStatus> from, required OrderStatus to}) async {
