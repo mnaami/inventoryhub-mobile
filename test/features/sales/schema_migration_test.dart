@@ -26,7 +26,7 @@ void main() {
     await db.close();
   });
 
-  test('schemaVersion is 2', () {
+  test('schemaVersion is 3', () {
     final db = newTestDb();
     expect(db.schemaVersion, 3);
     db.close();
