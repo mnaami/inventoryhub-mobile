@@ -1,5 +1,6 @@
 import '../../../../core/id/id_generator.dart';
 import '../../../../core/result/app_exception.dart';
+import '../data/sale_order_shipping_dao.dart' show ShipmentLine;
 import 'sale_order.dart';
 import 'sale_order_enums.dart';
 import 'sale_order_repository.dart';
@@ -206,6 +207,61 @@ class SaleOrderService {
     }
   }
 
+  Future<List<SaleOrderShipping>> shipments(String orderId) =>
+      _repo.shipmentsFor(orderId);
+
+  Future<void> createShipment(
+    SaleOrder order, {
+    required List<ShipLine> lines,
+    String? carrier,
+    String? trackingNumber,
+    DateTime? shippingDate,
+  }) async {
+    if (order.status != OrderStatus.confirmed &&
+        order.status != OrderStatus.processing) {
+      throw const ValidationException(
+          'Only confirmed or processing orders can ship.');
+    }
+    final positive = lines.where((l) => l.quantity > 0).toList();
+    if (positive.isEmpty) {
+      throw const ValidationException('A shipment needs at least one line.');
+    }
+    for (final l in positive) {
+      if (l.quantity > l.item.remainingQuantity) {
+        throw ValidationException(
+            'Cannot ship ${l.quantity} of ${l.item.productName}; only ${l.item.remainingQuantity} remain.');
+      }
+    }
+    final now = DateTime.now().toUtc();
+    final shippingId = _ids.newId();
+    final number = await _repo.nextNumber(_orgId, 'so_shipping', 'SHP');
+    final shipping = SaleOrderShipping(
+      id: shippingId,
+      organizationId: _orgId,
+      saleOrderId: order.id,
+      soShippingNumber: number,
+      shippingDate: shippingDate ?? now,
+      carrier: carrier,
+      trackingNumber: trackingNumber,
+      status: ShipmentStatus.shipped,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final daoLines = positive
+        .map((l) => ShipmentLine(
+              saleOrderItemId: l.item.id,
+              productId: l.item.productId,
+              movementId: _ids.newId(),
+              quantity: l.quantity,
+            ))
+        .toList();
+    await _repo.createShipment(shipping, daoLines, _userId);
+  }
+
+  Future<void> setShipmentStatus(
+          SaleOrderShipping shipping, ShipmentStatus status) =>
+      _repo.setShipmentStatus(shipping.id, status);
+
   Future<void> _transition(SaleOrder order,
       {required Set<OrderStatus> from, required OrderStatus to}) async {
     if (!from.contains(order.status)) {
@@ -233,4 +289,10 @@ class SaleOrderService {
       updatedAt: now,
     );
   }
+}
+
+class ShipLine {
+  const ShipLine({required this.item, required this.quantity});
+  final SaleOrderItem item;
+  final double quantity;
 }
