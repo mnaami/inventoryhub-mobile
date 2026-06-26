@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/providers.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/widgets/section_header.dart';
+import '../../../../app/theme/app_tokens.dart';
 import '../../category/domain/category.dart';
 import '../../category/presentation/category_providers.dart';
 import '../../unit/presentation/unit_providers.dart';
@@ -63,24 +65,39 @@ class _State extends ConsumerState<AddEditProductScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppTokens.space16),
           children: [
             _photoPicker(),
+            const SizedBox(height: AppTokens.space24),
+
+            // ── Details ──────────────────────────────────────────────────
+            const SectionHeader('Details'),
             TextFormField(
               controller: _name,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                prefixIcon: Icon(Icons.label_outline),
+              ),
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Name is required' : null,
             ),
+            const SizedBox(height: AppTokens.space16),
             TextFormField(
               controller: _desc,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: const InputDecoration(
+                labelText: 'Description',
+                prefixIcon: Icon(Icons.notes_outlined),
+              ),
+              maxLines: 2,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppTokens.space16),
             categories.maybeWhen(
               data: (nodes) => DropdownButtonFormField<String?>(
                 initialValue: _categoryId,
-                decoration: const InputDecoration(labelText: 'Category'),
+                decoration: const InputDecoration(
+                  labelText: 'Category',
+                  prefixIcon: Icon(Icons.folder_outlined),
+                ),
                 items: [
                   const DropdownMenuItem(value: null, child: Text('— None —')),
                   for (final c in _flatten(nodes))
@@ -90,10 +107,14 @@ class _State extends ConsumerState<AddEditProductScreen> {
               ),
               orElse: () => const SizedBox.shrink(),
             ),
+            const SizedBox(height: AppTokens.space16),
             units.maybeWhen(
               data: (list) => DropdownButtonFormField<String>(
                 initialValue: _unitId,
-                decoration: const InputDecoration(labelText: 'Unit'),
+                decoration: const InputDecoration(
+                  labelText: 'Unit',
+                  prefixIcon: Icon(Icons.straighten_outlined),
+                ),
                 items: [
                   for (final u in list)
                     DropdownMenuItem(value: u.id, child: Text(u.name)),
@@ -102,40 +123,66 @@ class _State extends ConsumerState<AddEditProductScreen> {
               ),
               orElse: () => const SizedBox.shrink(),
             ),
+            const SizedBox(height: AppTokens.space24),
+
+            // ── Pricing ───────────────────────────────────────────────────
+            const SectionHeader('Pricing'),
             Row(children: [
               Expanded(
                 child: TextFormField(
                   controller: _purchase,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Purchase price'),
+                  decoration: const InputDecoration(
+                    labelText: 'Purchase price',
+                    prefixIcon: Icon(Icons.arrow_downward_outlined),
+                  ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppTokens.space12),
               Expanded(
                 child: TextFormField(
                   controller: _selling,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Selling price'),
+                  decoration: const InputDecoration(
+                    labelText: 'Selling price',
+                    prefixIcon: Icon(Icons.arrow_upward_outlined),
+                  ),
                 ),
               ),
             ]),
+            const SizedBox(height: AppTokens.space24),
+
+            // ── Stock ─────────────────────────────────────────────────────
+            const SectionHeader('Stock'),
             TextFormField(
               controller: _min,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Minimum stock'),
+              decoration: const InputDecoration(
+                labelText: 'Minimum stock',
+                prefixIcon: Icon(Icons.inventory_2_outlined),
+              ),
             ),
+            const SizedBox(height: AppTokens.space24),
+
+            // ── Identification ────────────────────────────────────────────
+            const SectionHeader('Identification'),
             TextFormField(
               controller: _barcode,
               decoration: InputDecoration(
                 labelText: 'Barcode',
+                prefixIcon: const Icon(Icons.qr_code_outlined),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.qr_code_scanner),
                   onPressed: _scan,
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-            FilledButton(onPressed: _save, child: const Text('Save')),
+            const SizedBox(height: AppTokens.space24),
+
+            FilledButton(
+              onPressed: _save,
+              child: const Text('Save'),
+            ),
           ],
         ),
       ),
