@@ -18,6 +18,8 @@ abstract interface class SaleOrderRepository {
   Future<void> setStatus(String id, OrderStatus status);
   Future<void> softDeleteOrder(String id);
   Future<int> countLiveForCustomer(String orgId, String customerId);
+  Future<List<SaleOrder>> ordersForCustomer(String orgId, String customerId);
+  Future<double> outstandingForCustomer(String orgId, String customerId);
   Future<int> countOpenOrders(String orgId);
   Future<int> countUnshipped(String orgId);
   Future<double> outstandingReceivables(String orgId);

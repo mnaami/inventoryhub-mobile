@@ -39,6 +39,15 @@ class SaleOrderService {
   String get userId => _userId;
 
   Future<SaleOrder?> get(String id) => _repo.getOrder(id);
+
+  Future<List<SaleOrder>> ordersForCustomer(String customerId) =>
+      _repo.ordersForCustomer(_orgId, customerId);
+
+  Future<double> outstandingForCustomer(String customerId) =>
+      _repo.outstandingForCustomer(_orgId, customerId);
+
+  Future<int> liveOrdersForCustomer(String customerId) =>
+      _repo.countLiveForCustomer(_orgId, customerId);
   Future<List<SaleOrderItem>> items(String orderId) => _repo.itemsFor(orderId);
   Future<List<SaleOrder>> list({OrderStatus? status, String? customerId, int page = 0}) =>
       _repo.listOrders(_orgId,

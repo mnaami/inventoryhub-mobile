@@ -128,4 +128,27 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
           saleOrders.status.equals('cancelled').not());
     return (await q.getSingle()).read(s) ?? 0;
   }
+
+  Future<List<SaleOrderRow>> forCustomer(String orgId, String customerId) {
+    return (select(saleOrders)
+          ..where((o) =>
+              o.organizationId.equals(orgId) &
+              o.isActive.equals(true) &
+              o.customerId.equals(customerId))
+          ..orderBy([
+            (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)
+          ]))
+        .get();
+  }
+
+  Future<double> ordersTotalForCustomer(String orgId, String customerId) async {
+    final s = saleOrders.totalAmount.sum();
+    final q = selectOnly(saleOrders)
+      ..addColumns([s])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.customerId.equals(customerId) &
+          saleOrders.status.equals('cancelled').not());
+    return (await q.getSingle()).read(s) ?? 0;
+  }
 }
