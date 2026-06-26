@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/widgets/section_header.dart';
 import '../../product/presentation/product_providers.dart';
 import '../domain/stock_movement.dart';
 import 'stock_providers.dart';
@@ -38,8 +40,9 @@ class _State extends ConsumerState<RecordMovementScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppTokens.space16),
           children: [
+            const SectionHeader('Movement type'),
             SegmentedButton<MovementType>(
               segments: const [
                 ButtonSegment(value: MovementType.inbound, label: Text('In')),
@@ -50,7 +53,8 @@ class _State extends ConsumerState<RecordMovementScreen> {
               selected: {_type},
               onSelectionChanged: (s) => setState(() => _type = s.first),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppTokens.space24),
+            const SectionHeader('Details'),
             TextFormField(
               controller: _qty,
               keyboardType:
@@ -59,6 +63,7 @@ class _State extends ConsumerState<RecordMovementScreen> {
                 labelText: _type == MovementType.adjustment
                     ? 'Quantity (use − to reduce)'
                     : 'Quantity',
+                prefixIcon: const Icon(Icons.numbers),
               ),
               validator: (v) {
                 final n = double.tryParse(v ?? '');
@@ -67,11 +72,15 @@ class _State extends ConsumerState<RecordMovementScreen> {
                 return null;
               },
             ),
+            const SizedBox(height: AppTokens.space12),
             TextFormField(
               controller: _notes,
-              decoration: const InputDecoration(labelText: 'Notes (optional)'),
+              decoration: const InputDecoration(
+                labelText: 'Notes (optional)',
+                prefixIcon: Icon(Icons.notes),
+              ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppTokens.space24),
             FilledButton(onPressed: _save, child: const Text('Record')),
           ],
         ),
