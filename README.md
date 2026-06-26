@@ -54,6 +54,15 @@ following happy path before shipping a release:
    the UI updates immediately. Relaunch the app and confirm the dark theme
    persists.
 
+## Known Limitations (Slice 2 — Sales Flow)
+
+These are deliberate gaps deferred from the slice-2 sales flow implementation.
+
+- **No credit-limit enforcement / aging buckets.** Customer credit limits and receivables aging are not calculated or enforced.
+- **No backorders (oversell is blocked).** If a product's current stock is insufficient for a shipment, the shipment is rejected. Backorder / partial-fulfillment queuing is deferred.
+- **No returns / refund stock reversal.** There is no return-order or credit-note flow; shipped stock cannot be reversed back to inventory.
+- **No tax or discount on order lines.** Line items carry only unit price × quantity. Tax rates and line-level discounts are deferred.
+
 ## Known Limitations (Slice 1)
 
 These are deliberate gaps deferred to a later slice, not unintentional omissions.
