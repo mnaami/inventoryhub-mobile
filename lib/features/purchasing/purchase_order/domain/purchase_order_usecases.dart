@@ -201,7 +201,74 @@ class PurchaseOrderService {
     }
   }
 
-  // Task 12 (receipts) will append methods here.
+  Future<List<PurchaseOrderReceiptItem>> receiptItems(String receiptId) =>
+      _repo.receiptItemsFor(receiptId);
+
+  Future<void> createReceipt(
+    PurchaseOrder order, {
+    required List<ReceiveLine> lines,
+    String? notes,
+    DateTime? receiptDate,
+  }) async {
+    if (order.status != PurchaseOrderStatus.sent &&
+        order.status != PurchaseOrderStatus.confirmed) {
+      throw const ValidationException(
+          'Only sent or confirmed orders can receive goods.');
+    }
+    final positive = lines.where((l) => l.quantity > 0).toList();
+    if (positive.isEmpty) {
+      throw const ValidationException('A receipt needs at least one line.');
+    }
+    for (final l in positive) {
+      if (l.quantity > l.item.remainingQuantity) {
+        throw ValidationException(
+            'Cannot receive ${l.quantity} of ${l.item.productName}; only ${l.item.remainingQuantity} remain.');
+      }
+    }
+    final now = DateTime.now().toUtc();
+    final receiptId = _ids.newId();
+    final number = await _repo.nextNumber(_orgId, 'po_receipt', 'RCP');
+    final receipt = PurchaseOrderReceipt(
+      id: receiptId,
+      organizationId: _orgId,
+      purchaseOrderId: order.id,
+      receiptNumber: number,
+      receiptDate: receiptDate ?? now,
+      status: ReceiptDocStatus.draft,
+      notes: notes,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final items = positive
+        .map((l) => PurchaseOrderReceiptItem(
+              id: _ids.newId(),
+              organizationId: _orgId,
+              receiptId: receiptId,
+              purchaseOrderItemId: l.item.id,
+              productId: l.item.productId,
+              quantity: l.quantity,
+              createdAt: now,
+            ))
+        .toList();
+    await _repo.createReceipt(receipt, items);
+  }
+
+  Future<void> postReceipt(
+      PurchaseOrder order, PurchaseOrderReceipt receipt) async {
+    if (receipt.status != ReceiptDocStatus.draft) {
+      throw const ValidationException('Only draft receipts can be posted.');
+    }
+    final items = await _repo.receiptItemsFor(receipt.id);
+    final movementIds = {for (final it in items) it.id: _ids.newId()};
+    await _repo.postReceipt(receipt.id, movementIds, _userId);
+  }
+
+  Future<void> cancelReceipt(PurchaseOrderReceipt receipt) async {
+    if (receipt.status != ReceiptDocStatus.draft) {
+      throw const ValidationException('Only draft receipts can be cancelled.');
+    }
+    await _repo.cancelDraftReceipt(receipt.id);
+  }
 
   Future<void> _transition(PurchaseOrder order,
       {required Set<PurchaseOrderStatus> from,
@@ -231,4 +298,10 @@ class PurchaseOrderService {
       updatedAt: now,
     );
   }
+}
+
+class ReceiveLine {
+  const ReceiveLine({required this.item, required this.quantity});
+  final PurchaseOrderItem item;
+  final double quantity;
 }
