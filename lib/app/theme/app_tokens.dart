@@ -7,6 +7,7 @@ class AppTokens {
   AppTokens._();
 
   // Spacing
+  static const double space2 = 2;
   static const double space4 = 4;
   static const double space8 = 8;
   static const double space12 = 12;

@@ -108,22 +108,14 @@ class ProductDetailScreen extends ConsumerWidget {
                   Expanded(
                     child: StatTile(
                       label: 'Stock',
-                      value: p.currentStock.toStringAsFixed(
-                          p.currentStock ==
-                                  p.currentStock.roundToDouble()
-                              ? 0
-                              : 1),
+                      value: _fmtQty(p.currentStock),
                     ),
                   ),
                   const SizedBox(width: AppTokens.space12),
                   Expanded(
                     child: StatTile(
                       label: 'Minimum',
-                      value: p.minimumStock.toStringAsFixed(
-                          p.minimumStock ==
-                                  p.minimumStock.roundToDouble()
-                              ? 0
-                              : 1),
+                      value: _fmtQty(p.minimumStock),
                     ),
                   ),
                   const SizedBox(width: AppTokens.space12),
@@ -189,6 +181,9 @@ class ProductDetailScreen extends ConsumerWidget {
       ),
     );
   }
+
+  String _fmtQty(double v) =>
+      v.toStringAsFixed(v == v.roundToDouble() ? 0 : 1);
 
   Widget _infoRow(BuildContext context, String label, String value) {
     final theme = Theme.of(context);

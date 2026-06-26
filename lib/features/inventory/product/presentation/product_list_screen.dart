@@ -91,10 +91,10 @@ class _State extends ConsumerState<ProductListScreen> {
     final textTheme = Theme.of(context).textTheme;
 
     Widget trailing;
-    if (p.isLowStock) {
-      trailing = const StatusBadge.low();
-    } else if (p.currentStock <= 0) {
+    if (p.currentStock <= 0) {
       trailing = const StatusBadge.out();
+    } else if (p.isLowStock) {
+      trailing = const StatusBadge.low();
     } else {
       trailing = Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -144,9 +144,9 @@ class _State extends ConsumerState<ProductListScreen> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppTokens.space2),
                 Text(
-                  '${p.categoryId ?? 'Uncategorised'} · ${p.sellingPrice.toStringAsFixed(2)}',
+                  p.sellingPrice.toStringAsFixed(2),
                   style: textTheme.bodySmall
                       ?.copyWith(color: scheme.onSurfaceVariant),
                   maxLines: 1,
