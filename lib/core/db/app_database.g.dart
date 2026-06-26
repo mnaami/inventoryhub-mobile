@@ -11748,6 +11748,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final PurchaseOrderPaymentDao purchaseOrderPaymentDao =
       PurchaseOrderPaymentDao(this as AppDatabase);
+  late final PurchaseOrderReceiptDao purchaseOrderReceiptDao =
+      PurchaseOrderReceiptDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
