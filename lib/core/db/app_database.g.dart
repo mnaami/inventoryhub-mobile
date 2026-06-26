@@ -7788,6 +7788,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final DocumentCounterDao documentCounterDao = DocumentCounterDao(
     this as AppDatabase,
   );
+  late final CustomerDao customerDao = CustomerDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
