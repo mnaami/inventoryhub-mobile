@@ -111,6 +111,66 @@ void main() {
     expect(item.shippedQuantity, 0);
   });
 
+  test(
+      'two lines for same product aggregated — blocks oversell across duplicate lines',
+      () async {
+    // Add a second sale_order_item for the same product p1 on order so1.
+    await db.into(db.saleOrderItems).insert(SaleOrderItemsCompanion.insert(
+          id: 'i2',
+          organizationId: 'org1',
+          saleOrderId: 'so1',
+          productId: 'p1',
+          productName: 'Widget',
+          quantity: 4,
+          unitPrice: 1,
+          totalPrice: 4,
+          createdAt: now,
+          updatedAt: now,
+        ));
+
+    // Two ShipmentLines for the same product: 3 + 3 = 6, but stock is only 5.
+    final future = db.saleOrderShippingDao.createShipment(
+      shipping: shipping('1'),
+      lines: [
+        ShipmentLine(
+            saleOrderItemId: 'i1',
+            productId: 'p1',
+            movementId: 'm1',
+            quantity: 3),
+        ShipmentLine(
+            saleOrderItemId: 'i2',
+            productId: 'p1',
+            movementId: 'm2',
+            quantity: 3),
+      ],
+      orgId: 'org1',
+      createdBy: 'u1',
+      now: now,
+    );
+
+    await expectLater(future, throwsA(isA<ConflictException>()));
+
+    // Nothing must have been written.
+    final product = await (db.select(db.products)
+          ..where((p) => p.id.equals('p1')))
+        .getSingle();
+    expect(product.currentStock, 5); // unchanged
+
+    expect(await db.select(db.stockMovements).get(), isEmpty);
+    expect(await db.select(db.saleOrderShippings).get(), isEmpty);
+    expect(await db.select(db.saleOrderShippingItems).get(), isEmpty);
+
+    final item1 = await (db.select(db.saleOrderItems)
+          ..where((i) => i.id.equals('i1')))
+        .getSingle();
+    expect(item1.shippedQuantity, 0);
+
+    final item2 = await (db.select(db.saleOrderItems)
+          ..where((i) => i.id.equals('i2')))
+        .getSingle();
+    expect(item2.shippedQuantity, 0);
+  });
+
   test('marking a shipment delivered advances the order to delivered', () async {
     await db.saleOrderShippingDao.createShipment(
       shipping: shipping('1'),

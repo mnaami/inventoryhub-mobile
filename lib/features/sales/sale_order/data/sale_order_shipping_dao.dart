@@ -56,16 +56,22 @@ class SaleOrderShippingDao extends DatabaseAccessor<AppDatabase>
     final saleOrderId = shipping.saleOrderId.value;
     return transaction(() async {
       // 1. Validate availability up front — block oversell.
+      // Aggregate requested quantity per product to catch duplicate-product lines.
+      final neededByProduct = <String, double>{};
       for (final line in lines) {
+        neededByProduct[line.productId] =
+            (neededByProduct[line.productId] ?? 0) + line.quantity;
+      }
+      for (final entry in neededByProduct.entries) {
         final product = await (select(products)
-              ..where((p) => p.id.equals(line.productId)))
+                ..where((p) => p.id.equals(entry.key)))
             .getSingleOrNull();
         if (product == null) {
           throw const NotFoundException('Product not found for shipment.');
         }
-        if (line.quantity > product.currentStock) {
+        if (entry.value > product.currentStock) {
           throw ConflictException(
-              'Insufficient stock for ${product.name}: have ${product.currentStock}, need ${line.quantity}.');
+              'Insufficient stock for ${product.name}: have ${product.currentStock}, need ${entry.value}.');
         }
       }
 
