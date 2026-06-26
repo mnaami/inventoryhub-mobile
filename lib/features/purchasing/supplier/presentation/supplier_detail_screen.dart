@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/async_value_view.dart';
+import '../../purchase_order/presentation/purchase_order_providers.dart';
 import '../domain/supplier.dart';
 import 'add_edit_supplier_screen.dart';
 import 'supplier_providers.dart';
@@ -42,6 +43,36 @@ class SupplierDetailScreen extends ConsumerWidget {
                   leading: const Icon(Icons.credit_card),
                   title: Text('Credit limit: ${s.creditLimit}')),
               const SizedBox(height: 16),
+              const Divider(),
+              Consumer(builder: (context, ref, _) {
+                final outstanding =
+                    ref.watch(supplierOutstandingProvider(supplierId));
+                return outstanding.maybeWhen(
+                  data: (v) => ListTile(
+                      leading:
+                          const Icon(Icons.account_balance_wallet_outlined),
+                      title: Text('Outstanding payable: ${v.toStringAsFixed(2)}')),
+                  orElse: () => const SizedBox.shrink(),
+                );
+              }),
+              const Text('Purchase orders'),
+              Consumer(builder: (context, ref, _) {
+                final orders = ref.watch(supplierOrdersProvider(supplierId));
+                return orders.maybeWhen(
+                  data: (list) => Column(
+                    children: [
+                      for (final o in list)
+                        ListTile(
+                          dense: true,
+                          title: Text(o.orderNumber),
+                          subtitle: Text(poStatusLabel(o.status)),
+                          trailing: Text(o.totalAmount.toStringAsFixed(2)),
+                        ),
+                    ],
+                  ),
+                  orElse: () => const SizedBox.shrink(),
+                );
+              }),
               OutlinedButton.icon(
                 icon: const Icon(Icons.edit),
                 label: const Text('Edit'),

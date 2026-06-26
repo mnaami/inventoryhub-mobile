@@ -17,6 +17,8 @@ abstract interface class PurchaseOrderRepository {
   Future<void> setStatus(String id, PurchaseOrderStatus status);
   Future<void> softDeleteOrder(String id);
   Future<int> countLiveForSupplier(String orgId, String supplierId);
+  Future<List<PurchaseOrder>> ordersForSupplier(String orgId, String supplierId);
+  Future<double> outstandingForSupplier(String orgId, String supplierId);
 
   Future<int> countOpenOrders(String orgId);
   Future<int> countUnreceived(String orgId);

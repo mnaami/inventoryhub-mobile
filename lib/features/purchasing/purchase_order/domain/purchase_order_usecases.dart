@@ -270,6 +270,15 @@ class PurchaseOrderService {
     await _repo.cancelDraftReceipt(receipt.id);
   }
 
+  Future<List<PurchaseOrder>> ordersForSupplier(String supplierId) =>
+      _repo.ordersForSupplier(_orgId, supplierId);
+
+  Future<double> outstandingForSupplier(String supplierId) =>
+      _repo.outstandingForSupplier(_orgId, supplierId);
+
+  Future<int> livePosForSupplier(String supplierId) =>
+      _repo.countLiveForSupplier(_orgId, supplierId);
+
   Future<PurchaseKpis> dashboard() async => PurchaseKpis(
         openOrders: await _repo.countOpenOrders(_orgId),
         unreceived: await _repo.countUnreceived(_orgId),

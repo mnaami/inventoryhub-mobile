@@ -135,4 +135,27 @@ class PurchaseOrderDao extends DatabaseAccessor<AppDatabase>
           purchaseOrders.status.equals('cancelled').not());
     return (await q.getSingle()).read(s) ?? 0;
   }
+
+  Future<List<PurchaseOrderRow>> forSupplier(String orgId, String supplierId) {
+    return (select(purchaseOrders)
+          ..where((o) =>
+              o.organizationId.equals(orgId) &
+              o.isActive.equals(true) &
+              o.supplierId.equals(supplierId))
+          ..orderBy([
+            (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)
+          ]))
+        .get();
+  }
+
+  Future<double> ordersTotalForSupplier(String orgId, String supplierId) async {
+    final s = purchaseOrders.totalAmount.sum();
+    final q = selectOnly(purchaseOrders)
+      ..addColumns([s])
+      ..where(purchaseOrders.organizationId.equals(orgId) &
+          purchaseOrders.isActive.equals(true) &
+          purchaseOrders.supplierId.equals(supplierId) &
+          purchaseOrders.status.equals('cancelled').not());
+    return (await q.getSingle()).read(s) ?? 0;
+  }
 }
