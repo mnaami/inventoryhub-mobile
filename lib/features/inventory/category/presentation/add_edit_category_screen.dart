@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/widgets/section_header.dart';
 import '../../../../core/result/app_exception.dart';
 import '../domain/category.dart';
 import 'category_providers.dart';
@@ -39,19 +41,27 @@ class _State extends ConsumerState<AddEditCategoryScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppTokens.space16),
           children: [
+            const SectionHeader('Details'),
             TextFormField(
               controller: _name,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                prefixIcon: Icon(Icons.label_outline),
+              ),
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Name is required' : null,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppTokens.space24),
+            const SectionHeader('Organization'),
             treeAsync.maybeWhen(
               data: (nodes) => DropdownButtonFormField<String?>(
                 initialValue: _parentId,
-                decoration: const InputDecoration(labelText: 'Parent (optional)'),
+                decoration: const InputDecoration(
+                  labelText: 'Parent (optional)',
+                  prefixIcon: Icon(Icons.account_tree_outlined),
+                ),
                 items: [
                   const DropdownMenuItem(value: null, child: Text('— None —')),
                   for (final c in _flatten(nodes))
@@ -62,7 +72,7 @@ class _State extends ConsumerState<AddEditCategoryScreen> {
               ),
               orElse: () => const SizedBox.shrink(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppTokens.space24),
             FilledButton(onPressed: _save, child: const Text('Save')),
           ],
         ),
