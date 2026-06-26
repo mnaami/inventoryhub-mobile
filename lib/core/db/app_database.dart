@@ -11,6 +11,7 @@ import '../../features/inventory/product/data/product_dao.dart';
 import '../../features/inventory/stock_movement/data/stock_movement_table.dart';
 import '../../features/inventory/stock_movement/data/stock_movement_dao.dart';
 import '../../features/sales/customer/data/customer_table.dart';
+import '../../features/sales/customer/data/customer_dao.dart';
 import '../../features/sales/sale_order/data/document_counter_table.dart';
 import '../../features/sales/sale_order/data/document_counter_dao.dart';
 import '../../features/sales/sale_order/data/sale_order_tables.dart';
@@ -23,7 +24,7 @@ part 'app_database.g.dart';
     Customers, DocumentCounters, SaleOrders, SaleOrderItems,
     SaleOrderPayments, SaleOrderShippings, SaleOrderShippingItems,
   ],
-  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao],
+  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
