@@ -28,6 +28,16 @@ class SaleOrderPaymentDao extends DatabaseAccessor<AppDatabase>
     return row.read(sum) ?? 0;
   }
 
+  Future<double> completedTotalForOrg(String orgId) async {
+    final s = saleOrderPayments.amount.sum();
+    final q = selectOnly(saleOrderPayments)
+      ..addColumns([s])
+      ..where(saleOrderPayments.organizationId.equals(orgId) &
+          saleOrderPayments.isActive.equals(true) &
+          saleOrderPayments.status.equals('completed'));
+    return (await q.getSingle()).read(s) ?? 0;
+  }
+
   Future<void> recordPayment(SaleOrderPaymentsCompanion payment) {
     return transaction(() async {
       await into(saleOrderPayments).insert(payment);

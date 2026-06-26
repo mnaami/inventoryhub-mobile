@@ -68,6 +68,20 @@ class SaleOrderRepositoryImpl implements SaleOrderRepository {
       _orders.countLiveForCustomer(orgId, customerId);
 
   @override
+  Future<int> countOpenOrders(String orgId) => _orders.countByStatuses(
+      orgId, const ['draft', 'confirmed', 'processing']);
+
+  @override
+  Future<int> countUnshipped(String orgId) => _orders.countUnshipped(orgId);
+
+  @override
+  Future<double> outstandingReceivables(String orgId) async {
+    final total = await _orders.ordersTotal(orgId);
+    final paid = await _payments.completedTotalForOrg(orgId);
+    return total - paid;
+  }
+
+  @override
   Future<void> recordPayment(SaleOrderPayment payment) =>
       _payments.recordPayment(saleOrderPaymentInsert(payment));
 

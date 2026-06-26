@@ -9,6 +9,9 @@ import '../domain/sale_order.dart';
 import '../domain/sale_order_enums.dart';
 import '../domain/sale_order_usecases.dart';
 
+final saleDashboardProvider = FutureProvider((ref) =>
+    ref.watch(saleOrderServiceProvider).dashboard());
+
 final saleOrderServiceProvider = Provider<SaleOrderService>((ref) {
   final db = ref.watch(appDatabaseProvider);
   final session = ref.watch(sessionProvider);

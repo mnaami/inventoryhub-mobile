@@ -262,6 +262,12 @@ class SaleOrderService {
           SaleOrderShipping shipping, ShipmentStatus status) =>
       _repo.setShipmentStatus(shipping.id, status);
 
+  Future<SaleKpis> dashboard() async => SaleKpis(
+        openOrders: await _repo.countOpenOrders(_orgId),
+        unshipped: await _repo.countUnshipped(_orgId),
+        outstanding: await _repo.outstandingReceivables(_orgId),
+      );
+
   Future<void> _transition(SaleOrder order,
       {required Set<OrderStatus> from, required OrderStatus to}) async {
     if (!from.contains(order.status)) {
@@ -295,4 +301,15 @@ class ShipLine {
   const ShipLine({required this.item, required this.quantity});
   final SaleOrderItem item;
   final double quantity;
+}
+
+class SaleKpis {
+  const SaleKpis({
+    required this.openOrders,
+    required this.unshipped,
+    required this.outstanding,
+  });
+  final int openOrders;
+  final int unshipped;
+  final double outstanding;
 }

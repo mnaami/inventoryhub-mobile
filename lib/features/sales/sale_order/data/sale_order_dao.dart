@@ -97,4 +97,35 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
     final row = await q.getSingle();
     return row.read(c) ?? 0;
   }
+
+  Future<int> countByStatuses(String orgId, List<String> statuses) async {
+    final c = countAll();
+    final q = selectOnly(saleOrders)
+      ..addColumns([c])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.status.isIn(statuses));
+    return (await q.getSingle()).read(c) ?? 0;
+  }
+
+  Future<int> countUnshipped(String orgId) async {
+    final c = countAll();
+    final q = selectOnly(saleOrders)
+      ..addColumns([c])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.status.equals('cancelled').not() &
+          saleOrders.shippingStatus.equals('fully_shipped').not());
+    return (await q.getSingle()).read(c) ?? 0;
+  }
+
+  Future<double> ordersTotal(String orgId) async {
+    final s = saleOrders.totalAmount.sum();
+    final q = selectOnly(saleOrders)
+      ..addColumns([s])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.status.equals('cancelled').not());
+    return (await q.getSingle()).read(s) ?? 0;
+  }
 }
