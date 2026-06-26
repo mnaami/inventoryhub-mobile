@@ -53,6 +53,9 @@ final purchaseOrderReceiptsProvider =
     FutureProvider.family<List<PurchaseOrderReceipt>, String>(
         (ref, id) => ref.watch(purchaseOrderServiceProvider).receipts(id));
 
+final purchaseDashboardProvider = FutureProvider((ref) =>
+    ref.watch(purchaseOrderServiceProvider).dashboard());
+
 String poStatusLabel(PurchaseOrderStatus s) => switch (s) {
       PurchaseOrderStatus.draft => 'Draft',
       PurchaseOrderStatus.sent => 'Sent',

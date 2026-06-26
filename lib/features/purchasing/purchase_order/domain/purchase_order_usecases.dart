@@ -270,6 +270,12 @@ class PurchaseOrderService {
     await _repo.cancelDraftReceipt(receipt.id);
   }
 
+  Future<PurchaseKpis> dashboard() async => PurchaseKpis(
+        openOrders: await _repo.countOpenOrders(_orgId),
+        unreceived: await _repo.countUnreceived(_orgId),
+        outstanding: await _repo.outstandingPayable(_orgId),
+      );
+
   Future<void> _transition(PurchaseOrder order,
       {required Set<PurchaseOrderStatus> from,
       required PurchaseOrderStatus to}) async {
@@ -304,4 +310,15 @@ class ReceiveLine {
   const ReceiveLine({required this.item, required this.quantity});
   final PurchaseOrderItem item;
   final double quantity;
+}
+
+class PurchaseKpis {
+  const PurchaseKpis({
+    required this.openOrders,
+    required this.unreceived,
+    required this.outstanding,
+  });
+  final int openOrders;
+  final int unreceived;
+  final double outstanding;
 }

@@ -18,6 +18,10 @@ abstract interface class PurchaseOrderRepository {
   Future<void> softDeleteOrder(String id);
   Future<int> countLiveForSupplier(String orgId, String supplierId);
 
+  Future<int> countOpenOrders(String orgId);
+  Future<int> countUnreceived(String orgId);
+  Future<double> outstandingPayable(String orgId);
+
   Future<void> createDraftPayment(PurchaseOrderPayment payment);
   Future<void> editDraftPayment(String paymentId,
       {required double amount,

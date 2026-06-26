@@ -29,6 +29,16 @@ class PurchaseOrderPaymentDao extends DatabaseAccessor<AppDatabase>
     return row.read(sum) ?? 0;
   }
 
+  Future<double> postedTotalForOrg(String orgId) async {
+    final s = purchaseOrderPayments.amount.sum();
+    final q = selectOnly(purchaseOrderPayments)
+      ..addColumns([s])
+      ..where(purchaseOrderPayments.organizationId.equals(orgId) &
+          purchaseOrderPayments.isActive.equals(true) &
+          purchaseOrderPayments.status.equals('posted'));
+    return (await q.getSingle()).read(s) ?? 0;
+  }
+
   Future<void> createDraft(PurchaseOrderPaymentsCompanion payment) =>
       into(purchaseOrderPayments).insert(payment);
 

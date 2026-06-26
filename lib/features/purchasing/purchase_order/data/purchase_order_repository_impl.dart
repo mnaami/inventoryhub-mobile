@@ -67,6 +67,20 @@ class PurchaseOrderRepositoryImpl implements PurchaseOrderRepository {
       _orders.countLiveForSupplier(orgId, supplierId);
 
   @override
+  Future<int> countOpenOrders(String orgId) => _orders.countByStatuses(
+      orgId, const ['draft', 'sent', 'confirmed']);
+
+  @override
+  Future<int> countUnreceived(String orgId) => _orders.countUnreceived(orgId);
+
+  @override
+  Future<double> outstandingPayable(String orgId) async {
+    final total = await _orders.ordersTotal(orgId);
+    final paid = await _payments.postedTotalForOrg(orgId);
+    return total - paid;
+  }
+
+  @override
   Future<void> createDraftPayment(PurchaseOrderPayment payment) =>
       _payments.createDraft(purchaseOrderPaymentInsert(payment));
 

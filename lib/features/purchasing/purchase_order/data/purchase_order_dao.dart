@@ -104,4 +104,35 @@ class PurchaseOrderDao extends DatabaseAccessor<AppDatabase>
     final row = await q.getSingle();
     return row.read(c) ?? 0;
   }
+
+  Future<int> countByStatuses(String orgId, List<String> statuses) async {
+    final c = countAll();
+    final q = selectOnly(purchaseOrders)
+      ..addColumns([c])
+      ..where(purchaseOrders.organizationId.equals(orgId) &
+          purchaseOrders.isActive.equals(true) &
+          purchaseOrders.status.isIn(statuses));
+    return (await q.getSingle()).read(c) ?? 0;
+  }
+
+  Future<int> countUnreceived(String orgId) async {
+    final c = countAll();
+    final q = selectOnly(purchaseOrders)
+      ..addColumns([c])
+      ..where(purchaseOrders.organizationId.equals(orgId) &
+          purchaseOrders.isActive.equals(true) &
+          purchaseOrders.status.equals('cancelled').not() &
+          purchaseOrders.receiptStatus.equals('fully_received').not());
+    return (await q.getSingle()).read(c) ?? 0;
+  }
+
+  Future<double> ordersTotal(String orgId) async {
+    final s = purchaseOrders.totalAmount.sum();
+    final q = selectOnly(purchaseOrders)
+      ..addColumns([s])
+      ..where(purchaseOrders.organizationId.equals(orgId) &
+          purchaseOrders.isActive.equals(true) &
+          purchaseOrders.status.equals('cancelled').not());
+    return (await q.getSingle()).read(s) ?? 0;
+  }
 }
