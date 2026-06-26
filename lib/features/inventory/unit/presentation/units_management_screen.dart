@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
+import '../../../../core/widgets/empty_state.dart';
+import '../../../../app/theme/app_tokens.dart';
 import '../domain/unit.dart';
 import 'add_edit_unit_screen.dart';
 import 'unit_providers.dart';
@@ -22,21 +25,55 @@ class UnitsManagementScreen extends ConsumerWidget {
       body: AsyncValueView<List<Unit>>(
         value: units,
         data: (list) => list.isEmpty
-            ? const Center(child: Text('No units yet. Tap + to add one.'))
+            ? EmptyState(
+                icon: Icons.straighten,
+                title: 'No units yet',
+                subtitle: 'Define units like piece, kg, or litre.',
+                actionLabel: 'Add unit',
+                onAction: () => _edit(context),
+              )
             : ListView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppTokens.space16,
+                  vertical: AppTokens.space8,
+                ),
                 children: [
-                  for (final u in list)
-                    ListTile(
-                      title: Text('${u.name} (${u.symbol})'),
-                      subtitle: Text(u.isBaseUnit
-                          ? '${u.unitType} · base'
-                          : '${u.unitType} · ×${u.conversionFactor}'),
+                  for (final u in list) ...[
+                    AppCard(
                       onTap: () => _edit(context, existing: u),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: () => _delete(context, ref, u),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.straighten),
+                          const SizedBox(width: AppTokens.space12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${u.name} (${u.symbol})',
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                                const SizedBox(height: AppTokens.space4),
+                                Wrap(
+                                  spacing: AppTokens.space4,
+                                  children: [
+                                    Chip(label: Text(u.unitType)),
+                                    if (u.isBaseUnit)
+                                      const Chip(label: Text('base')),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline),
+                            onPressed: () => _delete(context, ref, u),
+                          ),
+                        ],
                       ),
                     ),
+                    const SizedBox(height: AppTokens.space8),
+                  ],
                 ],
               ),
       ),

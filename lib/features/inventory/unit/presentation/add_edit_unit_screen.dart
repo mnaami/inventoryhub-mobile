@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/widgets/section_header.dart';
+import '../../../../app/theme/app_tokens.dart';
 import '../domain/unit.dart';
 import 'unit_providers.dart';
 
@@ -46,21 +48,30 @@ class _State extends ConsumerState<AddEditUnitScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppTokens.space16),
           children: [
+            // ── Basic info ──────────────────────────────────────────────
+            const SectionHeader('Basic info'),
             TextFormField(
               controller: _name,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                prefixIcon: Icon(Icons.label_outline),
+              ),
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Required' : null,
             ),
+            const SizedBox(height: AppTokens.space12),
             TextFormField(
               controller: _symbol,
-              decoration: const InputDecoration(labelText: 'Symbol'),
+              decoration: const InputDecoration(
+                labelText: 'Symbol',
+                prefixIcon: Icon(Icons.text_fields),
+              ),
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Required' : null,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppTokens.space12),
             DropdownButtonFormField<String>(
               initialValue: _type,
               decoration: const InputDecoration(labelText: 'Type'),
@@ -70,12 +81,18 @@ class _State extends ConsumerState<AddEditUnitScreen> {
               ],
               onChanged: (v) => setState(() => _type = v ?? 'count'),
             ),
+
+            // ── Conversion ──────────────────────────────────────────────
+            const SizedBox(height: AppTokens.space24),
+            const SectionHeader('Conversion'),
             SwitchListTile(
               title: const Text('Base unit'),
               value: _isBase,
               onChanged: (v) => setState(() => _isBase = v),
+              contentPadding: EdgeInsets.zero,
             ),
             if (!_isBase) ...[
+              const SizedBox(height: AppTokens.space12),
               units.maybeWhen(
                 data: (list) {
                   final candidates = list
@@ -94,6 +111,7 @@ class _State extends ConsumerState<AddEditUnitScreen> {
                 },
                 orElse: () => const SizedBox.shrink(),
               ),
+              const SizedBox(height: AppTokens.space12),
               TextFormField(
                 controller: _factor,
                 keyboardType: TextInputType.number,
@@ -101,7 +119,8 @@ class _State extends ConsumerState<AddEditUnitScreen> {
                     labelText: 'Conversion factor (to base)'),
               ),
             ],
-            const SizedBox(height: 24),
+
+            const SizedBox(height: AppTokens.space24),
             FilledButton(onPressed: _save, child: const Text('Save')),
           ],
         ),
