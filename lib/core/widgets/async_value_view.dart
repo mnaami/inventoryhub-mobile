@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../result/app_exception.dart';
+import '../../app/theme/app_tokens.dart';
 
 class AsyncValueView<T> extends StatelessWidget {
   const AsyncValueView({super.key, required this.value, required this.data});
@@ -12,15 +13,23 @@ class AsyncValueView<T> extends StatelessWidget {
     return value.when(
       data: data,
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(
-            e is AppException ? e.message : 'Something went wrong.',
-            textAlign: TextAlign.center,
+      error: (e, _) {
+        final scheme = Theme.of(context).colorScheme;
+        final message = e is AppException ? e.message : 'Something went wrong.';
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppTokens.space24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error_outline, size: 32, color: scheme.error),
+                const SizedBox(height: AppTokens.space12),
+                Text(message, textAlign: TextAlign.center),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
