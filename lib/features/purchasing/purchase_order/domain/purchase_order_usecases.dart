@@ -125,7 +125,83 @@ class PurchaseOrderService {
     await _repo.softDeleteOrder(order.id);
   }
 
-  // Tasks 11 (payments) and 12 (receipts) will append methods here.
+  Future<List<PurchaseOrderPayment>> payments(String orderId) =>
+      _repo.paymentsFor(orderId);
+
+  Future<void> addPayment(
+    PurchaseOrder order, {
+    required double amount,
+    required PaymentMethod method,
+    DateTime? paymentDate,
+  }) async {
+    _assertPayable(order);
+    if (amount <= 0) {
+      throw const ValidationException('Payment amount must be positive.');
+    }
+    final now = DateTime.now().toUtc();
+    final number = await _repo.nextNumber(_orgId, 'po_payment', 'PPAY');
+    await _repo.createDraftPayment(PurchaseOrderPayment(
+      id: _ids.newId(),
+      organizationId: _orgId,
+      purchaseOrderId: order.id,
+      paymentNumber: number,
+      amount: amount,
+      method: method,
+      status: PaymentDocStatus.draft,
+      paymentDate: paymentDate ?? now,
+      isActive: true,
+      createdAt: now,
+      updatedAt: now,
+    ));
+  }
+
+  Future<void> editPayment(
+    PurchaseOrderPayment payment, {
+    required double amount,
+    required PaymentMethod method,
+    DateTime? paymentDate,
+  }) async {
+    if (payment.status != PaymentDocStatus.draft) {
+      throw const ValidationException('Only draft payments can be edited.');
+    }
+    if (amount <= 0) {
+      throw const ValidationException('Payment amount must be positive.');
+    }
+    await _repo.editDraftPayment(payment.id,
+        amount: amount,
+        method: method,
+        paymentDate: paymentDate ?? payment.paymentDate);
+  }
+
+  Future<void> postPayment(
+      PurchaseOrder order, PurchaseOrderPayment payment) async {
+    if (payment.status != PaymentDocStatus.draft) {
+      throw const ValidationException('Only draft payments can be posted.');
+    }
+    final posted = await _repo.postedTotal(order.id);
+    if (posted + payment.amount > order.totalAmount) {
+      throw const ValidationException(
+          'Total payments cannot exceed the order total.');
+    }
+    await _repo.postPayment(payment.id);
+  }
+
+  Future<void> cancelPayment(PurchaseOrderPayment payment) async {
+    if (payment.status != PaymentDocStatus.draft) {
+      throw const ValidationException('Only draft payments can be cancelled.');
+    }
+    await _repo.cancelDraftPayment(payment.id);
+  }
+
+  void _assertPayable(PurchaseOrder order) {
+    if (order.status == PurchaseOrderStatus.draft ||
+        order.status == PurchaseOrderStatus.cancelled) {
+      throw const ValidationException(
+          'Payments can only be recorded on a sent/confirmed order.');
+    }
+  }
+
+  // Task 12 (receipts) will append methods here.
 
   Future<void> _transition(PurchaseOrder order,
       {required Set<PurchaseOrderStatus> from,
