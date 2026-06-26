@@ -29,7 +29,9 @@ class SupplierDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<SupplierRow?> byId(String id) =>
-      (select(suppliers)..where((s) => s.id.equals(id))).getSingleOrNull();
+      (select(suppliers)
+            ..where((s) => s.id.equals(id) & s.isActive.equals(true)))
+          .getSingleOrNull();
 
   Future<void> insertRow(SuppliersCompanion c) => into(suppliers).insert(c);
 
