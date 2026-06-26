@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/quantity_format.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/empty_state.dart';
@@ -48,7 +49,7 @@ class _State extends ConsumerState<ProductListScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            padding: const EdgeInsets.fromLTRB(AppTokens.space16, AppTokens.space12, AppTokens.space16, AppTokens.space4),
             child: TextField(
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.search),
@@ -73,7 +74,7 @@ class _State extends ConsumerState<ProductListScreen> {
                   : ListView.separated(
                       controller: _scroll,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                          horizontal: AppTokens.space16, vertical: AppTokens.space8),
                       itemCount: list.length,
                       separatorBuilder: (_, __) =>
                           const SizedBox(height: AppTokens.space8),
@@ -101,8 +102,7 @@ class _State extends ConsumerState<ProductListScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            p.currentStock.toStringAsFixed(
-                p.currentStock == p.currentStock.roundToDouble() ? 0 : 1),
+            formatQty(p.currentStock),
             style: textTheme.titleMedium,
           ),
           Text(

@@ -62,6 +62,20 @@ class UnitsManagementScreen extends ConsumerWidget {
                                       const Chip(label: Text('base')),
                                   ],
                                 ),
+                                if (!u.isBaseUnit) ...[
+                                  const SizedBox(height: AppTokens.space4),
+                                  Text(
+                                    '× ${u.conversionFactor}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                        ),
+                                  ),
+                                ],
                               ],
                             ),
                           ),

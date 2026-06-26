@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/quantity_format.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/section_header.dart';
@@ -108,14 +109,14 @@ class ProductDetailScreen extends ConsumerWidget {
                   Expanded(
                     child: StatTile(
                       label: 'Stock',
-                      value: _fmtQty(p.currentStock),
+                      value: formatQty(p.currentStock),
                     ),
                   ),
                   const SizedBox(width: AppTokens.space12),
                   Expanded(
                     child: StatTile(
                       label: 'Minimum',
-                      value: _fmtQty(p.minimumStock),
+                      value: formatQty(p.minimumStock),
                     ),
                   ),
                   const SizedBox(width: AppTokens.space12),
@@ -181,9 +182,6 @@ class ProductDetailScreen extends ConsumerWidget {
       ),
     );
   }
-
-  String _fmtQty(double v) =>
-      v.toStringAsFixed(v == v.roundToDouble() ? 0 : 1);
 
   Widget _infoRow(BuildContext context, String label, String value) {
     final theme = Theme.of(context);
