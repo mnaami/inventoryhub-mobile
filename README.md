@@ -54,6 +54,16 @@ following happy path before shipping a release:
    the UI updates immediately. Relaunch the app and confirm the dark theme
    persists.
 
+## Known Limitations (Slice 3 — Purchasing Flow)
+
+These are deliberate gaps deferred from the slice-3 purchasing flow implementation.
+
+- **No inventory valuation/costing.** Receiving is quantity-only; cost-of-goods-sold and average-cost tracking are deferred.
+- **No purchase returns / posted-receipt reversal.** Once a receipt is posted, it cannot be reversed. A credit-note or return-to-supplier flow is deferred.
+- **No credit-limit enforcement on payables.** Supplier credit limits are stored but not enforced during order or payment posting.
+- **No over-receipt.** Receiving more units than ordered is blocked; partial receipts are supported but quantities cannot exceed the PO line quantity.
+- **In-place receipt editing deferred.** Posted receipts cannot be edited in place; the workaround is to cancel and recreate.
+
 ## Known Limitations (Slice 2 — Sales Flow)
 
 These are deliberate gaps deferred from the slice-2 sales flow implementation.
