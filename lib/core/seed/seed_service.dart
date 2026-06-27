@@ -18,8 +18,13 @@ class SeedService {
     final existingOrg = await _db.select(_db.organizations).getSingleOrNull();
     if (existingOrg != null) {
       final user = await _db.select(_db.users).getSingle();
+      // Resolve the original seeded base unit. Sample data and the unit editor
+      // can add other base units (one per unit type), so pick the oldest base
+      // unit deterministically rather than assuming exactly one exists.
       final unit = await (_db.select(_db.units)
-            ..where((u) => u.isBaseUnit.equals(true)))
+            ..where((u) => u.isBaseUnit.equals(true))
+            ..orderBy([(u) => OrderingTerm(expression: u.createdAt)])
+            ..limit(1))
           .getSingle();
       return SeededContext(existingOrg.id, user.id, unit.id);
     }

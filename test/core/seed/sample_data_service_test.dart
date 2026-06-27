@@ -35,6 +35,17 @@ void main() {
     return 'real-p';
   }
 
+  test('ensureSeeded still resolves the default unit after sample data adds '
+      'base units (relaunch must not crash)', () async {
+    // Sample data legitimately adds Meter/Liter/Kilogram as base units of their
+    // own types. A subsequent app launch calls ensureSeeded again, which must
+    // not throw "Too many elements" and must return the original default unit.
+    await service.load();
+    final again = await SeedService(db, const IdGenerator()).ensureSeeded();
+    expect(again.defaultUnitId, session.defaultUnitId);
+    expect(again.organizationId, session.organizationId);
+  });
+
   test('isLoaded is false on a fresh seed, true once a sample row exists', () async {
     expect(await service.isLoaded(), isFalse);
     await seedTwoProducts();
