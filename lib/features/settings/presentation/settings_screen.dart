@@ -4,6 +4,7 @@ import '../../../app/theme/app_tokens.dart';
 import '../../../app/theme/theme_controller.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/section_header.dart';
+import 'sample_data_section.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -40,6 +41,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ),
+          const SizedBox(height: AppTokens.space24),
+          const SampleDataSection(),
           const SizedBox(height: AppTokens.space24),
           const SectionHeader('About'),
           const AppCard(
