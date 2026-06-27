@@ -128,7 +128,7 @@ class SampleDataService {
         organizationId: orgId,
         name: p[0] as String,
         unitId: unitId,
-        categoryId: Value(refs.categoryIdByName[p[1] as String]),
+        categoryId: Value(refs.categoryIdByName[p[1] as String]!),
         purchasePrice: Value(p[3] as double),
         sellingPrice: Value(p[4] as double),
         minimumStock: Value(p[5] as double),
