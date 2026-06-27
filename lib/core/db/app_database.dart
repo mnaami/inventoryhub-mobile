@@ -24,6 +24,10 @@ import '../../features/purchasing/purchase_order/data/purchase_order_tables.dart
 import '../../features/purchasing/purchase_order/data/purchase_order_dao.dart';
 import '../../features/purchasing/purchase_order/data/purchase_order_payment_dao.dart';
 import '../../features/purchasing/purchase_order/data/purchase_order_receipt_dao.dart';
+import '../../features/production/recipe/data/production_recipe_tables.dart';
+import '../../features/production/recipe/data/production_recipe_dao.dart';
+import '../../features/production/production_order/data/production_order_tables.dart';
+import '../../features/production/production_order/data/production_order_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -34,8 +38,9 @@ part 'app_database.g.dart';
     SaleOrderPayments, SaleOrderShippings, SaleOrderShippingItems,
     Suppliers, PurchaseOrders, PurchaseOrderItems, PurchaseOrderReceipts,
     PurchaseOrderReceiptItems, PurchaseOrderPayments,
+    ProductionRecipes, ProductionRecipeItems, ProductionOrders,
   ],
-  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao, SaleOrderDao, SaleOrderPaymentDao, SaleOrderShippingDao, SupplierDao, PurchaseOrderDao, PurchaseOrderPaymentDao, PurchaseOrderReceiptDao],
+  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao, SaleOrderDao, SaleOrderPaymentDao, SaleOrderShippingDao, SupplierDao, PurchaseOrderDao, PurchaseOrderPaymentDao, PurchaseOrderReceiptDao, ProductionRecipeDao, ProductionOrderDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
@@ -48,7 +53,7 @@ class AppDatabase extends _$AppDatabase {
       AppDatabase(driftDatabase(name: 'inventoryhub'));
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -70,6 +75,11 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(purchaseOrderReceipts);
             await m.createTable(purchaseOrderReceiptItems);
             await m.createTable(purchaseOrderPayments);
+          }
+          if (from < 4) {
+            await m.createTable(productionRecipes);
+            await m.createTable(productionRecipeItems);
+            await m.createTable(productionOrders);
           }
         },
       );
