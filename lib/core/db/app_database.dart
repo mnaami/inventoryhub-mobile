@@ -25,6 +25,7 @@ import '../../features/purchasing/purchase_order/data/purchase_order_dao.dart';
 import '../../features/purchasing/purchase_order/data/purchase_order_payment_dao.dart';
 import '../../features/purchasing/purchase_order/data/purchase_order_receipt_dao.dart';
 import '../../features/production/recipe/data/production_recipe_tables.dart';
+import '../../features/production/recipe/data/production_recipe_dao.dart';
 import '../../features/production/production_order/data/production_order_tables.dart';
 
 part 'app_database.g.dart';
@@ -38,7 +39,7 @@ part 'app_database.g.dart';
     PurchaseOrderReceiptItems, PurchaseOrderPayments,
     ProductionRecipes, ProductionRecipeItems, ProductionOrders,
   ],
-  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao, SaleOrderDao, SaleOrderPaymentDao, SaleOrderShippingDao, SupplierDao, PurchaseOrderDao, PurchaseOrderPaymentDao, PurchaseOrderReceiptDao],
+  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao, SaleOrderDao, SaleOrderPaymentDao, SaleOrderShippingDao, SupplierDao, PurchaseOrderDao, PurchaseOrderPaymentDao, PurchaseOrderReceiptDao, ProductionRecipeDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
