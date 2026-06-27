@@ -11,6 +11,8 @@ class StockMovements extends Table {
   TextColumn get referenceId => text().named('reference_id').nullable()();
   TextColumn get notes => text().nullable()();
   TextColumn get createdBy => text().named('created_by')();
+  BoolColumn get isSample =>
+      boolean().named('is_sample').withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().named('created_at')();
 
   @override

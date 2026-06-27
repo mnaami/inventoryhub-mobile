@@ -755,6 +755,21 @@ class $CategoriesTable extends Categories
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -786,6 +801,7 @@ class $CategoriesTable extends Categories
     color,
     icon,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -852,6 +868,12 @@ class $CategoriesTable extends Categories
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -909,6 +931,10 @@ class $CategoriesTable extends Categories
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -934,6 +960,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
   final String? color;
   final String? icon;
   final bool isActive;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const CategoryRow({
@@ -944,6 +971,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
     this.color,
     this.icon,
     required this.isActive,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -963,6 +991,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
       map['icon'] = Variable<String>(icon);
     }
     map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -981,6 +1010,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
           : Value(color),
       icon: icon == null && nullToAbsent ? const Value.absent() : Value(icon),
       isActive: Value(isActive),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -999,6 +1029,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
       color: serializer.fromJson<String?>(json['color']),
       icon: serializer.fromJson<String?>(json['icon']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -1014,6 +1045,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
       'color': serializer.toJson<String?>(color),
       'icon': serializer.toJson<String?>(icon),
       'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -1027,6 +1059,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
     Value<String?> color = const Value.absent(),
     Value<String?> icon = const Value.absent(),
     bool? isActive,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => CategoryRow(
@@ -1039,6 +1072,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
     color: color.present ? color.value : this.color,
     icon: icon.present ? icon.value : this.icon,
     isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -1055,6 +1089,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
       color: data.color.present ? data.color.value : this.color,
       icon: data.icon.present ? data.icon.value : this.icon,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -1070,6 +1105,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
           ..write('color: $color, ')
           ..write('icon: $icon, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1085,6 +1121,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
     color,
     icon,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -1099,6 +1136,7 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
           other.color == this.color &&
           other.icon == this.icon &&
           other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -1111,6 +1149,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
   final Value<String?> color;
   final Value<String?> icon;
   final Value<bool> isActive;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -1122,6 +1161,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     this.color = const Value.absent(),
     this.icon = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1134,6 +1174,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     this.color = const Value.absent(),
     this.icon = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -1150,6 +1191,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     Expression<String>? color,
     Expression<String>? icon,
     Expression<bool>? isActive,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -1162,6 +1204,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
       if (color != null) 'color': color,
       if (icon != null) 'icon': icon,
       if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -1176,6 +1219,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     Value<String?>? color,
     Value<String?>? icon,
     Value<bool>? isActive,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -1188,6 +1232,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
       color: color ?? this.color,
       icon: icon ?? this.icon,
       isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -1218,6 +1263,9 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1240,6 +1288,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
           ..write('color: $color, ')
           ..write('icon: $icon, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -1355,6 +1404,21 @@ class $UnitsTable extends Units with TableInfo<$UnitsTable, UnitRow> {
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1388,6 +1452,7 @@ class $UnitsTable extends Units with TableInfo<$UnitsTable, UnitRow> {
     baseUnitId,
     conversionFactor,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -1476,6 +1541,12 @@ class $UnitsTable extends Units with TableInfo<$UnitsTable, UnitRow> {
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1542,6 +1613,10 @@ class $UnitsTable extends Units with TableInfo<$UnitsTable, UnitRow> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1569,6 +1644,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
   final String? baseUnitId;
   final double conversionFactor;
   final bool isActive;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const UnitRow({
@@ -1581,6 +1657,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
     this.baseUnitId,
     required this.conversionFactor,
     required this.isActive,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -1598,6 +1675,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
     }
     map['conversion_factor'] = Variable<double>(conversionFactor);
     map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -1616,6 +1694,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
           : Value(baseUnitId),
       conversionFactor: Value(conversionFactor),
       isActive: Value(isActive),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -1636,6 +1715,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
       baseUnitId: serializer.fromJson<String?>(json['baseUnitId']),
       conversionFactor: serializer.fromJson<double>(json['conversionFactor']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -1653,6 +1733,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
       'baseUnitId': serializer.toJson<String?>(baseUnitId),
       'conversionFactor': serializer.toJson<double>(conversionFactor),
       'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -1668,6 +1749,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
     Value<String?> baseUnitId = const Value.absent(),
     double? conversionFactor,
     bool? isActive,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => UnitRow(
@@ -1680,6 +1762,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
     baseUnitId: baseUnitId.present ? baseUnitId.value : this.baseUnitId,
     conversionFactor: conversionFactor ?? this.conversionFactor,
     isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -1702,6 +1785,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
           ? data.conversionFactor.value
           : this.conversionFactor,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -1719,6 +1803,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
           ..write('baseUnitId: $baseUnitId, ')
           ..write('conversionFactor: $conversionFactor, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1736,6 +1821,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
     baseUnitId,
     conversionFactor,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -1752,6 +1838,7 @@ class UnitRow extends DataClass implements Insertable<UnitRow> {
           other.baseUnitId == this.baseUnitId &&
           other.conversionFactor == this.conversionFactor &&
           other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -1766,6 +1853,7 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
   final Value<String?> baseUnitId;
   final Value<double> conversionFactor;
   final Value<bool> isActive;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -1779,6 +1867,7 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
     this.baseUnitId = const Value.absent(),
     this.conversionFactor = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1793,6 +1882,7 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
     this.baseUnitId = const Value.absent(),
     this.conversionFactor = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -1813,6 +1903,7 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
     Expression<String>? baseUnitId,
     Expression<double>? conversionFactor,
     Expression<bool>? isActive,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -1827,6 +1918,7 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
       if (baseUnitId != null) 'base_unit_id': baseUnitId,
       if (conversionFactor != null) 'conversion_factor': conversionFactor,
       if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -1843,6 +1935,7 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
     Value<String?>? baseUnitId,
     Value<double>? conversionFactor,
     Value<bool>? isActive,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -1857,6 +1950,7 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
       baseUnitId: baseUnitId ?? this.baseUnitId,
       conversionFactor: conversionFactor ?? this.conversionFactor,
       isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -1893,6 +1987,9 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1917,6 +2014,7 @@ class UnitsCompanion extends UpdateCompanion<UnitRow> {
           ..write('baseUnitId: $baseUnitId, ')
           ..write('conversionFactor: $conversionFactor, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -2999,6 +3097,21 @@ class $StockMovementsTable extends StockMovements
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -3021,6 +3134,7 @@ class $StockMovementsTable extends StockMovements
     referenceId,
     notes,
     createdBy,
+    isSample,
     createdAt,
   ];
   @override
@@ -3110,6 +3224,12 @@ class $StockMovementsTable extends StockMovements
     } else if (isInserting) {
       context.missing(_createdByMeta);
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -3163,6 +3283,10 @@ class $StockMovementsTable extends StockMovements
         DriftSqlType.string,
         data['${effectivePrefix}created_by'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -3187,6 +3311,7 @@ class StockMovementRow extends DataClass
   final String? referenceId;
   final String? notes;
   final String createdBy;
+  final bool isSample;
   final DateTime createdAt;
   const StockMovementRow({
     required this.id,
@@ -3198,6 +3323,7 @@ class StockMovementRow extends DataClass
     this.referenceId,
     this.notes,
     required this.createdBy,
+    required this.isSample,
     required this.createdAt,
   });
   @override
@@ -3218,6 +3344,7 @@ class StockMovementRow extends DataClass
       map['notes'] = Variable<String>(notes);
     }
     map['created_by'] = Variable<String>(createdBy);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -3239,6 +3366,7 @@ class StockMovementRow extends DataClass
           ? const Value.absent()
           : Value(notes),
       createdBy: Value(createdBy),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
     );
   }
@@ -3258,6 +3386,7 @@ class StockMovementRow extends DataClass
       referenceId: serializer.fromJson<String?>(json['referenceId']),
       notes: serializer.fromJson<String?>(json['notes']),
       createdBy: serializer.fromJson<String>(json['createdBy']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -3274,6 +3403,7 @@ class StockMovementRow extends DataClass
       'referenceId': serializer.toJson<String?>(referenceId),
       'notes': serializer.toJson<String?>(notes),
       'createdBy': serializer.toJson<String>(createdBy),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -3288,6 +3418,7 @@ class StockMovementRow extends DataClass
     Value<String?> referenceId = const Value.absent(),
     Value<String?> notes = const Value.absent(),
     String? createdBy,
+    bool? isSample,
     DateTime? createdAt,
   }) => StockMovementRow(
     id: id ?? this.id,
@@ -3301,6 +3432,7 @@ class StockMovementRow extends DataClass
     referenceId: referenceId.present ? referenceId.value : this.referenceId,
     notes: notes.present ? notes.value : this.notes,
     createdBy: createdBy ?? this.createdBy,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
   );
   StockMovementRow copyWithCompanion(StockMovementsCompanion data) {
@@ -3322,6 +3454,7 @@ class StockMovementRow extends DataClass
           : this.referenceId,
       notes: data.notes.present ? data.notes.value : this.notes,
       createdBy: data.createdBy.present ? data.createdBy.value : this.createdBy,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -3338,6 +3471,7 @@ class StockMovementRow extends DataClass
           ..write('referenceId: $referenceId, ')
           ..write('notes: $notes, ')
           ..write('createdBy: $createdBy, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -3354,6 +3488,7 @@ class StockMovementRow extends DataClass
     referenceId,
     notes,
     createdBy,
+    isSample,
     createdAt,
   );
   @override
@@ -3369,6 +3504,7 @@ class StockMovementRow extends DataClass
           other.referenceId == this.referenceId &&
           other.notes == this.notes &&
           other.createdBy == this.createdBy &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt);
 }
 
@@ -3382,6 +3518,7 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
   final Value<String?> referenceId;
   final Value<String?> notes;
   final Value<String> createdBy;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const StockMovementsCompanion({
@@ -3394,6 +3531,7 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
     this.referenceId = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdBy = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -3407,6 +3545,7 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
     this.referenceId = const Value.absent(),
     this.notes = const Value.absent(),
     required String createdBy,
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -3426,6 +3565,7 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
     Expression<String>? referenceId,
     Expression<String>? notes,
     Expression<String>? createdBy,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -3439,6 +3579,7 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
       if (referenceId != null) 'reference_id': referenceId,
       if (notes != null) 'notes': notes,
       if (createdBy != null) 'created_by': createdBy,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -3454,6 +3595,7 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
     Value<String?>? referenceId,
     Value<String?>? notes,
     Value<String>? createdBy,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -3467,6 +3609,7 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
       referenceId: referenceId ?? this.referenceId,
       notes: notes ?? this.notes,
       createdBy: createdBy ?? this.createdBy,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -3502,6 +3645,9 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
     if (createdBy.present) {
       map['created_by'] = Variable<String>(createdBy.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -3523,6 +3669,7 @@ class StockMovementsCompanion extends UpdateCompanion<StockMovementRow> {
           ..write('referenceId: $referenceId, ')
           ..write('notes: $notes, ')
           ..write('createdBy: $createdBy, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -3643,6 +3790,21 @@ class $CustomersTable extends Customers
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -3677,6 +3839,7 @@ class $CustomersTable extends Customers
     creditLimit,
     imagePath,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -3764,6 +3927,12 @@ class $CustomersTable extends Customers
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -3829,6 +3998,10 @@ class $CustomersTable extends Customers
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -3857,6 +4030,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
   final double? creditLimit;
   final String? imagePath;
   final bool isActive;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const CustomerRow({
@@ -3870,6 +4044,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
     this.creditLimit,
     this.imagePath,
     required this.isActive,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -3896,6 +4071,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
       map['image_path'] = Variable<String>(imagePath);
     }
     map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -3923,6 +4099,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
           ? const Value.absent()
           : Value(imagePath),
       isActive: Value(isActive),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -3944,6 +4121,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
       creditLimit: serializer.fromJson<double?>(json['creditLimit']),
       imagePath: serializer.fromJson<String?>(json['imagePath']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -3962,6 +4140,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
       'creditLimit': serializer.toJson<double?>(creditLimit),
       'imagePath': serializer.toJson<String?>(imagePath),
       'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -3978,6 +4157,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
     Value<double?> creditLimit = const Value.absent(),
     Value<String?> imagePath = const Value.absent(),
     bool? isActive,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => CustomerRow(
@@ -3991,6 +4171,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
     creditLimit: creditLimit.present ? creditLimit.value : this.creditLimit,
     imagePath: imagePath.present ? imagePath.value : this.imagePath,
     isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -4012,6 +4193,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
           : this.creditLimit,
       imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -4030,6 +4212,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
           ..write('creditLimit: $creditLimit, ')
           ..write('imagePath: $imagePath, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -4048,6 +4231,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
     creditLimit,
     imagePath,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -4065,6 +4249,7 @@ class CustomerRow extends DataClass implements Insertable<CustomerRow> {
           other.creditLimit == this.creditLimit &&
           other.imagePath == this.imagePath &&
           other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -4080,6 +4265,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
   final Value<double?> creditLimit;
   final Value<String?> imagePath;
   final Value<bool> isActive;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -4094,6 +4280,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
     this.creditLimit = const Value.absent(),
     this.imagePath = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -4109,6 +4296,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
     this.creditLimit = const Value.absent(),
     this.imagePath = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -4128,6 +4316,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
     Expression<double>? creditLimit,
     Expression<String>? imagePath,
     Expression<bool>? isActive,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -4143,6 +4332,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
       if (creditLimit != null) 'credit_limit': creditLimit,
       if (imagePath != null) 'image_path': imagePath,
       if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -4160,6 +4350,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
     Value<double?>? creditLimit,
     Value<String?>? imagePath,
     Value<bool>? isActive,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -4175,6 +4366,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
       creditLimit: creditLimit ?? this.creditLimit,
       imagePath: imagePath ?? this.imagePath,
       isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -4214,6 +4406,9 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -4239,6 +4434,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerRow> {
           ..write('creditLimit: $creditLimit, ')
           ..write('imagePath: $imagePath, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -4653,6 +4849,21 @@ class $SaleOrdersTable extends SaleOrders
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -4688,6 +4899,7 @@ class $SaleOrdersTable extends SaleOrders
     shippingStatus,
     totalAmount,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -4791,6 +5003,12 @@ class $SaleOrdersTable extends SaleOrders
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -4860,6 +5078,10 @@ class $SaleOrdersTable extends SaleOrders
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -4889,6 +5111,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
   final String shippingStatus;
   final double totalAmount;
   final bool isActive;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const SaleOrderRow({
@@ -4903,6 +5126,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
     required this.shippingStatus,
     required this.totalAmount,
     required this.isActive,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -4922,6 +5146,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
     map['shipping_status'] = Variable<String>(shippingStatus);
     map['total_amount'] = Variable<double>(totalAmount);
     map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -4942,6 +5167,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
       shippingStatus: Value(shippingStatus),
       totalAmount: Value(totalAmount),
       isActive: Value(isActive),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -4964,6 +5190,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
       shippingStatus: serializer.fromJson<String>(json['shippingStatus']),
       totalAmount: serializer.fromJson<double>(json['totalAmount']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -4983,6 +5210,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
       'shippingStatus': serializer.toJson<String>(shippingStatus),
       'totalAmount': serializer.toJson<double>(totalAmount),
       'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -5000,6 +5228,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
     String? shippingStatus,
     double? totalAmount,
     bool? isActive,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => SaleOrderRow(
@@ -5014,6 +5243,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
     shippingStatus: shippingStatus ?? this.shippingStatus,
     totalAmount: totalAmount ?? this.totalAmount,
     isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -5042,6 +5272,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
           ? data.totalAmount.value
           : this.totalAmount,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -5061,6 +5292,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
           ..write('shippingStatus: $shippingStatus, ')
           ..write('totalAmount: $totalAmount, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -5080,6 +5312,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
     shippingStatus,
     totalAmount,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -5098,6 +5331,7 @@ class SaleOrderRow extends DataClass implements Insertable<SaleOrderRow> {
           other.shippingStatus == this.shippingStatus &&
           other.totalAmount == this.totalAmount &&
           other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -5114,6 +5348,7 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
   final Value<String> shippingStatus;
   final Value<double> totalAmount;
   final Value<bool> isActive;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -5129,6 +5364,7 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
     this.shippingStatus = const Value.absent(),
     this.totalAmount = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -5145,6 +5381,7 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
     this.shippingStatus = const Value.absent(),
     this.totalAmount = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -5167,6 +5404,7 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
     Expression<String>? shippingStatus,
     Expression<double>? totalAmount,
     Expression<bool>? isActive,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -5183,6 +5421,7 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
       if (shippingStatus != null) 'shipping_status': shippingStatus,
       if (totalAmount != null) 'total_amount': totalAmount,
       if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -5201,6 +5440,7 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
     Value<String>? shippingStatus,
     Value<double>? totalAmount,
     Value<bool>? isActive,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -5217,6 +5457,7 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
       shippingStatus: shippingStatus ?? this.shippingStatus,
       totalAmount: totalAmount ?? this.totalAmount,
       isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -5259,6 +5500,9 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -5285,6 +5529,7 @@ class SaleOrdersCompanion extends UpdateCompanion<SaleOrderRow> {
           ..write('shippingStatus: $shippingStatus, ')
           ..write('totalAmount: $totalAmount, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -5397,6 +5642,21 @@ class $SaleOrderItemsTable extends SaleOrderItems
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -5430,6 +5690,7 @@ class $SaleOrderItemsTable extends SaleOrderItems
     unitPrice,
     totalPrice,
     shippedQuantity,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -5524,6 +5785,12 @@ class $SaleOrderItemsTable extends SaleOrderItems
         ),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -5585,6 +5852,10 @@ class $SaleOrderItemsTable extends SaleOrderItems
         DriftSqlType.double,
         data['${effectivePrefix}shipped_quantity'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -5613,6 +5884,7 @@ class SaleOrderItemRow extends DataClass
   final double unitPrice;
   final double totalPrice;
   final double shippedQuantity;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const SaleOrderItemRow({
@@ -5625,6 +5897,7 @@ class SaleOrderItemRow extends DataClass
     required this.unitPrice,
     required this.totalPrice,
     required this.shippedQuantity,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -5640,6 +5913,7 @@ class SaleOrderItemRow extends DataClass
     map['unit_price'] = Variable<double>(unitPrice);
     map['total_price'] = Variable<double>(totalPrice);
     map['shipped_quantity'] = Variable<double>(shippedQuantity);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -5656,6 +5930,7 @@ class SaleOrderItemRow extends DataClass
       unitPrice: Value(unitPrice),
       totalPrice: Value(totalPrice),
       shippedQuantity: Value(shippedQuantity),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -5676,6 +5951,7 @@ class SaleOrderItemRow extends DataClass
       unitPrice: serializer.fromJson<double>(json['unitPrice']),
       totalPrice: serializer.fromJson<double>(json['totalPrice']),
       shippedQuantity: serializer.fromJson<double>(json['shippedQuantity']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -5693,6 +5969,7 @@ class SaleOrderItemRow extends DataClass
       'unitPrice': serializer.toJson<double>(unitPrice),
       'totalPrice': serializer.toJson<double>(totalPrice),
       'shippedQuantity': serializer.toJson<double>(shippedQuantity),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -5708,6 +5985,7 @@ class SaleOrderItemRow extends DataClass
     double? unitPrice,
     double? totalPrice,
     double? shippedQuantity,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => SaleOrderItemRow(
@@ -5720,6 +5998,7 @@ class SaleOrderItemRow extends DataClass
     unitPrice: unitPrice ?? this.unitPrice,
     totalPrice: totalPrice ?? this.totalPrice,
     shippedQuantity: shippedQuantity ?? this.shippedQuantity,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -5744,6 +6023,7 @@ class SaleOrderItemRow extends DataClass
       shippedQuantity: data.shippedQuantity.present
           ? data.shippedQuantity.value
           : this.shippedQuantity,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -5761,6 +6041,7 @@ class SaleOrderItemRow extends DataClass
           ..write('unitPrice: $unitPrice, ')
           ..write('totalPrice: $totalPrice, ')
           ..write('shippedQuantity: $shippedQuantity, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -5778,6 +6059,7 @@ class SaleOrderItemRow extends DataClass
     unitPrice,
     totalPrice,
     shippedQuantity,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -5794,6 +6076,7 @@ class SaleOrderItemRow extends DataClass
           other.unitPrice == this.unitPrice &&
           other.totalPrice == this.totalPrice &&
           other.shippedQuantity == this.shippedQuantity &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -5808,6 +6091,7 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
   final Value<double> unitPrice;
   final Value<double> totalPrice;
   final Value<double> shippedQuantity;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -5821,6 +6105,7 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
     this.unitPrice = const Value.absent(),
     this.totalPrice = const Value.absent(),
     this.shippedQuantity = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -5835,6 +6120,7 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
     required double unitPrice,
     required double totalPrice,
     this.shippedQuantity = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -5858,6 +6144,7 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
     Expression<double>? unitPrice,
     Expression<double>? totalPrice,
     Expression<double>? shippedQuantity,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -5872,6 +6159,7 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
       if (unitPrice != null) 'unit_price': unitPrice,
       if (totalPrice != null) 'total_price': totalPrice,
       if (shippedQuantity != null) 'shipped_quantity': shippedQuantity,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -5888,6 +6176,7 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
     Value<double>? unitPrice,
     Value<double>? totalPrice,
     Value<double>? shippedQuantity,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -5902,6 +6191,7 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
       unitPrice: unitPrice ?? this.unitPrice,
       totalPrice: totalPrice ?? this.totalPrice,
       shippedQuantity: shippedQuantity ?? this.shippedQuantity,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -5938,6 +6228,9 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
     if (shippedQuantity.present) {
       map['shipped_quantity'] = Variable<double>(shippedQuantity.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -5962,6 +6255,7 @@ class SaleOrderItemsCompanion extends UpdateCompanion<SaleOrderItemRow> {
           ..write('unitPrice: $unitPrice, ')
           ..write('totalPrice: $totalPrice, ')
           ..write('shippedQuantity: $shippedQuantity, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -6072,6 +6366,21 @@ class $SaleOrderPaymentsTable extends SaleOrderPayments
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -6105,6 +6414,7 @@ class $SaleOrderPaymentsTable extends SaleOrderPayments
     status,
     paymentDate,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -6197,6 +6507,12 @@ class $SaleOrderPaymentsTable extends SaleOrderPayments
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -6258,6 +6574,10 @@ class $SaleOrderPaymentsTable extends SaleOrderPayments
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -6286,6 +6606,7 @@ class SaleOrderPaymentRow extends DataClass
   final String status;
   final DateTime paymentDate;
   final bool isActive;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const SaleOrderPaymentRow({
@@ -6298,6 +6619,7 @@ class SaleOrderPaymentRow extends DataClass
     required this.status,
     required this.paymentDate,
     required this.isActive,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -6313,6 +6635,7 @@ class SaleOrderPaymentRow extends DataClass
     map['status'] = Variable<String>(status);
     map['payment_date'] = Variable<DateTime>(paymentDate);
     map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -6329,6 +6652,7 @@ class SaleOrderPaymentRow extends DataClass
       status: Value(status),
       paymentDate: Value(paymentDate),
       isActive: Value(isActive),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -6349,6 +6673,7 @@ class SaleOrderPaymentRow extends DataClass
       status: serializer.fromJson<String>(json['status']),
       paymentDate: serializer.fromJson<DateTime>(json['paymentDate']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -6366,6 +6691,7 @@ class SaleOrderPaymentRow extends DataClass
       'status': serializer.toJson<String>(status),
       'paymentDate': serializer.toJson<DateTime>(paymentDate),
       'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -6381,6 +6707,7 @@ class SaleOrderPaymentRow extends DataClass
     String? status,
     DateTime? paymentDate,
     bool? isActive,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => SaleOrderPaymentRow(
@@ -6393,6 +6720,7 @@ class SaleOrderPaymentRow extends DataClass
     status: status ?? this.status,
     paymentDate: paymentDate ?? this.paymentDate,
     isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -6415,6 +6743,7 @@ class SaleOrderPaymentRow extends DataClass
           ? data.paymentDate.value
           : this.paymentDate,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -6432,6 +6761,7 @@ class SaleOrderPaymentRow extends DataClass
           ..write('status: $status, ')
           ..write('paymentDate: $paymentDate, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -6449,6 +6779,7 @@ class SaleOrderPaymentRow extends DataClass
     status,
     paymentDate,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -6465,6 +6796,7 @@ class SaleOrderPaymentRow extends DataClass
           other.status == this.status &&
           other.paymentDate == this.paymentDate &&
           other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -6479,6 +6811,7 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
   final Value<String> status;
   final Value<DateTime> paymentDate;
   final Value<bool> isActive;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -6492,6 +6825,7 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
     this.status = const Value.absent(),
     this.paymentDate = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -6506,6 +6840,7 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
     this.status = const Value.absent(),
     required DateTime paymentDate,
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -6528,6 +6863,7 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
     Expression<String>? status,
     Expression<DateTime>? paymentDate,
     Expression<bool>? isActive,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -6542,6 +6878,7 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
       if (status != null) 'status': status,
       if (paymentDate != null) 'payment_date': paymentDate,
       if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -6558,6 +6895,7 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
     Value<String>? status,
     Value<DateTime>? paymentDate,
     Value<bool>? isActive,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -6572,6 +6910,7 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
       status: status ?? this.status,
       paymentDate: paymentDate ?? this.paymentDate,
       isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -6608,6 +6947,9 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -6632,6 +6974,7 @@ class SaleOrderPaymentsCompanion extends UpdateCompanion<SaleOrderPaymentRow> {
           ..write('status: $status, ')
           ..write('paymentDate: $paymentDate, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -6731,6 +7074,21 @@ class $SaleOrderShippingsTable extends SaleOrderShippings
     requiredDuringInsert: false,
     defaultValue: const Constant('shipped'),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -6763,6 +7121,7 @@ class $SaleOrderShippingsTable extends SaleOrderShippings
     carrier,
     trackingNumber,
     status,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -6848,6 +7207,12 @@ class $SaleOrderShippingsTable extends SaleOrderShippings
         status.isAcceptableOrUnknown(data['status']!, _statusMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -6905,6 +7270,10 @@ class $SaleOrderShippingsTable extends SaleOrderShippings
         DriftSqlType.string,
         data['${effectivePrefix}status'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -6932,6 +7301,7 @@ class SaleOrderShippingRow extends DataClass
   final String? carrier;
   final String? trackingNumber;
   final String status;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const SaleOrderShippingRow({
@@ -6943,6 +7313,7 @@ class SaleOrderShippingRow extends DataClass
     this.carrier,
     this.trackingNumber,
     required this.status,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -6961,6 +7332,7 @@ class SaleOrderShippingRow extends DataClass
       map['tracking_number'] = Variable<String>(trackingNumber);
     }
     map['status'] = Variable<String>(status);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -6980,6 +7352,7 @@ class SaleOrderShippingRow extends DataClass
           ? const Value.absent()
           : Value(trackingNumber),
       status: Value(status),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -6999,6 +7372,7 @@ class SaleOrderShippingRow extends DataClass
       carrier: serializer.fromJson<String?>(json['carrier']),
       trackingNumber: serializer.fromJson<String?>(json['trackingNumber']),
       status: serializer.fromJson<String>(json['status']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -7015,6 +7389,7 @@ class SaleOrderShippingRow extends DataClass
       'carrier': serializer.toJson<String?>(carrier),
       'trackingNumber': serializer.toJson<String?>(trackingNumber),
       'status': serializer.toJson<String>(status),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -7029,6 +7404,7 @@ class SaleOrderShippingRow extends DataClass
     Value<String?> carrier = const Value.absent(),
     Value<String?> trackingNumber = const Value.absent(),
     String? status,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => SaleOrderShippingRow(
@@ -7042,6 +7418,7 @@ class SaleOrderShippingRow extends DataClass
         ? trackingNumber.value
         : this.trackingNumber,
     status: status ?? this.status,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -7065,6 +7442,7 @@ class SaleOrderShippingRow extends DataClass
           ? data.trackingNumber.value
           : this.trackingNumber,
       status: data.status.present ? data.status.value : this.status,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -7081,6 +7459,7 @@ class SaleOrderShippingRow extends DataClass
           ..write('carrier: $carrier, ')
           ..write('trackingNumber: $trackingNumber, ')
           ..write('status: $status, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -7097,6 +7476,7 @@ class SaleOrderShippingRow extends DataClass
     carrier,
     trackingNumber,
     status,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -7112,6 +7492,7 @@ class SaleOrderShippingRow extends DataClass
           other.carrier == this.carrier &&
           other.trackingNumber == this.trackingNumber &&
           other.status == this.status &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -7126,6 +7507,7 @@ class SaleOrderShippingsCompanion
   final Value<String?> carrier;
   final Value<String?> trackingNumber;
   final Value<String> status;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -7138,6 +7520,7 @@ class SaleOrderShippingsCompanion
     this.carrier = const Value.absent(),
     this.trackingNumber = const Value.absent(),
     this.status = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -7151,6 +7534,7 @@ class SaleOrderShippingsCompanion
     this.carrier = const Value.absent(),
     this.trackingNumber = const Value.absent(),
     this.status = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -7170,6 +7554,7 @@ class SaleOrderShippingsCompanion
     Expression<String>? carrier,
     Expression<String>? trackingNumber,
     Expression<String>? status,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -7183,6 +7568,7 @@ class SaleOrderShippingsCompanion
       if (carrier != null) 'carrier': carrier,
       if (trackingNumber != null) 'tracking_number': trackingNumber,
       if (status != null) 'status': status,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -7198,6 +7584,7 @@ class SaleOrderShippingsCompanion
     Value<String?>? carrier,
     Value<String?>? trackingNumber,
     Value<String>? status,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -7211,6 +7598,7 @@ class SaleOrderShippingsCompanion
       carrier: carrier ?? this.carrier,
       trackingNumber: trackingNumber ?? this.trackingNumber,
       status: status ?? this.status,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -7244,6 +7632,9 @@ class SaleOrderShippingsCompanion
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -7267,6 +7658,7 @@ class SaleOrderShippingsCompanion
           ..write('carrier: $carrier, ')
           ..write('trackingNumber: $trackingNumber, ')
           ..write('status: $status, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -7345,6 +7737,21 @@ class $SaleOrderShippingItemsTable extends SaleOrderShippingItems
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -7364,6 +7771,7 @@ class $SaleOrderShippingItemsTable extends SaleOrderShippingItems
     saleOrderItemId,
     productId,
     quantity,
+    isSample,
     createdAt,
   ];
   @override
@@ -7429,6 +7837,12 @@ class $SaleOrderShippingItemsTable extends SaleOrderShippingItems
     } else if (isInserting) {
       context.missing(_quantityMeta);
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -7473,6 +7887,10 @@ class $SaleOrderShippingItemsTable extends SaleOrderShippingItems
         DriftSqlType.double,
         data['${effectivePrefix}quantity'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -7494,6 +7912,7 @@ class SaleOrderShippingItemRow extends DataClass
   final String saleOrderItemId;
   final String productId;
   final double quantity;
+  final bool isSample;
   final DateTime createdAt;
   const SaleOrderShippingItemRow({
     required this.id,
@@ -7502,6 +7921,7 @@ class SaleOrderShippingItemRow extends DataClass
     required this.saleOrderItemId,
     required this.productId,
     required this.quantity,
+    required this.isSample,
     required this.createdAt,
   });
   @override
@@ -7513,6 +7933,7 @@ class SaleOrderShippingItemRow extends DataClass
     map['sale_order_item_id'] = Variable<String>(saleOrderItemId);
     map['product_id'] = Variable<String>(productId);
     map['quantity'] = Variable<double>(quantity);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -7525,6 +7946,7 @@ class SaleOrderShippingItemRow extends DataClass
       saleOrderItemId: Value(saleOrderItemId),
       productId: Value(productId),
       quantity: Value(quantity),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
     );
   }
@@ -7541,6 +7963,7 @@ class SaleOrderShippingItemRow extends DataClass
       saleOrderItemId: serializer.fromJson<String>(json['saleOrderItemId']),
       productId: serializer.fromJson<String>(json['productId']),
       quantity: serializer.fromJson<double>(json['quantity']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -7554,6 +7977,7 @@ class SaleOrderShippingItemRow extends DataClass
       'saleOrderItemId': serializer.toJson<String>(saleOrderItemId),
       'productId': serializer.toJson<String>(productId),
       'quantity': serializer.toJson<double>(quantity),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -7565,6 +7989,7 @@ class SaleOrderShippingItemRow extends DataClass
     String? saleOrderItemId,
     String? productId,
     double? quantity,
+    bool? isSample,
     DateTime? createdAt,
   }) => SaleOrderShippingItemRow(
     id: id ?? this.id,
@@ -7573,6 +7998,7 @@ class SaleOrderShippingItemRow extends DataClass
     saleOrderItemId: saleOrderItemId ?? this.saleOrderItemId,
     productId: productId ?? this.productId,
     quantity: quantity ?? this.quantity,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
   );
   SaleOrderShippingItemRow copyWithCompanion(
@@ -7591,6 +8017,7 @@ class SaleOrderShippingItemRow extends DataClass
           : this.saleOrderItemId,
       productId: data.productId.present ? data.productId.value : this.productId,
       quantity: data.quantity.present ? data.quantity.value : this.quantity,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -7604,6 +8031,7 @@ class SaleOrderShippingItemRow extends DataClass
           ..write('saleOrderItemId: $saleOrderItemId, ')
           ..write('productId: $productId, ')
           ..write('quantity: $quantity, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -7617,6 +8045,7 @@ class SaleOrderShippingItemRow extends DataClass
     saleOrderItemId,
     productId,
     quantity,
+    isSample,
     createdAt,
   );
   @override
@@ -7629,6 +8058,7 @@ class SaleOrderShippingItemRow extends DataClass
           other.saleOrderItemId == this.saleOrderItemId &&
           other.productId == this.productId &&
           other.quantity == this.quantity &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt);
 }
 
@@ -7640,6 +8070,7 @@ class SaleOrderShippingItemsCompanion
   final Value<String> saleOrderItemId;
   final Value<String> productId;
   final Value<double> quantity;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const SaleOrderShippingItemsCompanion({
@@ -7649,6 +8080,7 @@ class SaleOrderShippingItemsCompanion
     this.saleOrderItemId = const Value.absent(),
     this.productId = const Value.absent(),
     this.quantity = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -7659,6 +8091,7 @@ class SaleOrderShippingItemsCompanion
     required String saleOrderItemId,
     required String productId,
     required double quantity,
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -7675,6 +8108,7 @@ class SaleOrderShippingItemsCompanion
     Expression<String>? saleOrderItemId,
     Expression<String>? productId,
     Expression<double>? quantity,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -7685,6 +8119,7 @@ class SaleOrderShippingItemsCompanion
       if (saleOrderItemId != null) 'sale_order_item_id': saleOrderItemId,
       if (productId != null) 'product_id': productId,
       if (quantity != null) 'quantity': quantity,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -7697,6 +8132,7 @@ class SaleOrderShippingItemsCompanion
     Value<String>? saleOrderItemId,
     Value<String>? productId,
     Value<double>? quantity,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -7707,6 +8143,7 @@ class SaleOrderShippingItemsCompanion
       saleOrderItemId: saleOrderItemId ?? this.saleOrderItemId,
       productId: productId ?? this.productId,
       quantity: quantity ?? this.quantity,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -7733,6 +8170,9 @@ class SaleOrderShippingItemsCompanion
     if (quantity.present) {
       map['quantity'] = Variable<double>(quantity.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -7751,6 +8191,7 @@ class SaleOrderShippingItemsCompanion
           ..write('saleOrderItemId: $saleOrderItemId, ')
           ..write('productId: $productId, ')
           ..write('quantity: $quantity, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -7871,6 +8312,21 @@ class $SuppliersTable extends Suppliers
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -7905,6 +8361,7 @@ class $SuppliersTable extends Suppliers
     paymentTerms,
     creditLimit,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -7995,6 +8452,12 @@ class $SuppliersTable extends Suppliers
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -8060,6 +8523,10 @@ class $SuppliersTable extends Suppliers
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -8088,6 +8555,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
   final int paymentTerms;
   final double? creditLimit;
   final bool isActive;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const SupplierRow({
@@ -8101,6 +8569,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
     required this.paymentTerms,
     this.creditLimit,
     required this.isActive,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -8127,6 +8596,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
       map['credit_limit'] = Variable<double>(creditLimit);
     }
     map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -8154,6 +8624,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
           ? const Value.absent()
           : Value(creditLimit),
       isActive: Value(isActive),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -8175,6 +8646,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
       paymentTerms: serializer.fromJson<int>(json['paymentTerms']),
       creditLimit: serializer.fromJson<double?>(json['creditLimit']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -8193,6 +8665,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
       'paymentTerms': serializer.toJson<int>(paymentTerms),
       'creditLimit': serializer.toJson<double?>(creditLimit),
       'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -8209,6 +8682,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
     int? paymentTerms,
     Value<double?> creditLimit = const Value.absent(),
     bool? isActive,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => SupplierRow(
@@ -8224,6 +8698,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
     paymentTerms: paymentTerms ?? this.paymentTerms,
     creditLimit: creditLimit.present ? creditLimit.value : this.creditLimit,
     isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -8247,6 +8722,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
           ? data.creditLimit.value
           : this.creditLimit,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -8265,6 +8741,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
           ..write('paymentTerms: $paymentTerms, ')
           ..write('creditLimit: $creditLimit, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -8283,6 +8760,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
     paymentTerms,
     creditLimit,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -8300,6 +8778,7 @@ class SupplierRow extends DataClass implements Insertable<SupplierRow> {
           other.paymentTerms == this.paymentTerms &&
           other.creditLimit == this.creditLimit &&
           other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -8315,6 +8794,7 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
   final Value<int> paymentTerms;
   final Value<double?> creditLimit;
   final Value<bool> isActive;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -8329,6 +8809,7 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
     this.paymentTerms = const Value.absent(),
     this.creditLimit = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -8344,6 +8825,7 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
     this.paymentTerms = const Value.absent(),
     this.creditLimit = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -8363,6 +8845,7 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
     Expression<int>? paymentTerms,
     Expression<double>? creditLimit,
     Expression<bool>? isActive,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -8378,6 +8861,7 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
       if (paymentTerms != null) 'payment_terms': paymentTerms,
       if (creditLimit != null) 'credit_limit': creditLimit,
       if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -8395,6 +8879,7 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
     Value<int>? paymentTerms,
     Value<double?>? creditLimit,
     Value<bool>? isActive,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -8410,6 +8895,7 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
       paymentTerms: paymentTerms ?? this.paymentTerms,
       creditLimit: creditLimit ?? this.creditLimit,
       isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -8449,6 +8935,9 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -8474,6 +8963,7 @@ class SuppliersCompanion extends UpdateCompanion<SupplierRow> {
           ..write('paymentTerms: $paymentTerms, ')
           ..write('creditLimit: $creditLimit, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -8613,6 +9103,21 @@ class $PurchaseOrdersTable extends PurchaseOrders
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -8648,6 +9153,7 @@ class $PurchaseOrdersTable extends PurchaseOrders
     receiptStatus,
     totalAmount,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -8754,6 +9260,12 @@ class $PurchaseOrdersTable extends PurchaseOrders
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -8823,6 +9335,10 @@ class $PurchaseOrdersTable extends PurchaseOrders
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -8853,6 +9369,7 @@ class PurchaseOrderRow extends DataClass
   final String receiptStatus;
   final double totalAmount;
   final bool isActive;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const PurchaseOrderRow({
@@ -8867,6 +9384,7 @@ class PurchaseOrderRow extends DataClass
     required this.receiptStatus,
     required this.totalAmount,
     required this.isActive,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -8886,6 +9404,7 @@ class PurchaseOrderRow extends DataClass
     map['receipt_status'] = Variable<String>(receiptStatus);
     map['total_amount'] = Variable<double>(totalAmount);
     map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -8906,6 +9425,7 @@ class PurchaseOrderRow extends DataClass
       receiptStatus: Value(receiptStatus),
       totalAmount: Value(totalAmount),
       isActive: Value(isActive),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -8930,6 +9450,7 @@ class PurchaseOrderRow extends DataClass
       receiptStatus: serializer.fromJson<String>(json['receiptStatus']),
       totalAmount: serializer.fromJson<double>(json['totalAmount']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -8951,6 +9472,7 @@ class PurchaseOrderRow extends DataClass
       'receiptStatus': serializer.toJson<String>(receiptStatus),
       'totalAmount': serializer.toJson<double>(totalAmount),
       'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -8968,6 +9490,7 @@ class PurchaseOrderRow extends DataClass
     String? receiptStatus,
     double? totalAmount,
     bool? isActive,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => PurchaseOrderRow(
@@ -8984,6 +9507,7 @@ class PurchaseOrderRow extends DataClass
     receiptStatus: receiptStatus ?? this.receiptStatus,
     totalAmount: totalAmount ?? this.totalAmount,
     isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -9014,6 +9538,7 @@ class PurchaseOrderRow extends DataClass
           ? data.totalAmount.value
           : this.totalAmount,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -9033,6 +9558,7 @@ class PurchaseOrderRow extends DataClass
           ..write('receiptStatus: $receiptStatus, ')
           ..write('totalAmount: $totalAmount, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -9052,6 +9578,7 @@ class PurchaseOrderRow extends DataClass
     receiptStatus,
     totalAmount,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -9070,6 +9597,7 @@ class PurchaseOrderRow extends DataClass
           other.receiptStatus == this.receiptStatus &&
           other.totalAmount == this.totalAmount &&
           other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -9086,6 +9614,7 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
   final Value<String> receiptStatus;
   final Value<double> totalAmount;
   final Value<bool> isActive;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -9101,6 +9630,7 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
     this.receiptStatus = const Value.absent(),
     this.totalAmount = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -9117,6 +9647,7 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
     this.receiptStatus = const Value.absent(),
     this.totalAmount = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -9139,6 +9670,7 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
     Expression<String>? receiptStatus,
     Expression<double>? totalAmount,
     Expression<bool>? isActive,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -9156,6 +9688,7 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
       if (receiptStatus != null) 'receipt_status': receiptStatus,
       if (totalAmount != null) 'total_amount': totalAmount,
       if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -9174,6 +9707,7 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
     Value<String>? receiptStatus,
     Value<double>? totalAmount,
     Value<bool>? isActive,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -9190,6 +9724,7 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
       receiptStatus: receiptStatus ?? this.receiptStatus,
       totalAmount: totalAmount ?? this.totalAmount,
       isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -9234,6 +9769,9 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -9260,6 +9798,7 @@ class PurchaseOrdersCompanion extends UpdateCompanion<PurchaseOrderRow> {
           ..write('receiptStatus: $receiptStatus, ')
           ..write('totalAmount: $totalAmount, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -9372,6 +9911,21 @@ class $PurchaseOrderItemsTable extends PurchaseOrderItems
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -9405,6 +9959,7 @@ class $PurchaseOrderItemsTable extends PurchaseOrderItems
     unitPrice,
     totalPrice,
     receivedQuantity,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -9499,6 +10054,12 @@ class $PurchaseOrderItemsTable extends PurchaseOrderItems
         ),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -9560,6 +10121,10 @@ class $PurchaseOrderItemsTable extends PurchaseOrderItems
         DriftSqlType.double,
         data['${effectivePrefix}received_quantity'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -9588,6 +10153,7 @@ class PurchaseOrderItemRow extends DataClass
   final double unitPrice;
   final double totalPrice;
   final double receivedQuantity;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const PurchaseOrderItemRow({
@@ -9600,6 +10166,7 @@ class PurchaseOrderItemRow extends DataClass
     required this.unitPrice,
     required this.totalPrice,
     required this.receivedQuantity,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -9615,6 +10182,7 @@ class PurchaseOrderItemRow extends DataClass
     map['unit_price'] = Variable<double>(unitPrice);
     map['total_price'] = Variable<double>(totalPrice);
     map['received_quantity'] = Variable<double>(receivedQuantity);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -9631,6 +10199,7 @@ class PurchaseOrderItemRow extends DataClass
       unitPrice: Value(unitPrice),
       totalPrice: Value(totalPrice),
       receivedQuantity: Value(receivedQuantity),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -9651,6 +10220,7 @@ class PurchaseOrderItemRow extends DataClass
       unitPrice: serializer.fromJson<double>(json['unitPrice']),
       totalPrice: serializer.fromJson<double>(json['totalPrice']),
       receivedQuantity: serializer.fromJson<double>(json['receivedQuantity']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -9668,6 +10238,7 @@ class PurchaseOrderItemRow extends DataClass
       'unitPrice': serializer.toJson<double>(unitPrice),
       'totalPrice': serializer.toJson<double>(totalPrice),
       'receivedQuantity': serializer.toJson<double>(receivedQuantity),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -9683,6 +10254,7 @@ class PurchaseOrderItemRow extends DataClass
     double? unitPrice,
     double? totalPrice,
     double? receivedQuantity,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => PurchaseOrderItemRow(
@@ -9695,6 +10267,7 @@ class PurchaseOrderItemRow extends DataClass
     unitPrice: unitPrice ?? this.unitPrice,
     totalPrice: totalPrice ?? this.totalPrice,
     receivedQuantity: receivedQuantity ?? this.receivedQuantity,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -9719,6 +10292,7 @@ class PurchaseOrderItemRow extends DataClass
       receivedQuantity: data.receivedQuantity.present
           ? data.receivedQuantity.value
           : this.receivedQuantity,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -9736,6 +10310,7 @@ class PurchaseOrderItemRow extends DataClass
           ..write('unitPrice: $unitPrice, ')
           ..write('totalPrice: $totalPrice, ')
           ..write('receivedQuantity: $receivedQuantity, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -9753,6 +10328,7 @@ class PurchaseOrderItemRow extends DataClass
     unitPrice,
     totalPrice,
     receivedQuantity,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -9769,6 +10345,7 @@ class PurchaseOrderItemRow extends DataClass
           other.unitPrice == this.unitPrice &&
           other.totalPrice == this.totalPrice &&
           other.receivedQuantity == this.receivedQuantity &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -9784,6 +10361,7 @@ class PurchaseOrderItemsCompanion
   final Value<double> unitPrice;
   final Value<double> totalPrice;
   final Value<double> receivedQuantity;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -9797,6 +10375,7 @@ class PurchaseOrderItemsCompanion
     this.unitPrice = const Value.absent(),
     this.totalPrice = const Value.absent(),
     this.receivedQuantity = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -9811,6 +10390,7 @@ class PurchaseOrderItemsCompanion
     required double unitPrice,
     required double totalPrice,
     this.receivedQuantity = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -9834,6 +10414,7 @@ class PurchaseOrderItemsCompanion
     Expression<double>? unitPrice,
     Expression<double>? totalPrice,
     Expression<double>? receivedQuantity,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -9848,6 +10429,7 @@ class PurchaseOrderItemsCompanion
       if (unitPrice != null) 'unit_price': unitPrice,
       if (totalPrice != null) 'total_price': totalPrice,
       if (receivedQuantity != null) 'received_quantity': receivedQuantity,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -9864,6 +10446,7 @@ class PurchaseOrderItemsCompanion
     Value<double>? unitPrice,
     Value<double>? totalPrice,
     Value<double>? receivedQuantity,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -9878,6 +10461,7 @@ class PurchaseOrderItemsCompanion
       unitPrice: unitPrice ?? this.unitPrice,
       totalPrice: totalPrice ?? this.totalPrice,
       receivedQuantity: receivedQuantity ?? this.receivedQuantity,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -9914,6 +10498,9 @@ class PurchaseOrderItemsCompanion
     if (receivedQuantity.present) {
       map['received_quantity'] = Variable<double>(receivedQuantity.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -9938,6 +10525,7 @@ class PurchaseOrderItemsCompanion
           ..write('unitPrice: $unitPrice, ')
           ..write('totalPrice: $totalPrice, ')
           ..write('receivedQuantity: $receivedQuantity, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -10024,6 +10612,21 @@ class $PurchaseOrderReceiptsTable extends PurchaseOrderReceipts
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -10055,6 +10658,7 @@ class $PurchaseOrderReceiptsTable extends PurchaseOrderReceipts
     receiptDate,
     status,
     notes,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -10131,6 +10735,12 @@ class $PurchaseOrderReceiptsTable extends PurchaseOrderReceipts
         notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -10187,6 +10797,10 @@ class $PurchaseOrderReceiptsTable extends PurchaseOrderReceipts
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
       ),
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -10213,6 +10827,7 @@ class PurchaseOrderReceiptRow extends DataClass
   final DateTime receiptDate;
   final String status;
   final String? notes;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const PurchaseOrderReceiptRow({
@@ -10223,6 +10838,7 @@ class PurchaseOrderReceiptRow extends DataClass
     required this.receiptDate,
     required this.status,
     this.notes,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -10238,6 +10854,7 @@ class PurchaseOrderReceiptRow extends DataClass
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
     }
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -10254,6 +10871,7 @@ class PurchaseOrderReceiptRow extends DataClass
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -10272,6 +10890,7 @@ class PurchaseOrderReceiptRow extends DataClass
       receiptDate: serializer.fromJson<DateTime>(json['receiptDate']),
       status: serializer.fromJson<String>(json['status']),
       notes: serializer.fromJson<String?>(json['notes']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -10287,6 +10906,7 @@ class PurchaseOrderReceiptRow extends DataClass
       'receiptDate': serializer.toJson<DateTime>(receiptDate),
       'status': serializer.toJson<String>(status),
       'notes': serializer.toJson<String?>(notes),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -10300,6 +10920,7 @@ class PurchaseOrderReceiptRow extends DataClass
     DateTime? receiptDate,
     String? status,
     Value<String?> notes = const Value.absent(),
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => PurchaseOrderReceiptRow(
@@ -10310,6 +10931,7 @@ class PurchaseOrderReceiptRow extends DataClass
     receiptDate: receiptDate ?? this.receiptDate,
     status: status ?? this.status,
     notes: notes.present ? notes.value : this.notes,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -10332,6 +10954,7 @@ class PurchaseOrderReceiptRow extends DataClass
           : this.receiptDate,
       status: data.status.present ? data.status.value : this.status,
       notes: data.notes.present ? data.notes.value : this.notes,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -10347,6 +10970,7 @@ class PurchaseOrderReceiptRow extends DataClass
           ..write('receiptDate: $receiptDate, ')
           ..write('status: $status, ')
           ..write('notes: $notes, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -10362,6 +10986,7 @@ class PurchaseOrderReceiptRow extends DataClass
     receiptDate,
     status,
     notes,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -10376,6 +11001,7 @@ class PurchaseOrderReceiptRow extends DataClass
           other.receiptDate == this.receiptDate &&
           other.status == this.status &&
           other.notes == this.notes &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -10389,6 +11015,7 @@ class PurchaseOrderReceiptsCompanion
   final Value<DateTime> receiptDate;
   final Value<String> status;
   final Value<String?> notes;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -10400,6 +11027,7 @@ class PurchaseOrderReceiptsCompanion
     this.receiptDate = const Value.absent(),
     this.status = const Value.absent(),
     this.notes = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -10412,6 +11040,7 @@ class PurchaseOrderReceiptsCompanion
     required DateTime receiptDate,
     this.status = const Value.absent(),
     this.notes = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -10430,6 +11059,7 @@ class PurchaseOrderReceiptsCompanion
     Expression<DateTime>? receiptDate,
     Expression<String>? status,
     Expression<String>? notes,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -10442,6 +11072,7 @@ class PurchaseOrderReceiptsCompanion
       if (receiptDate != null) 'receipt_date': receiptDate,
       if (status != null) 'status': status,
       if (notes != null) 'notes': notes,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -10456,6 +11087,7 @@ class PurchaseOrderReceiptsCompanion
     Value<DateTime>? receiptDate,
     Value<String>? status,
     Value<String?>? notes,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -10468,6 +11100,7 @@ class PurchaseOrderReceiptsCompanion
       receiptDate: receiptDate ?? this.receiptDate,
       status: status ?? this.status,
       notes: notes ?? this.notes,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -10498,6 +11131,9 @@ class PurchaseOrderReceiptsCompanion
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -10520,6 +11156,7 @@ class PurchaseOrderReceiptsCompanion
           ..write('receiptDate: $receiptDate, ')
           ..write('status: $status, ')
           ..write('notes: $notes, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -10602,6 +11239,21 @@ class $PurchaseOrderReceiptItemsTable extends PurchaseOrderReceiptItems
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -10621,6 +11273,7 @@ class $PurchaseOrderReceiptItemsTable extends PurchaseOrderReceiptItems
     purchaseOrderItemId,
     productId,
     quantity,
+    isSample,
     createdAt,
   ];
   @override
@@ -10686,6 +11339,12 @@ class $PurchaseOrderReceiptItemsTable extends PurchaseOrderReceiptItems
     } else if (isInserting) {
       context.missing(_quantityMeta);
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -10730,6 +11389,10 @@ class $PurchaseOrderReceiptItemsTable extends PurchaseOrderReceiptItems
         DriftSqlType.double,
         data['${effectivePrefix}quantity'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -10751,6 +11414,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
   final String purchaseOrderItemId;
   final String productId;
   final double quantity;
+  final bool isSample;
   final DateTime createdAt;
   const PurchaseOrderReceiptItemRow({
     required this.id,
@@ -10759,6 +11423,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
     required this.purchaseOrderItemId,
     required this.productId,
     required this.quantity,
+    required this.isSample,
     required this.createdAt,
   });
   @override
@@ -10770,6 +11435,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
     map['purchase_order_item_id'] = Variable<String>(purchaseOrderItemId);
     map['product_id'] = Variable<String>(productId);
     map['quantity'] = Variable<double>(quantity);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -10782,6 +11448,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
       purchaseOrderItemId: Value(purchaseOrderItemId),
       productId: Value(productId),
       quantity: Value(quantity),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
     );
   }
@@ -10800,6 +11467,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
       ),
       productId: serializer.fromJson<String>(json['productId']),
       quantity: serializer.fromJson<double>(json['quantity']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -10813,6 +11481,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
       'purchaseOrderItemId': serializer.toJson<String>(purchaseOrderItemId),
       'productId': serializer.toJson<String>(productId),
       'quantity': serializer.toJson<double>(quantity),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -10824,6 +11493,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
     String? purchaseOrderItemId,
     String? productId,
     double? quantity,
+    bool? isSample,
     DateTime? createdAt,
   }) => PurchaseOrderReceiptItemRow(
     id: id ?? this.id,
@@ -10832,6 +11502,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
     purchaseOrderItemId: purchaseOrderItemId ?? this.purchaseOrderItemId,
     productId: productId ?? this.productId,
     quantity: quantity ?? this.quantity,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
   );
   PurchaseOrderReceiptItemRow copyWithCompanion(
@@ -10848,6 +11519,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
           : this.purchaseOrderItemId,
       productId: data.productId.present ? data.productId.value : this.productId,
       quantity: data.quantity.present ? data.quantity.value : this.quantity,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -10861,6 +11533,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
           ..write('purchaseOrderItemId: $purchaseOrderItemId, ')
           ..write('productId: $productId, ')
           ..write('quantity: $quantity, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -10874,6 +11547,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
     purchaseOrderItemId,
     productId,
     quantity,
+    isSample,
     createdAt,
   );
   @override
@@ -10886,6 +11560,7 @@ class PurchaseOrderReceiptItemRow extends DataClass
           other.purchaseOrderItemId == this.purchaseOrderItemId &&
           other.productId == this.productId &&
           other.quantity == this.quantity &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt);
 }
 
@@ -10897,6 +11572,7 @@ class PurchaseOrderReceiptItemsCompanion
   final Value<String> purchaseOrderItemId;
   final Value<String> productId;
   final Value<double> quantity;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const PurchaseOrderReceiptItemsCompanion({
@@ -10906,6 +11582,7 @@ class PurchaseOrderReceiptItemsCompanion
     this.purchaseOrderItemId = const Value.absent(),
     this.productId = const Value.absent(),
     this.quantity = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -10916,6 +11593,7 @@ class PurchaseOrderReceiptItemsCompanion
     required String purchaseOrderItemId,
     required String productId,
     required double quantity,
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -10932,6 +11610,7 @@ class PurchaseOrderReceiptItemsCompanion
     Expression<String>? purchaseOrderItemId,
     Expression<String>? productId,
     Expression<double>? quantity,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -10943,6 +11622,7 @@ class PurchaseOrderReceiptItemsCompanion
         'purchase_order_item_id': purchaseOrderItemId,
       if (productId != null) 'product_id': productId,
       if (quantity != null) 'quantity': quantity,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -10955,6 +11635,7 @@ class PurchaseOrderReceiptItemsCompanion
     Value<String>? purchaseOrderItemId,
     Value<String>? productId,
     Value<double>? quantity,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -10965,6 +11646,7 @@ class PurchaseOrderReceiptItemsCompanion
       purchaseOrderItemId: purchaseOrderItemId ?? this.purchaseOrderItemId,
       productId: productId ?? this.productId,
       quantity: quantity ?? this.quantity,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -10993,6 +11675,9 @@ class PurchaseOrderReceiptItemsCompanion
     if (quantity.present) {
       map['quantity'] = Variable<double>(quantity.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -11011,6 +11696,7 @@ class PurchaseOrderReceiptItemsCompanion
           ..write('purchaseOrderItemId: $purchaseOrderItemId, ')
           ..write('productId: $productId, ')
           ..write('quantity: $quantity, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -11120,6 +11806,21 @@ class $PurchaseOrderPaymentsTable extends PurchaseOrderPayments
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _isSampleMeta = const VerificationMeta(
+    'isSample',
+  );
+  @override
+  late final GeneratedColumn<bool> isSample = GeneratedColumn<bool>(
+    'is_sample',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_sample" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -11153,6 +11854,7 @@ class $PurchaseOrderPaymentsTable extends PurchaseOrderPayments
     status,
     paymentDate,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   ];
@@ -11245,6 +11947,12 @@ class $PurchaseOrderPaymentsTable extends PurchaseOrderPayments
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('is_sample')) {
+      context.handle(
+        _isSampleMeta,
+        isSample.isAcceptableOrUnknown(data['is_sample']!, _isSampleMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -11309,6 +12017,10 @@ class $PurchaseOrderPaymentsTable extends PurchaseOrderPayments
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      isSample: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_sample'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -11337,6 +12049,7 @@ class PurchaseOrderPaymentRow extends DataClass
   final String status;
   final DateTime paymentDate;
   final bool isActive;
+  final bool isSample;
   final DateTime createdAt;
   final DateTime updatedAt;
   const PurchaseOrderPaymentRow({
@@ -11349,6 +12062,7 @@ class PurchaseOrderPaymentRow extends DataClass
     required this.status,
     required this.paymentDate,
     required this.isActive,
+    required this.isSample,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -11364,6 +12078,7 @@ class PurchaseOrderPaymentRow extends DataClass
     map['status'] = Variable<String>(status);
     map['payment_date'] = Variable<DateTime>(paymentDate);
     map['is_active'] = Variable<bool>(isActive);
+    map['is_sample'] = Variable<bool>(isSample);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -11380,6 +12095,7 @@ class PurchaseOrderPaymentRow extends DataClass
       status: Value(status),
       paymentDate: Value(paymentDate),
       isActive: Value(isActive),
+      isSample: Value(isSample),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -11400,6 +12116,7 @@ class PurchaseOrderPaymentRow extends DataClass
       status: serializer.fromJson<String>(json['status']),
       paymentDate: serializer.fromJson<DateTime>(json['paymentDate']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      isSample: serializer.fromJson<bool>(json['isSample']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -11417,6 +12134,7 @@ class PurchaseOrderPaymentRow extends DataClass
       'status': serializer.toJson<String>(status),
       'paymentDate': serializer.toJson<DateTime>(paymentDate),
       'isActive': serializer.toJson<bool>(isActive),
+      'isSample': serializer.toJson<bool>(isSample),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -11432,6 +12150,7 @@ class PurchaseOrderPaymentRow extends DataClass
     String? status,
     DateTime? paymentDate,
     bool? isActive,
+    bool? isSample,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => PurchaseOrderPaymentRow(
@@ -11444,6 +12163,7 @@ class PurchaseOrderPaymentRow extends DataClass
     status: status ?? this.status,
     paymentDate: paymentDate ?? this.paymentDate,
     isActive: isActive ?? this.isActive,
+    isSample: isSample ?? this.isSample,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -11468,6 +12188,7 @@ class PurchaseOrderPaymentRow extends DataClass
           ? data.paymentDate.value
           : this.paymentDate,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isSample: data.isSample.present ? data.isSample.value : this.isSample,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -11485,6 +12206,7 @@ class PurchaseOrderPaymentRow extends DataClass
           ..write('status: $status, ')
           ..write('paymentDate: $paymentDate, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -11502,6 +12224,7 @@ class PurchaseOrderPaymentRow extends DataClass
     status,
     paymentDate,
     isActive,
+    isSample,
     createdAt,
     updatedAt,
   );
@@ -11518,6 +12241,7 @@ class PurchaseOrderPaymentRow extends DataClass
           other.status == this.status &&
           other.paymentDate == this.paymentDate &&
           other.isActive == this.isActive &&
+          other.isSample == this.isSample &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -11533,6 +12257,7 @@ class PurchaseOrderPaymentsCompanion
   final Value<String> status;
   final Value<DateTime> paymentDate;
   final Value<bool> isActive;
+  final Value<bool> isSample;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -11546,6 +12271,7 @@ class PurchaseOrderPaymentsCompanion
     this.status = const Value.absent(),
     this.paymentDate = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -11560,6 +12286,7 @@ class PurchaseOrderPaymentsCompanion
     this.status = const Value.absent(),
     required DateTime paymentDate,
     this.isActive = const Value.absent(),
+    this.isSample = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -11582,6 +12309,7 @@ class PurchaseOrderPaymentsCompanion
     Expression<String>? status,
     Expression<DateTime>? paymentDate,
     Expression<bool>? isActive,
+    Expression<bool>? isSample,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -11596,6 +12324,7 @@ class PurchaseOrderPaymentsCompanion
       if (status != null) 'status': status,
       if (paymentDate != null) 'payment_date': paymentDate,
       if (isActive != null) 'is_active': isActive,
+      if (isSample != null) 'is_sample': isSample,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -11612,6 +12341,7 @@ class PurchaseOrderPaymentsCompanion
     Value<String>? status,
     Value<DateTime>? paymentDate,
     Value<bool>? isActive,
+    Value<bool>? isSample,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -11626,6 +12356,7 @@ class PurchaseOrderPaymentsCompanion
       status: status ?? this.status,
       paymentDate: paymentDate ?? this.paymentDate,
       isActive: isActive ?? this.isActive,
+      isSample: isSample ?? this.isSample,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -11662,6 +12393,9 @@ class PurchaseOrderPaymentsCompanion
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (isSample.present) {
+      map['is_sample'] = Variable<bool>(isSample.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -11686,6 +12420,7 @@ class PurchaseOrderPaymentsCompanion
           ..write('status: $status, ')
           ..write('paymentDate: $paymentDate, ')
           ..write('isActive: $isActive, ')
+          ..write('isSample: $isSample, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -13906,6 +14641,7 @@ typedef $$CategoriesTableCreateCompanionBuilder =
       Value<String?> color,
       Value<String?> icon,
       Value<bool> isActive,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -13919,6 +14655,7 @@ typedef $$CategoriesTableUpdateCompanionBuilder =
       Value<String?> color,
       Value<String?> icon,
       Value<bool> isActive,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -13965,6 +14702,11 @@ class $$CategoriesTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -14023,6 +14765,11 @@ class $$CategoriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -14067,6 +14814,9 @@ class $$CategoriesTableAnnotationComposer
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -14113,6 +14863,7 @@ class $$CategoriesTableTableManager
                 Value<String?> color = const Value.absent(),
                 Value<String?> icon = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -14124,6 +14875,7 @@ class $$CategoriesTableTableManager
                 color: color,
                 icon: icon,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -14137,6 +14889,7 @@ class $$CategoriesTableTableManager
                 Value<String?> color = const Value.absent(),
                 Value<String?> icon = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -14148,6 +14901,7 @@ class $$CategoriesTableTableManager
                 color: color,
                 icon: icon,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -14188,6 +14942,7 @@ typedef $$UnitsTableCreateCompanionBuilder =
       Value<String?> baseUnitId,
       Value<double> conversionFactor,
       Value<bool> isActive,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -14203,6 +14958,7 @@ typedef $$UnitsTableUpdateCompanionBuilder =
       Value<String?> baseUnitId,
       Value<double> conversionFactor,
       Value<bool> isActive,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -14258,6 +15014,11 @@ class $$UnitsTableFilterComposer extends Composer<_$AppDatabase, $UnitsTable> {
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -14326,6 +15087,11 @@ class $$UnitsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -14381,6 +15147,9 @@ class $$UnitsTableAnnotationComposer
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -14425,6 +15194,7 @@ class $$UnitsTableTableManager
                 Value<String?> baseUnitId = const Value.absent(),
                 Value<double> conversionFactor = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -14438,6 +15208,7 @@ class $$UnitsTableTableManager
                 baseUnitId: baseUnitId,
                 conversionFactor: conversionFactor,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -14453,6 +15224,7 @@ class $$UnitsTableTableManager
                 Value<String?> baseUnitId = const Value.absent(),
                 Value<double> conversionFactor = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -14466,6 +15238,7 @@ class $$UnitsTableTableManager
                 baseUnitId: baseUnitId,
                 conversionFactor: conversionFactor,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -14944,6 +15717,7 @@ typedef $$StockMovementsTableCreateCompanionBuilder =
       Value<String?> referenceId,
       Value<String?> notes,
       required String createdBy,
+      Value<bool> isSample,
       required DateTime createdAt,
       Value<int> rowid,
     });
@@ -14958,6 +15732,7 @@ typedef $$StockMovementsTableUpdateCompanionBuilder =
       Value<String?> referenceId,
       Value<String?> notes,
       Value<String> createdBy,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -15013,6 +15788,11 @@ class $$StockMovementsTableFilterComposer
 
   ColumnFilters<String> get createdBy => $composableBuilder(
     column: $table.createdBy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15076,6 +15856,11 @@ class $$StockMovementsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -15125,6 +15910,9 @@ class $$StockMovementsTableAnnotationComposer
 
   GeneratedColumn<String> get createdBy =>
       $composableBuilder(column: $table.createdBy, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -15176,6 +15964,7 @@ class $$StockMovementsTableTableManager
                 Value<String?> referenceId = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<String> createdBy = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => StockMovementsCompanion(
@@ -15188,6 +15977,7 @@ class $$StockMovementsTableTableManager
                 referenceId: referenceId,
                 notes: notes,
                 createdBy: createdBy,
+                isSample: isSample,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -15202,6 +15992,7 @@ class $$StockMovementsTableTableManager
                 Value<String?> referenceId = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 required String createdBy,
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => StockMovementsCompanion.insert(
@@ -15214,6 +16005,7 @@ class $$StockMovementsTableTableManager
                 referenceId: referenceId,
                 notes: notes,
                 createdBy: createdBy,
+                isSample: isSample,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -15254,6 +16046,7 @@ typedef $$CustomersTableCreateCompanionBuilder =
       Value<double?> creditLimit,
       Value<String?> imagePath,
       Value<bool> isActive,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -15270,6 +16063,7 @@ typedef $$CustomersTableUpdateCompanionBuilder =
       Value<double?> creditLimit,
       Value<String?> imagePath,
       Value<bool> isActive,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -15331,6 +16125,11 @@ class $$CustomersTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15404,6 +16203,11 @@ class $$CustomersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -15460,6 +16264,9 @@ class $$CustomersTableAnnotationComposer
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -15508,6 +16315,7 @@ class $$CustomersTableTableManager
                 Value<double?> creditLimit = const Value.absent(),
                 Value<String?> imagePath = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -15522,6 +16330,7 @@ class $$CustomersTableTableManager
                 creditLimit: creditLimit,
                 imagePath: imagePath,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -15538,6 +16347,7 @@ class $$CustomersTableTableManager
                 Value<double?> creditLimit = const Value.absent(),
                 Value<String?> imagePath = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -15552,6 +16362,7 @@ class $$CustomersTableTableManager
                 creditLimit: creditLimit,
                 imagePath: imagePath,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -15770,6 +16581,7 @@ typedef $$SaleOrdersTableCreateCompanionBuilder =
       Value<String> shippingStatus,
       Value<double> totalAmount,
       Value<bool> isActive,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -15787,6 +16599,7 @@ typedef $$SaleOrdersTableUpdateCompanionBuilder =
       Value<String> shippingStatus,
       Value<double> totalAmount,
       Value<bool> isActive,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -15853,6 +16666,11 @@ class $$SaleOrdersTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15931,6 +16749,11 @@ class $$SaleOrdersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -15996,6 +16819,9 @@ class $$SaleOrdersTableAnnotationComposer
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -16045,6 +16871,7 @@ class $$SaleOrdersTableTableManager
                 Value<String> shippingStatus = const Value.absent(),
                 Value<double> totalAmount = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -16060,6 +16887,7 @@ class $$SaleOrdersTableTableManager
                 shippingStatus: shippingStatus,
                 totalAmount: totalAmount,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -16077,6 +16905,7 @@ class $$SaleOrdersTableTableManager
                 Value<String> shippingStatus = const Value.absent(),
                 Value<double> totalAmount = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -16092,6 +16921,7 @@ class $$SaleOrdersTableTableManager
                 shippingStatus: shippingStatus,
                 totalAmount: totalAmount,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -16132,6 +16962,7 @@ typedef $$SaleOrderItemsTableCreateCompanionBuilder =
       required double unitPrice,
       required double totalPrice,
       Value<double> shippedQuantity,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -16147,6 +16978,7 @@ typedef $$SaleOrderItemsTableUpdateCompanionBuilder =
       Value<double> unitPrice,
       Value<double> totalPrice,
       Value<double> shippedQuantity,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -16203,6 +17035,11 @@ class $$SaleOrderItemsTableFilterComposer
 
   ColumnFilters<double> get shippedQuantity => $composableBuilder(
     column: $table.shippedQuantity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16271,6 +17108,11 @@ class $$SaleOrderItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -16328,6 +17170,9 @@ class $$SaleOrderItemsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -16381,6 +17226,7 @@ class $$SaleOrderItemsTableTableManager
                 Value<double> unitPrice = const Value.absent(),
                 Value<double> totalPrice = const Value.absent(),
                 Value<double> shippedQuantity = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -16394,6 +17240,7 @@ class $$SaleOrderItemsTableTableManager
                 unitPrice: unitPrice,
                 totalPrice: totalPrice,
                 shippedQuantity: shippedQuantity,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -16409,6 +17256,7 @@ class $$SaleOrderItemsTableTableManager
                 required double unitPrice,
                 required double totalPrice,
                 Value<double> shippedQuantity = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -16422,6 +17270,7 @@ class $$SaleOrderItemsTableTableManager
                 unitPrice: unitPrice,
                 totalPrice: totalPrice,
                 shippedQuantity: shippedQuantity,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -16462,6 +17311,7 @@ typedef $$SaleOrderPaymentsTableCreateCompanionBuilder =
       Value<String> status,
       required DateTime paymentDate,
       Value<bool> isActive,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -16477,6 +17327,7 @@ typedef $$SaleOrderPaymentsTableUpdateCompanionBuilder =
       Value<String> status,
       Value<DateTime> paymentDate,
       Value<bool> isActive,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -16533,6 +17384,11 @@ class $$SaleOrderPaymentsTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16601,6 +17457,11 @@ class $$SaleOrderPaymentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -16655,6 +17516,9 @@ class $$SaleOrderPaymentsTableAnnotationComposer
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -16712,6 +17576,7 @@ class $$SaleOrderPaymentsTableTableManager
                 Value<String> status = const Value.absent(),
                 Value<DateTime> paymentDate = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -16725,6 +17590,7 @@ class $$SaleOrderPaymentsTableTableManager
                 status: status,
                 paymentDate: paymentDate,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -16740,6 +17606,7 @@ class $$SaleOrderPaymentsTableTableManager
                 Value<String> status = const Value.absent(),
                 required DateTime paymentDate,
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -16753,6 +17620,7 @@ class $$SaleOrderPaymentsTableTableManager
                 status: status,
                 paymentDate: paymentDate,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -16796,6 +17664,7 @@ typedef $$SaleOrderShippingsTableCreateCompanionBuilder =
       Value<String?> carrier,
       Value<String?> trackingNumber,
       Value<String> status,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -16810,6 +17679,7 @@ typedef $$SaleOrderShippingsTableUpdateCompanionBuilder =
       Value<String?> carrier,
       Value<String?> trackingNumber,
       Value<String> status,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -16861,6 +17731,11 @@ class $$SaleOrderShippingsTableFilterComposer
 
   ColumnFilters<String> get status => $composableBuilder(
     column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16924,6 +17799,11 @@ class $$SaleOrderShippingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -16977,6 +17857,9 @@ class $$SaleOrderShippingsTableAnnotationComposer
 
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -17033,6 +17916,7 @@ class $$SaleOrderShippingsTableTableManager
                 Value<String?> carrier = const Value.absent(),
                 Value<String?> trackingNumber = const Value.absent(),
                 Value<String> status = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -17045,6 +17929,7 @@ class $$SaleOrderShippingsTableTableManager
                 carrier: carrier,
                 trackingNumber: trackingNumber,
                 status: status,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -17059,6 +17944,7 @@ class $$SaleOrderShippingsTableTableManager
                 Value<String?> carrier = const Value.absent(),
                 Value<String?> trackingNumber = const Value.absent(),
                 Value<String> status = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -17071,6 +17957,7 @@ class $$SaleOrderShippingsTableTableManager
                 carrier: carrier,
                 trackingNumber: trackingNumber,
                 status: status,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -17112,6 +17999,7 @@ typedef $$SaleOrderShippingItemsTableCreateCompanionBuilder =
       required String saleOrderItemId,
       required String productId,
       required double quantity,
+      Value<bool> isSample,
       required DateTime createdAt,
       Value<int> rowid,
     });
@@ -17123,6 +18011,7 @@ typedef $$SaleOrderShippingItemsTableUpdateCompanionBuilder =
       Value<String> saleOrderItemId,
       Value<String> productId,
       Value<double> quantity,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -17163,6 +18052,11 @@ class $$SaleOrderShippingItemsTableFilterComposer
 
   ColumnFilters<double> get quantity => $composableBuilder(
     column: $table.quantity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17211,6 +18105,11 @@ class $$SaleOrderShippingItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -17249,6 +18148,9 @@ class $$SaleOrderShippingItemsTableAnnotationComposer
 
   GeneratedColumn<double> get quantity =>
       $composableBuilder(column: $table.quantity, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -17306,6 +18208,7 @@ class $$SaleOrderShippingItemsTableTableManager
                 Value<String> saleOrderItemId = const Value.absent(),
                 Value<String> productId = const Value.absent(),
                 Value<double> quantity = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SaleOrderShippingItemsCompanion(
@@ -17315,6 +18218,7 @@ class $$SaleOrderShippingItemsTableTableManager
                 saleOrderItemId: saleOrderItemId,
                 productId: productId,
                 quantity: quantity,
+                isSample: isSample,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -17326,6 +18230,7 @@ class $$SaleOrderShippingItemsTableTableManager
                 required String saleOrderItemId,
                 required String productId,
                 required double quantity,
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => SaleOrderShippingItemsCompanion.insert(
@@ -17335,6 +18240,7 @@ class $$SaleOrderShippingItemsTableTableManager
                 saleOrderItemId: saleOrderItemId,
                 productId: productId,
                 quantity: quantity,
+                isSample: isSample,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -17379,6 +18285,7 @@ typedef $$SuppliersTableCreateCompanionBuilder =
       Value<int> paymentTerms,
       Value<double?> creditLimit,
       Value<bool> isActive,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -17395,6 +18302,7 @@ typedef $$SuppliersTableUpdateCompanionBuilder =
       Value<int> paymentTerms,
       Value<double?> creditLimit,
       Value<bool> isActive,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -17456,6 +18364,11 @@ class $$SuppliersTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17529,6 +18442,11 @@ class $$SuppliersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -17587,6 +18505,9 @@ class $$SuppliersTableAnnotationComposer
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -17635,6 +18556,7 @@ class $$SuppliersTableTableManager
                 Value<int> paymentTerms = const Value.absent(),
                 Value<double?> creditLimit = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -17649,6 +18571,7 @@ class $$SuppliersTableTableManager
                 paymentTerms: paymentTerms,
                 creditLimit: creditLimit,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -17665,6 +18588,7 @@ class $$SuppliersTableTableManager
                 Value<int> paymentTerms = const Value.absent(),
                 Value<double?> creditLimit = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -17679,6 +18603,7 @@ class $$SuppliersTableTableManager
                 paymentTerms: paymentTerms,
                 creditLimit: creditLimit,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -17721,6 +18646,7 @@ typedef $$PurchaseOrdersTableCreateCompanionBuilder =
       Value<String> receiptStatus,
       Value<double> totalAmount,
       Value<bool> isActive,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -17738,6 +18664,7 @@ typedef $$PurchaseOrdersTableUpdateCompanionBuilder =
       Value<String> receiptStatus,
       Value<double> totalAmount,
       Value<bool> isActive,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -17804,6 +18731,11 @@ class $$PurchaseOrdersTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17882,6 +18814,11 @@ class $$PurchaseOrdersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -17949,6 +18886,9 @@ class $$PurchaseOrdersTableAnnotationComposer
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -18004,6 +18944,7 @@ class $$PurchaseOrdersTableTableManager
                 Value<String> receiptStatus = const Value.absent(),
                 Value<double> totalAmount = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -18019,6 +18960,7 @@ class $$PurchaseOrdersTableTableManager
                 receiptStatus: receiptStatus,
                 totalAmount: totalAmount,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -18036,6 +18978,7 @@ class $$PurchaseOrdersTableTableManager
                 Value<String> receiptStatus = const Value.absent(),
                 Value<double> totalAmount = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -18051,6 +18994,7 @@ class $$PurchaseOrdersTableTableManager
                 receiptStatus: receiptStatus,
                 totalAmount: totalAmount,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -18091,6 +19035,7 @@ typedef $$PurchaseOrderItemsTableCreateCompanionBuilder =
       required double unitPrice,
       required double totalPrice,
       Value<double> receivedQuantity,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -18106,6 +19051,7 @@ typedef $$PurchaseOrderItemsTableUpdateCompanionBuilder =
       Value<double> unitPrice,
       Value<double> totalPrice,
       Value<double> receivedQuantity,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -18162,6 +19108,11 @@ class $$PurchaseOrderItemsTableFilterComposer
 
   ColumnFilters<double> get receivedQuantity => $composableBuilder(
     column: $table.receivedQuantity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18230,6 +19181,11 @@ class $$PurchaseOrderItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -18287,6 +19243,9 @@ class $$PurchaseOrderItemsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -18343,6 +19302,7 @@ class $$PurchaseOrderItemsTableTableManager
                 Value<double> unitPrice = const Value.absent(),
                 Value<double> totalPrice = const Value.absent(),
                 Value<double> receivedQuantity = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -18356,6 +19316,7 @@ class $$PurchaseOrderItemsTableTableManager
                 unitPrice: unitPrice,
                 totalPrice: totalPrice,
                 receivedQuantity: receivedQuantity,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -18371,6 +19332,7 @@ class $$PurchaseOrderItemsTableTableManager
                 required double unitPrice,
                 required double totalPrice,
                 Value<double> receivedQuantity = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -18384,6 +19346,7 @@ class $$PurchaseOrderItemsTableTableManager
                 unitPrice: unitPrice,
                 totalPrice: totalPrice,
                 receivedQuantity: receivedQuantity,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -18426,6 +19389,7 @@ typedef $$PurchaseOrderReceiptsTableCreateCompanionBuilder =
       required DateTime receiptDate,
       Value<String> status,
       Value<String?> notes,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -18439,6 +19403,7 @@ typedef $$PurchaseOrderReceiptsTableUpdateCompanionBuilder =
       Value<DateTime> receiptDate,
       Value<String> status,
       Value<String?> notes,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -18485,6 +19450,11 @@ class $$PurchaseOrderReceiptsTableFilterComposer
 
   ColumnFilters<String> get notes => $composableBuilder(
     column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18543,6 +19513,11 @@ class $$PurchaseOrderReceiptsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -18591,6 +19566,9 @@ class $$PurchaseOrderReceiptsTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -18652,6 +19630,7 @@ class $$PurchaseOrderReceiptsTableTableManager
                 Value<DateTime> receiptDate = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -18663,6 +19642,7 @@ class $$PurchaseOrderReceiptsTableTableManager
                 receiptDate: receiptDate,
                 status: status,
                 notes: notes,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -18676,6 +19656,7 @@ class $$PurchaseOrderReceiptsTableTableManager
                 required DateTime receiptDate,
                 Value<String> status = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -18687,6 +19668,7 @@ class $$PurchaseOrderReceiptsTableTableManager
                 receiptDate: receiptDate,
                 status: status,
                 notes: notes,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -18728,6 +19710,7 @@ typedef $$PurchaseOrderReceiptItemsTableCreateCompanionBuilder =
       required String purchaseOrderItemId,
       required String productId,
       required double quantity,
+      Value<bool> isSample,
       required DateTime createdAt,
       Value<int> rowid,
     });
@@ -18739,6 +19722,7 @@ typedef $$PurchaseOrderReceiptItemsTableUpdateCompanionBuilder =
       Value<String> purchaseOrderItemId,
       Value<String> productId,
       Value<double> quantity,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -18779,6 +19763,11 @@ class $$PurchaseOrderReceiptItemsTableFilterComposer
 
   ColumnFilters<double> get quantity => $composableBuilder(
     column: $table.quantity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18827,6 +19816,11 @@ class $$PurchaseOrderReceiptItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -18863,6 +19857,9 @@ class $$PurchaseOrderReceiptItemsTableAnnotationComposer
 
   GeneratedColumn<double> get quantity =>
       $composableBuilder(column: $table.quantity, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -18920,6 +19917,7 @@ class $$PurchaseOrderReceiptItemsTableTableManager
                 Value<String> purchaseOrderItemId = const Value.absent(),
                 Value<String> productId = const Value.absent(),
                 Value<double> quantity = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PurchaseOrderReceiptItemsCompanion(
@@ -18929,6 +19927,7 @@ class $$PurchaseOrderReceiptItemsTableTableManager
                 purchaseOrderItemId: purchaseOrderItemId,
                 productId: productId,
                 quantity: quantity,
+                isSample: isSample,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -18940,6 +19939,7 @@ class $$PurchaseOrderReceiptItemsTableTableManager
                 required String purchaseOrderItemId,
                 required String productId,
                 required double quantity,
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => PurchaseOrderReceiptItemsCompanion.insert(
@@ -18949,6 +19949,7 @@ class $$PurchaseOrderReceiptItemsTableTableManager
                 purchaseOrderItemId: purchaseOrderItemId,
                 productId: productId,
                 quantity: quantity,
+                isSample: isSample,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -18992,6 +19993,7 @@ typedef $$PurchaseOrderPaymentsTableCreateCompanionBuilder =
       Value<String> status,
       required DateTime paymentDate,
       Value<bool> isActive,
+      Value<bool> isSample,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -19007,6 +20009,7 @@ typedef $$PurchaseOrderPaymentsTableUpdateCompanionBuilder =
       Value<String> status,
       Value<DateTime> paymentDate,
       Value<bool> isActive,
+      Value<bool> isSample,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -19063,6 +20066,11 @@ class $$PurchaseOrderPaymentsTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19131,6 +20139,11 @@ class $$PurchaseOrderPaymentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSample => $composableBuilder(
+    column: $table.isSample,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -19185,6 +20198,9 @@ class $$PurchaseOrderPaymentsTableAnnotationComposer
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSample =>
+      $composableBuilder(column: $table.isSample, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -19248,6 +20264,7 @@ class $$PurchaseOrderPaymentsTableTableManager
                 Value<String> status = const Value.absent(),
                 Value<DateTime> paymentDate = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -19261,6 +20278,7 @@ class $$PurchaseOrderPaymentsTableTableManager
                 status: status,
                 paymentDate: paymentDate,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -19276,6 +20294,7 @@ class $$PurchaseOrderPaymentsTableTableManager
                 Value<String> status = const Value.absent(),
                 required DateTime paymentDate,
                 Value<bool> isActive = const Value.absent(),
+                Value<bool> isSample = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -19289,6 +20308,7 @@ class $$PurchaseOrderPaymentsTableTableManager
                 status: status,
                 paymentDate: paymentDate,
                 isActive: isActive,
+                isSample: isSample,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,

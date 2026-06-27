@@ -53,7 +53,7 @@ class AppDatabase extends _$AppDatabase {
       AppDatabase(driftDatabase(name: 'inventoryhub'));
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -80,6 +80,24 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(productionRecipes);
             await m.createTable(productionRecipeItems);
             await m.createTable(productionOrders);
+          }
+          if (from < 5) {
+            await m.addColumn(products, products.isSample);
+            await m.addColumn(categories, categories.isSample);
+            await m.addColumn(units, units.isSample);
+            await m.addColumn(customers, customers.isSample);
+            await m.addColumn(suppliers, suppliers.isSample);
+            await m.addColumn(stockMovements, stockMovements.isSample);
+            await m.addColumn(saleOrders, saleOrders.isSample);
+            await m.addColumn(saleOrderItems, saleOrderItems.isSample);
+            await m.addColumn(saleOrderPayments, saleOrderPayments.isSample);
+            await m.addColumn(saleOrderShippings, saleOrderShippings.isSample);
+            await m.addColumn(saleOrderShippingItems, saleOrderShippingItems.isSample);
+            await m.addColumn(purchaseOrders, purchaseOrders.isSample);
+            await m.addColumn(purchaseOrderItems, purchaseOrderItems.isSample);
+            await m.addColumn(purchaseOrderReceipts, purchaseOrderReceipts.isSample);
+            await m.addColumn(purchaseOrderReceiptItems, purchaseOrderReceiptItems.isSample);
+            await m.addColumn(purchaseOrderPayments, purchaseOrderPayments.isSample);
           }
         },
       );

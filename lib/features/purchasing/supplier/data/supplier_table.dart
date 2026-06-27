@@ -14,6 +14,8 @@ class Suppliers extends Table {
   RealColumn get creditLimit => real().named('credit_limit').nullable()();
   BoolColumn get isActive =>
       boolean().named('is_active').withDefault(const Constant(true))();
+  BoolColumn get isSample =>
+      boolean().named('is_sample').withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().named('created_at')();
   DateTimeColumn get updatedAt => dateTime().named('updated_at')();
 

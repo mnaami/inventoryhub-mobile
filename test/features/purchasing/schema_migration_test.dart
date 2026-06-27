@@ -34,9 +34,9 @@ void main() {
     await db.close();
   });
 
-  test('schemaVersion is 4', () {
+  test('schemaVersion is 5', () {
     final db = newTestDb();
-    expect(db.schemaVersion, 4);
+    expect(db.schemaVersion, 5);
     db.close();
   });
 }

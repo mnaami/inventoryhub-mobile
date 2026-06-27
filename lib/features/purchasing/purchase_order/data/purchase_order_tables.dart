@@ -18,6 +18,8 @@ class PurchaseOrders extends Table {
       real().named('total_amount').withDefault(const Constant(0))();
   BoolColumn get isActive =>
       boolean().named('is_active').withDefault(const Constant(true))();
+  BoolColumn get isSample =>
+      boolean().named('is_sample').withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().named('created_at')();
   DateTimeColumn get updatedAt => dateTime().named('updated_at')();
 
@@ -37,6 +39,8 @@ class PurchaseOrderItems extends Table {
   RealColumn get totalPrice => real().named('total_price')();
   RealColumn get receivedQuantity =>
       real().named('received_quantity').withDefault(const Constant(0))();
+  BoolColumn get isSample =>
+      boolean().named('is_sample').withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().named('created_at')();
   DateTimeColumn get updatedAt => dateTime().named('updated_at')();
 
@@ -53,6 +57,8 @@ class PurchaseOrderReceipts extends Table {
   DateTimeColumn get receiptDate => dateTime().named('receipt_date')();
   TextColumn get status => text().withDefault(const Constant('draft'))();
   TextColumn get notes => text().nullable()();
+  BoolColumn get isSample =>
+      boolean().named('is_sample').withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().named('created_at')();
   DateTimeColumn get updatedAt => dateTime().named('updated_at')();
 
@@ -68,6 +74,8 @@ class PurchaseOrderReceiptItems extends Table {
   TextColumn get purchaseOrderItemId => text().named('purchase_order_item_id')();
   TextColumn get productId => text().named('product_id')();
   RealColumn get quantity => real()();
+  BoolColumn get isSample =>
+      boolean().named('is_sample').withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().named('created_at')();
 
   @override
@@ -86,6 +94,8 @@ class PurchaseOrderPayments extends Table {
   DateTimeColumn get paymentDate => dateTime().named('payment_date')();
   BoolColumn get isActive =>
       boolean().named('is_active').withDefault(const Constant(true))();
+  BoolColumn get isSample =>
+      boolean().named('is_sample').withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().named('created_at')();
   DateTimeColumn get updatedAt => dateTime().named('updated_at')();
 
