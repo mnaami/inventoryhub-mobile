@@ -107,7 +107,8 @@ class SampleDataService {
   }
 
   _ProductRef _product(_Refs refs, String name) =>
-      refs.products.firstWhere((p) => p.name == name);
+      refs.products.firstWhere((p) => p.name == name,
+          orElse: () => throw StateError('Unknown sample product: $name'));
 
   Future<void> _seedPurchasing(_Refs refs, DateTime now) async {
     final orgId = _session.organizationId;

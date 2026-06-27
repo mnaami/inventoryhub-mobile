@@ -39,6 +39,7 @@ class _SampleDataSectionState extends ConsumerState<SampleDataSection> {
       confirmLabel: 'Remove',
     );
     if (!ok) return;
+    if (!mounted) return;
     setState(() => _busy = true);
     try {
       await ref.read(sampleDataServiceProvider).remove();
