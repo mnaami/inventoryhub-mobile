@@ -6,6 +6,8 @@ import 'package:inventoryhub_mobile/core/seed/sample_data_service.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import '../../helpers/test_db.dart';
 
+Matcher moveCloseTo(double v) => closeTo(v, 0.0001);
+
 void main() {
   late AppDatabase db;
   late SampleDataService service;
@@ -87,5 +89,40 @@ void main() {
     await service.load();
     final products = await (db.select(db.products)..where((p) => p.isSample.equals(true))).get();
     expect(products.every((p) => p.minimumStock > 0), isTrue);
+  });
+
+  group('purchasing', () {
+    test('receipts add stock IN through the ledger and reconcile', () async {
+      await service.load();
+      final products = await (db.select(db.products)..where((p) => p.isSample.equals(true))).get();
+      // At least some products have positive stock from posted receipts.
+      expect(products.where((p) => p.currentStock > 0), isNotEmpty);
+      // current_stock equals the signed sum of that product's movements.
+      for (final p in products) {
+        final moves = await db.stockMovementDao.forProduct(p.id);
+        final sum = moves.fold<double>(0, (a, m) => a + m.quantity);
+        expect(p.currentStock, moveCloseTo(sum));
+      }
+    });
+
+    test('purchase orders show a mix of payment statuses', () async {
+      await service.load();
+      final pos = await (db.select(db.purchaseOrders)..where((o) => o.isSample.equals(true))).get();
+      final statuses = pos.map((o) => o.paymentStatus).toSet();
+      expect(statuses.length, greaterThan(1)); // not all identical
+      expect(pos.where((o) => o.status == 'draft'), isNotEmpty);
+    });
+
+    test('directly-built purchasing rows are tagged is_sample', () async {
+      await service.load();
+      // Stock movements are created INSIDE the receipt DAO and are tagged in
+      // Task 6 (_tagInternalRows); they are NOT asserted here.
+      final receipts = await db.select(db.purchaseOrderReceipts).get();
+      expect(receipts.every((r) => r.isSample), isTrue);
+      final items = await db.select(db.purchaseOrderItems).get();
+      expect(items.every((i) => i.isSample), isTrue);
+      final pays = await db.select(db.purchaseOrderPayments).get();
+      expect(pays.every((p) => p.isSample), isTrue);
+    });
   });
 }

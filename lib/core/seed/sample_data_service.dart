@@ -77,7 +77,153 @@ class SampleDataService {
     await _db.transaction(() async {
       final refs = _Refs();
       await _seedFoundation(refs, now);
+      await _seedPurchasing(refs, now);
     });
+  }
+
+  _ProductRef _product(_Refs refs, String name) =>
+      refs.products.firstWhere((p) => p.name == name);
+
+  Future<void> _seedPurchasing(_Refs refs, DateTime now) async {
+    final orgId = _session.organizationId;
+    final userId = _session.userId;
+
+    for (final s in _kSuppliers) {
+      final id = _ids.newId();
+      refs.supplierIds.add(id);
+      await _db.supplierDao.insertRow(SuppliersCompanion.insert(
+        id: id,
+        organizationId: orgId,
+        name: s[0] as String,
+        contactPerson: Value(s[1] as String),
+        paymentTerms: Value(s[2] as int),
+        isSample: const Value(true),
+        createdAt: now,
+        updatedAt: now,
+      ));
+    }
+
+    for (final spec in _kPurchaseOrders) {
+      final orderDate = now.subtract(Duration(days: spec.daysAgo));
+      final poId = _ids.newId();
+      final number =
+          await _db.documentCounterDao.next(orgId, 'purchase_order', 'PO');
+
+      // Build line items.
+      final items = <PurchaseOrderItemsCompanion>[];
+      final lineRefs = <_PoLine>[];
+      var total = 0.0;
+      for (final it in spec.items) {
+        final p = _product(refs, it[0] as String);
+        final qty = it[1] as double;
+        final cost = it[2] as double;
+        final lineTotal = qty * cost;
+        total += lineTotal;
+        final itemId = _ids.newId();
+        items.add(PurchaseOrderItemsCompanion.insert(
+          id: itemId,
+          organizationId: orgId,
+          purchaseOrderId: poId,
+          productId: p.id,
+          productName: p.name,
+          quantity: qty,
+          unitPrice: cost,
+          totalPrice: lineTotal,
+          isSample: const Value(true),
+          createdAt: orderDate,
+          updatedAt: orderDate,
+        ));
+        lineRefs.add(_PoLine(itemId, p.id, qty));
+      }
+
+      await _db.purchaseOrderDao.createWithItems(
+        PurchaseOrdersCompanion.insert(
+          id: poId,
+          organizationId: orgId,
+          orderNumber: number,
+          supplierId: refs.supplierIds[spec.supplierIndex],
+          orderDate: orderDate,
+          status: Value(spec.status),
+          totalAmount: Value(total),
+          isSample: const Value(true),
+          createdAt: orderDate,
+          updatedAt: orderDate,
+        ),
+        items,
+      );
+
+      if (spec.status == 'draft') continue;
+
+      // Receipt (draft -> post) adds stock IN for the received fraction.
+      if (spec.receiveFraction > 0) {
+        final receiptDate = orderDate.add(const Duration(days: 2));
+        final receiptId = _ids.newId();
+        final rNumber =
+            await _db.documentCounterDao.next(orgId, 'po_receipt', 'RCP');
+        final receiptItems = <PurchaseOrderReceiptItemsCompanion>[];
+        final movementByReceiptItem = <String, String>{};
+        for (final l in lineRefs) {
+          final recvQty = l.qty * spec.receiveFraction;
+          if (recvQty <= 0) continue;
+          final riId = _ids.newId();
+          final movId = _ids.newId();
+          movementByReceiptItem[riId] = movId;
+          refs.receiptMovementIds.add(movId);
+          receiptItems.add(PurchaseOrderReceiptItemsCompanion.insert(
+            id: riId,
+            organizationId: orgId,
+            receiptId: receiptId,
+            purchaseOrderItemId: l.itemId,
+            productId: l.productId,
+            quantity: recvQty,
+            isSample: const Value(true),
+            createdAt: receiptDate,
+          ));
+        }
+        await _db.purchaseOrderReceiptDao.createReceipt(
+          receipt: PurchaseOrderReceiptsCompanion.insert(
+            id: receiptId,
+            organizationId: orgId,
+            purchaseOrderId: poId,
+            receiptNumber: rNumber,
+            receiptDate: receiptDate,
+            isSample: const Value(true),
+            createdAt: receiptDate,
+            updatedAt: receiptDate,
+          ),
+          items: receiptItems,
+        );
+        await _db.purchaseOrderReceiptDao.post(
+          receiptId: receiptId,
+          movementIdByReceiptItem: movementByReceiptItem,
+          createdBy: userId,
+          now: receiptDate,
+        );
+      }
+
+      // Payment (draft -> post) for the paid fraction.
+      if (spec.payFraction > 0) {
+        final payDate = orderDate.add(const Duration(days: 3));
+        final payId = _ids.newId();
+        final pNumber =
+            await _db.documentCounterDao.next(orgId, 'po_payment', 'PPAY');
+        await _db.purchaseOrderPaymentDao.createDraft(
+          PurchaseOrderPaymentsCompanion.insert(
+            id: payId,
+            organizationId: orgId,
+            purchaseOrderId: poId,
+            paymentNumber: pNumber,
+            amount: total * spec.payFraction,
+            method: 'bank_transfer',
+            paymentDate: payDate,
+            isSample: const Value(true),
+            createdAt: payDate,
+            updatedAt: payDate,
+          ),
+        );
+        await _db.purchaseOrderPaymentDao.post(payId, payDate);
+      }
+    }
   }
 
   Future<void> _seedFoundation(_Refs refs, DateTime now) async {
@@ -151,6 +297,13 @@ class _ProductRef {
   final double minimumStock;
 }
 
+class _PoLine {
+  _PoLine(this.itemId, this.productId, this.qty);
+  final String itemId;
+  final String productId;
+  final double qty;
+}
+
 class _Refs {
   final Map<String, String> unitIdBySymbol = {};
   final Map<String, String> categoryIdByName = {};
@@ -191,4 +344,59 @@ const _kProducts = <List<Object>>[
   ['Copper Pipe 15mm', 'Plumbing', 'm', 3.0, 7.0, 25.0],
   ['PVC Elbow 32mm', 'Plumbing', 'pc', 1.0, 3.0, 20.0],
   ['Safety Goggles', 'Hand Tools', 'pc', 3.0, 8.0, 10.0],
+];
+
+// A purchase order spec.
+// items: (productName, qty, unitCost); receiveFraction: 0..1 of each line;
+// payFraction: 0..1 of total (posted); status: 'sent' or 'draft'; daysAgo.
+class _PoSpec {
+  const _PoSpec(this.supplierIndex, this.items, this.receiveFraction,
+      this.payFraction, this.status, this.daysAgo);
+  final int supplierIndex;
+  final List<List<Object>> items;
+  final double receiveFraction;
+  final double payFraction;
+  final String status;
+  final int daysAgo;
+}
+
+const _kSuppliers = <List<Object>>[
+  ['BuildPro Wholesale', 'Dana Cole', 30],
+  ['FastFix Fasteners', 'Sam Reyes', 15],
+  ['ColorCraft Paints', 'Lee Park', 30],
+  ['Timberline Supply', 'Jo Quinn', 45],
+];
+
+const _kPurchaseOrders = <_PoSpec>[
+  _PoSpec(0, [
+    ['Cordless Drill 18V', 10.0, 75.0],
+    ['Plywood Sheet', 12.0, 18.0],
+    ['Paint Roller Set', 10.0, 5.0],
+  ], 1.0, 1.0, 'sent', 8),
+  _PoSpec(1, [
+    ['Wood Screws 4x40', 40.0, 3.0],
+    ['Hex Bolts M8', 30.0, 5.0],
+    ['Wall Plugs', 50.0, 2.0],
+  ], 1.0, 0.5, 'sent', 20),
+  _PoSpec(2, [
+    ['Interior Paint 5L', 30.0, 4.0],
+    ['Exterior Paint 5L', 20.0, 5.0],
+  ], 1.0, 0.0, 'sent', 15),
+  _PoSpec(3, [
+    ['Pine Plank 2.4m', 60.0, 2.5],
+    ['Plywood Sheet', 10.0, 18.0],
+  ], 0.6, 0.3, 'sent', 12),
+  _PoSpec(0, [
+    ['Claw Hammer', 12.0, 8.0],
+    ['Tape Measure 5m', 15.0, 4.0],
+    ['Adjustable Wrench', 10.0, 6.0],
+    ['Pipe Wrench', 6.0, 11.0],
+    ['Safety Goggles', 20.0, 3.0],
+    ['Copper Pipe 15mm', 40.0, 3.0],
+    ['PVC Elbow 32mm', 40.0, 1.0],
+  ], 1.0, 1.0, 'sent', 30),
+  _PoSpec(1, [
+    ['Wood Screws 4x40', 20.0, 3.0],
+    ['Hex Bolts M8', 15.0, 5.0],
+  ], 0.0, 0.0, 'draft', 3),
 ];
