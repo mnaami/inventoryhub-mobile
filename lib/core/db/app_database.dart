@@ -82,23 +82,50 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(productionOrders);
           }
           if (from < 5) {
-            await m.addColumn(products, products.isSample);
-            await m.addColumn(categories, categories.isSample);
-            await m.addColumn(units, units.isSample);
-            await m.addColumn(customers, customers.isSample);
-            await m.addColumn(suppliers, suppliers.isSample);
-            await m.addColumn(stockMovements, stockMovements.isSample);
-            await m.addColumn(saleOrders, saleOrders.isSample);
-            await m.addColumn(saleOrderItems, saleOrderItems.isSample);
-            await m.addColumn(saleOrderPayments, saleOrderPayments.isSample);
-            await m.addColumn(saleOrderShippings, saleOrderShippings.isSample);
-            await m.addColumn(saleOrderShippingItems, saleOrderShippingItems.isSample);
-            await m.addColumn(purchaseOrders, purchaseOrders.isSample);
-            await m.addColumn(purchaseOrderItems, purchaseOrderItems.isSample);
-            await m.addColumn(purchaseOrderReceipts, purchaseOrderReceipts.isSample);
-            await m.addColumn(purchaseOrderReceiptItems, purchaseOrderReceiptItems.isSample);
-            await m.addColumn(purchaseOrderPayments, purchaseOrderPayments.isSample);
+            // `products` has carried is_sample since slice 1, and the
+            // createTable steps above build tables from current definitions
+            // (which already include is_sample). Add the column only where it
+            // is genuinely missing so the upgrade is safe from any prior
+            // version. See migration_v4_to_v5_test.
+            await _addColumnIfAbsent(m, products, products.isSample);
+            await _addColumnIfAbsent(m, categories, categories.isSample);
+            await _addColumnIfAbsent(m, units, units.isSample);
+            await _addColumnIfAbsent(m, customers, customers.isSample);
+            await _addColumnIfAbsent(m, suppliers, suppliers.isSample);
+            await _addColumnIfAbsent(m, stockMovements, stockMovements.isSample);
+            await _addColumnIfAbsent(m, saleOrders, saleOrders.isSample);
+            await _addColumnIfAbsent(m, saleOrderItems, saleOrderItems.isSample);
+            await _addColumnIfAbsent(
+                m, saleOrderPayments, saleOrderPayments.isSample);
+            await _addColumnIfAbsent(
+                m, saleOrderShippings, saleOrderShippings.isSample);
+            await _addColumnIfAbsent(
+                m, saleOrderShippingItems, saleOrderShippingItems.isSample);
+            await _addColumnIfAbsent(m, purchaseOrders, purchaseOrders.isSample);
+            await _addColumnIfAbsent(
+                m, purchaseOrderItems, purchaseOrderItems.isSample);
+            await _addColumnIfAbsent(
+                m, purchaseOrderReceipts, purchaseOrderReceipts.isSample);
+            await _addColumnIfAbsent(m, purchaseOrderReceiptItems,
+                purchaseOrderReceiptItems.isSample);
+            await _addColumnIfAbsent(
+                m, purchaseOrderPayments, purchaseOrderPayments.isSample);
           }
         },
       );
+
+  /// Adds [column] to [table] only if it is not already present, making the
+  /// migration idempotent and safe regardless of the device's prior schema
+  /// version (some tables are created above from definitions that already
+  /// carry the column).
+  Future<void> _addColumnIfAbsent(
+      Migrator m, TableInfo table, GeneratedColumn column) async {
+    final info =
+        await customSelect('PRAGMA table_info(${table.actualTableName})').get();
+    final present =
+        info.any((row) => row.read<String>('name') == column.name);
+    if (!present) {
+      await m.addColumn(table, column);
+    }
+  }
 }
