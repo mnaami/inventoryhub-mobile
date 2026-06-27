@@ -160,4 +160,70 @@ void main() {
       expect(ships.every((s) => s.isSample), isTrue);
     });
   });
+
+  group('end-to-end', () {
+    test('rows created inside shipping/receipt DAOs are tagged is_sample', () async {
+      await service.load();
+      final moves = await db.select(db.stockMovements).get();
+      expect(moves, isNotEmpty);
+      expect(moves.every((m) => m.isSample), isTrue);
+      final shipItems = await db.select(db.saleOrderShippingItems).get();
+      expect(shipItems, isNotEmpty);
+      expect(shipItems.every((i) => i.isSample), isTrue);
+    });
+
+    test('load then remove returns the DB to its pre-load state', () async {
+      Future<int> totalRows() async {
+        var n = 0;
+        n += (await db.select(db.products).get()).length;
+        n += (await db.select(db.categories).get()).length;
+        n += (await db.select(db.units).get()).length;
+        n += (await db.select(db.customers).get()).length;
+        n += (await db.select(db.suppliers).get()).length;
+        n += (await db.select(db.saleOrders).get()).length;
+        n += (await db.select(db.saleOrderItems).get()).length;
+        n += (await db.select(db.saleOrderPayments).get()).length;
+        n += (await db.select(db.saleOrderShippings).get()).length;
+        n += (await db.select(db.saleOrderShippingItems).get()).length;
+        n += (await db.select(db.stockMovements).get()).length;
+        n += (await db.select(db.purchaseOrders).get()).length;
+        n += (await db.select(db.purchaseOrderItems).get()).length;
+        n += (await db.select(db.purchaseOrderReceipts).get()).length;
+        n += (await db.select(db.purchaseOrderReceiptItems).get()).length;
+        n += (await db.select(db.purchaseOrderPayments).get()).length;
+        return n;
+      }
+
+      final before = await totalRows();
+      await service.load();
+      expect(await totalRows(), greaterThan(before));
+      await service.remove();
+      expect(await totalRows(), before); // base 'pc' unit only
+    });
+
+    test('remove keeps a user-created product entered alongside the sample data',
+        () async {
+      await service.load();
+      final now = DateTime.utc(2026, 2, 1);
+      await db.into(db.products).insert(ProductsCompanion.insert(
+            id: 'mine', organizationId: session.organizationId,
+            name: 'My Hand-Entered Item', unitId: session.defaultUnitId,
+            createdAt: now, updatedAt: now,
+          ));
+      await service.remove();
+      final left = await db.select(db.products).get();
+      expect(left.map((p) => p.id), ['mine']);
+    });
+
+    test('load is idempotent across load -> remove -> load', () async {
+      await service.load();
+      final firstCount =
+          (await (db.select(db.products)..where((p) => p.isSample.equals(true))).get()).length;
+      await service.remove();
+      await service.load();
+      final secondCount =
+          (await (db.select(db.products)..where((p) => p.isSample.equals(true))).get()).length;
+      expect(secondCount, firstCount);
+    });
+  });
 }

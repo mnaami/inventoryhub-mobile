@@ -81,7 +81,29 @@ class SampleDataService {
       await _seedFoundation(refs, now);
       await _seedPurchasing(refs, now);
       await _seedSales(refs, now);
+      await _tagInternalRows(refs);
     });
+  }
+
+  /// Tags rows created INSIDE the shipping/receipt DAOs (stock movements and
+  /// shipment items) — the only demo rows whose companions we don't build
+  /// ourselves. Their ids are the movement ids we generated and passed in.
+  Future<void> _tagInternalRows(_Refs refs) async {
+    final allMovementIds = [
+      ...refs.receiptMovementIds,
+      ...refs.shipMovementIds,
+    ];
+    if (allMovementIds.isNotEmpty) {
+      await (_db.update(_db.stockMovements)
+            ..where((m) => m.id.isIn(allMovementIds)))
+          .write(const StockMovementsCompanion(isSample: Value(true)));
+    }
+    if (refs.shipMovementIds.isNotEmpty) {
+      // Shipment items reuse the movement id as their primary key.
+      await (_db.update(_db.saleOrderShippingItems)
+            ..where((i) => i.id.isIn(refs.shipMovementIds)))
+          .write(const SaleOrderShippingItemsCompanion(isSample: Value(true)));
+    }
   }
 
   _ProductRef _product(_Refs refs, String name) =>
