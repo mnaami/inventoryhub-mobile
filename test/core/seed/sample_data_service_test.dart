@@ -64,4 +64,28 @@ void main() {
     expect(s.purchases, 0);
     expect(s.isLoaded, isTrue);
   });
+
+  group('foundation', () {
+    test('load creates units, categories, and ~16 tagged products', () async {
+      await service.load();
+      final units = await (db.select(db.units)..where((u) => u.isSample.equals(true))).get();
+      final cats = await (db.select(db.categories)..where((c) => c.isSample.equals(true))).get();
+      final products = await (db.select(db.products)..where((p) => p.isSample.equals(true))).get();
+      expect(units.length, greaterThanOrEqualTo(4));
+      expect(cats.length, greaterThanOrEqualTo(5));
+      expect(products.length, inInclusiveRange(15, 25));
+      // No duplicate of the base 'pc' unit.
+      final pcUnits = await (db.select(db.units)..where((u) => u.symbol.equals('pc'))).get();
+      expect(pcUnits, hasLength(1));
+    });
+  });
+
+  test('foundation marks at least one product below its reorder point is possible',
+      () async {
+    // Foundation alone sets current_stock = 0; minimums are > 0, so every
+    // product is technically below reorder until purchasing adds stock.
+    await service.load();
+    final products = await (db.select(db.products)..where((p) => p.isSample.equals(true))).get();
+    expect(products.every((p) => p.minimumStock > 0), isTrue);
+  });
 }
