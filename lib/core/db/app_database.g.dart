@@ -13488,6 +13488,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final ProductionRecipeDao productionRecipeDao = ProductionRecipeDao(
     this as AppDatabase,
   );
+  late final ProductionOrderDao productionOrderDao = ProductionOrderDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
