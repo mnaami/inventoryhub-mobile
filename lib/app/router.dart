@@ -9,6 +9,7 @@ import '../features/sales/customer/presentation/customer_list_screen.dart';
 import '../features/sales/sale_order/presentation/sale_order_dashboard_screen.dart';
 import '../features/purchasing/purchase_order/presentation/purchase_order_dashboard_screen.dart';
 import '../features/purchasing/supplier/presentation/supplier_list_screen.dart';
+import '../features/production/presentation/production_home_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -43,15 +44,24 @@ class _MainScaffoldState extends State<MainScaffold> {
     showModalBottomSheet(
       context: context,
       builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
             ListTile(
               leading: const Icon(Icons.swap_vert),
               title: const Text('Stock'),
               onTap: () {
                 Navigator.pop(ctx);
                 _push(const StockMovementsScreen());
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.precision_manufacturing_outlined),
+              title: const Text('Production'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _push(const ProductionHomeScreen());
               },
             ),
             ListTile(
@@ -95,6 +105,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               },
             ),
           ],
+          ),
         ),
       ),
     );
