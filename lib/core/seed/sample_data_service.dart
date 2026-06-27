@@ -129,7 +129,7 @@ class SampleDataService {
       ));
     }
 
-    for (final spec in _kPurchaseOrders) {
+    for (final spec in <_PoSpec>[..._kPurchaseOrders, ..._generatedPurchaseOrders()]) {
       final orderDate = now.subtract(Duration(days: spec.daysAgo));
       final poId = _ids.newId();
       final number =
@@ -191,6 +191,8 @@ class SampleDataService {
         for (final l in lineRefs) {
           final recvQty = l.qty * spec.receiveFraction;
           if (recvQty <= 0) continue;
+          refs.available[l.productId] =
+              (refs.available[l.productId] ?? 0) + recvQty;
           final riId = _ids.newId();
           final movId = _ids.newId();
           movementByReceiptItem[riId] = movId;
@@ -270,7 +272,7 @@ class SampleDataService {
       ));
     }
 
-    for (final spec in _kSaleOrders) {
+    for (final spec in <_SoSpec>[..._kSaleOrders, ..._generatedSaleOrders()]) {
       final orderDate = now.subtract(Duration(days: spec.daysAgo));
       final soId = _ids.newId();
       final number = await _db.documentCounterDao.next(orgId, 'sale_order', 'SO');
@@ -319,16 +321,17 @@ class SampleDataService {
 
       if (spec.status == 'draft') continue;
 
-      // Shipment posts stock OUT for the shipped fraction.
+      // Shipment posts stock OUT for the shipped fraction, clamped to on-hand
+      // stock so a sale never oversells (which would throw and roll back).
       if (spec.shipFraction > 0) {
-        final shipDate = orderDate.add(const Duration(days: 1));
-        final shipId = _ids.newId();
-        final sNumber =
-            await _db.documentCounterDao.next(orgId, 'so_shipping', 'SHP');
         final shipLines = <ShipmentLine>[];
         for (final l in lineRefs) {
-          final shipQty = l.qty * spec.shipFraction;
+          final desired = l.qty * spec.shipFraction;
+          if (desired <= 0) continue;
+          final avail = refs.available[l.productId] ?? 0;
+          final shipQty = desired <= avail ? desired : avail;
           if (shipQty <= 0) continue;
+          refs.available[l.productId] = avail - shipQty;
           final movId = _ids.newId();
           refs.shipMovementIds.add(movId);
           shipLines.add(ShipmentLine(
@@ -338,22 +341,29 @@ class SampleDataService {
             quantity: shipQty,
           ));
         }
-        await _db.saleOrderShippingDao.createShipment(
-          shipping: SaleOrderShippingsCompanion.insert(
-            id: shipId,
-            organizationId: orgId,
-            saleOrderId: soId,
-            soShippingNumber: sNumber,
-            shippingDate: shipDate,
-            isSample: const Value(true),
-            createdAt: shipDate,
-            updatedAt: shipDate,
-          ),
-          lines: shipLines,
-          orgId: orgId,
-          createdBy: userId,
-          now: shipDate,
-        );
+        // If nothing is on hand, leave the order as awaiting shipment.
+        if (shipLines.isNotEmpty) {
+          final shipDate = orderDate.add(const Duration(days: 1));
+          final shipId = _ids.newId();
+          final sNumber =
+              await _db.documentCounterDao.next(orgId, 'so_shipping', 'SHP');
+          await _db.saleOrderShippingDao.createShipment(
+            shipping: SaleOrderShippingsCompanion.insert(
+              id: shipId,
+              organizationId: orgId,
+              saleOrderId: soId,
+              soShippingNumber: sNumber,
+              shippingDate: shipDate,
+              isSample: const Value(true),
+              createdAt: shipDate,
+              updatedAt: shipDate,
+            ),
+            lines: shipLines,
+            orgId: orgId,
+            createdBy: userId,
+            now: shipDate,
+          );
+        }
       }
 
       // Payment (status 'completed') for the paid fraction.
@@ -467,6 +477,11 @@ class _Refs {
   final List<String> customerIds = [];
   final List<String> shipMovementIds = [];
   final List<String> receiptMovementIds = [];
+
+  /// Running on-hand stock per product id: receipts add, shipments subtract.
+  /// Used to clamp shipments so a generated sale never oversells (which would
+  /// throw in the shipping DAO and roll back the whole load).
+  final Map<String, double> available = {};
 }
 
 // (symbol, name, unitType, isBase, conversionFactor) — 'pc' reuses the seed unit.
@@ -622,3 +637,59 @@ const _kPurchaseOrders = <_PoSpec>[
     ['Hex Bolts M8', 15.0, 5.0],
   ], 0.0, 0.0, 'draft', 3),
 ];
+
+// Index of "Tape Measure 5m" in [_kProducts]; intentionally excluded from the
+// generated restocks below so it stays below its reorder point after sales.
+const _kLowStockShowcaseProduct = 2;
+
+/// Generates 10 additional purchase orders that restock the catalogue
+/// generously (so the 50 generated sales have stock to draw from) with a
+/// realistic spread of received/payment states. Deterministic — keyed off the
+/// loop index so every load produces the same data.
+List<_PoSpec> _generatedPurchaseOrders() {
+  final pool = [
+    for (var i = 0; i < _kProducts.length; i++)
+      if (i != _kLowStockShowcaseProduct) i,
+  ];
+  final out = <_PoSpec>[];
+  for (var i = 0; i < 10; i++) {
+    final items = <List<Object>>[];
+    for (var j = 0; j < 4; j++) {
+      final idx = pool[(i * 4 + j) % pool.length];
+      final qty = 50.0 + ((i + j) % 4) * 20; // 50..110
+      items.add([_kProducts[idx][0], qty, _kProducts[idx][3]]);
+    }
+    final isDraft = i == 9;
+    final receive = isDraft ? 0.0 : (i == 7 ? 0.6 : 1.0);
+    final pay = isDraft ? 0.0 : (i % 5 < 3 ? (i.isEven ? 1.0 : 0.5) : 0.0);
+    final daysAgo = 56 - i * 5; // 56..11
+    out.add(_PoSpec(i % _kSuppliers.length, items, receive, pay,
+        isDraft ? 'draft' : 'sent', daysAgo));
+  }
+  return out;
+}
+
+/// Generates 50 additional sale orders with a realistic spread of
+/// shipped/awaiting/draft and paid/partial/unpaid states. Roughly 60% carry a
+/// payment. Shipment quantities are clamped to on-hand stock at load time, so
+/// these never oversell. Deterministic — keyed off the loop index.
+List<_SoSpec> _generatedSaleOrders() {
+  final out = <_SoSpec>[];
+  for (var i = 0; i < 50; i++) {
+    final lineCount = 1 + (i % 3); // 1..3 lines
+    final items = <List<Object>>[];
+    for (var j = 0; j < lineCount; j++) {
+      final idx = (i * 3 + j * 5) % _kProducts.length;
+      final qty = (1 + (i + j) % 4).toDouble(); // 1..4
+      items.add([_kProducts[idx][0], qty, _kProducts[idx][4]]);
+    }
+    final isDraft = i % 13 == 12; // a few drafts
+    final awaiting = !isDraft && i % 9 == 8; // a few awaiting shipment
+    final ship = (isDraft || awaiting) ? 0.0 : 1.0;
+    final pay = isDraft ? 0.0 : (i % 5 < 3 ? (i.isEven ? 1.0 : 0.5) : 0.0);
+    final daysAgo = 1 + (i * 7) % 59; // spread across ~60 days
+    out.add(_SoSpec(i % _kCustomers.length, items, ship, pay,
+        isDraft ? 'draft' : 'confirmed', daysAgo));
+  }
+  return out;
+}
