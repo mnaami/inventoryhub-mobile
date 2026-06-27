@@ -125,4 +125,39 @@ void main() {
       expect(pays.every((p) => p.isSample), isTrue);
     });
   });
+
+  group('sales', () {
+    test('shipments post stock OUT and at least one product ends below reorder',
+        () async {
+      await service.load();
+      final products = await (db.select(db.products)..where((p) => p.isSample.equals(true))).get();
+      final outMoves = await (db.select(db.stockMovements)
+            ..where((m) => m.movementType.equals('out')))
+          .get();
+      expect(outMoves, isNotEmpty);
+      expect(products.any((p) => p.currentStock < p.minimumStock), isTrue);
+      // Stock never goes negative.
+      expect(products.every((p) => p.currentStock >= 0), isTrue);
+    });
+
+    test('sale orders show a mix of payment statuses incl. a draft', () async {
+      await service.load();
+      final sos = await (db.select(db.saleOrders)..where((o) => o.isSample.equals(true))).get();
+      expect(sos.map((o) => o.paymentStatus).toSet().length, greaterThan(1));
+      expect(sos.where((o) => o.status == 'draft'), isNotEmpty);
+    });
+
+    test('directly-built sales rows are tagged is_sample', () async {
+      await service.load();
+      // Shipment items + out stock movements are created INSIDE the shipping
+      // DAO and are tagged in Task 6 (_tagInternalRows); not asserted here.
+      final sos = await db.select(db.saleOrders).get();
+      expect(sos, isNotEmpty);
+      expect(sos.every((o) => o.isSample), isTrue);
+      final items = await db.select(db.saleOrderItems).get();
+      expect(items.every((i) => i.isSample), isTrue);
+      final ships = await db.select(db.saleOrderShippings).get();
+      expect(ships.every((s) => s.isSample), isTrue);
+    });
+  });
 }

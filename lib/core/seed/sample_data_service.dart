@@ -2,6 +2,8 @@ import 'package:drift/drift.dart';
 import '../db/app_database.dart';
 import '../id/id_generator.dart';
 import 'seed_service.dart';
+import '../../features/sales/sale_order/data/sale_order_shipping_dao.dart'
+    show ShipmentLine;
 
 /// Counts of demo records currently loaded, for the Settings UI.
 class SampleDataSummary {
@@ -78,6 +80,7 @@ class SampleDataService {
       final refs = _Refs();
       await _seedFoundation(refs, now);
       await _seedPurchasing(refs, now);
+      await _seedSales(refs, now);
     });
   }
 
@@ -226,6 +229,135 @@ class SampleDataService {
     }
   }
 
+  Future<void> _seedSales(_Refs refs, DateTime now) async {
+    final orgId = _session.organizationId;
+    final userId = _session.userId;
+
+    for (final c in _kCustomers) {
+      final id = _ids.newId();
+      refs.customerIds.add(id);
+      await _db.customerDao.insertRow(CustomersCompanion.insert(
+        id: id,
+        organizationId: orgId,
+        name: c[0] as String,
+        paymentTerms: Value(c[1] as int),
+        isSample: const Value(true),
+        createdAt: now,
+        updatedAt: now,
+      ));
+    }
+
+    for (final spec in _kSaleOrders) {
+      final orderDate = now.subtract(Duration(days: spec.daysAgo));
+      final soId = _ids.newId();
+      final number = await _db.documentCounterDao.next(orgId, 'sale_order', 'SO');
+
+      final items = <SaleOrderItemsCompanion>[];
+      final lineRefs = <_SoLine>[];
+      var total = 0.0;
+      for (final it in spec.items) {
+        final p = _product(refs, it[0] as String);
+        final qty = it[1] as double;
+        final price = it[2] as double;
+        final lineTotal = qty * price;
+        total += lineTotal;
+        final itemId = _ids.newId();
+        items.add(SaleOrderItemsCompanion.insert(
+          id: itemId,
+          organizationId: orgId,
+          saleOrderId: soId,
+          productId: p.id,
+          productName: p.name,
+          quantity: qty,
+          unitPrice: price,
+          totalPrice: lineTotal,
+          isSample: const Value(true),
+          createdAt: orderDate,
+          updatedAt: orderDate,
+        ));
+        lineRefs.add(_SoLine(itemId, p.id, qty));
+      }
+
+      await _db.saleOrderDao.createWithItems(
+        SaleOrdersCompanion.insert(
+          id: soId,
+          organizationId: orgId,
+          soNumber: number,
+          customerId: refs.customerIds[spec.customerIndex],
+          orderDate: orderDate,
+          status: Value(spec.status),
+          totalAmount: Value(total),
+          isSample: const Value(true),
+          createdAt: orderDate,
+          updatedAt: orderDate,
+        ),
+        items,
+      );
+
+      if (spec.status == 'draft') continue;
+
+      // Shipment posts stock OUT for the shipped fraction.
+      if (spec.shipFraction > 0) {
+        final shipDate = orderDate.add(const Duration(days: 1));
+        final shipId = _ids.newId();
+        final sNumber =
+            await _db.documentCounterDao.next(orgId, 'so_shipping', 'SHP');
+        final shipLines = <ShipmentLine>[];
+        for (final l in lineRefs) {
+          final shipQty = l.qty * spec.shipFraction;
+          if (shipQty <= 0) continue;
+          final movId = _ids.newId();
+          refs.shipMovementIds.add(movId);
+          shipLines.add(ShipmentLine(
+            saleOrderItemId: l.itemId,
+            productId: l.productId,
+            movementId: movId,
+            quantity: shipQty,
+          ));
+        }
+        await _db.saleOrderShippingDao.createShipment(
+          shipping: SaleOrderShippingsCompanion.insert(
+            id: shipId,
+            organizationId: orgId,
+            saleOrderId: soId,
+            soShippingNumber: sNumber,
+            shippingDate: shipDate,
+            isSample: const Value(true),
+            createdAt: shipDate,
+            updatedAt: shipDate,
+          ),
+          lines: shipLines,
+          orgId: orgId,
+          createdBy: userId,
+          now: shipDate,
+        );
+      }
+
+      // Payment (status 'completed') for the paid fraction.
+      if (spec.payFraction > 0) {
+        final payDate = orderDate.add(const Duration(days: 2));
+        final payId = _ids.newId();
+        final pNumber =
+            await _db.documentCounterDao.next(orgId, 'so_payment', 'PAY');
+        await _db.saleOrderPaymentDao.recordPayment(
+          SaleOrderPaymentsCompanion.insert(
+            id: payId,
+            organizationId: orgId,
+            saleOrderId: soId,
+            paymentNumber: pNumber,
+            amount: total * spec.payFraction,
+            method: 'cash',
+            status: const Value('completed'),
+            paymentDate: payDate,
+            isSample: const Value(true),
+            createdAt: payDate,
+            updatedAt: payDate,
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _seedFoundation(_Refs refs, DateTime now) async {
     final orgId = _session.organizationId;
     refs.unitIdBySymbol['pc'] = _session.defaultUnitId;
@@ -344,6 +476,73 @@ const _kProducts = <List<Object>>[
   ['Copper Pipe 15mm', 'Plumbing', 'm', 3.0, 7.0, 25.0],
   ['PVC Elbow 32mm', 'Plumbing', 'pc', 1.0, 3.0, 20.0],
   ['Safety Goggles', 'Hand Tools', 'pc', 3.0, 8.0, 10.0],
+];
+
+class _SoLine {
+  _SoLine(this.itemId, this.productId, this.qty);
+  final String itemId;
+  final String productId;
+  final double qty;
+}
+
+// A sale order spec.
+// items: (productName, qty, unitPrice); shipFraction: 0..1; payFraction: 0..1;
+// status: 'confirmed' or 'draft'; daysAgo.
+class _SoSpec {
+  const _SoSpec(this.customerIndex, this.items, this.shipFraction,
+      this.payFraction, this.status, this.daysAgo);
+  final int customerIndex;
+  final List<List<Object>> items;
+  final double shipFraction;
+  final double payFraction;
+  final String status;
+  final int daysAgo;
+}
+
+const _kCustomers = <List<Object>>[
+  ['Acme Builders', 30],
+  ['Ridgeline Construction', 45],
+  ['Hometown Hardware', 15],
+  ['Walk-in Retail', 0],
+  ['Meadow Renovations', 30],
+];
+
+const _kSaleOrders = <_SoSpec>[
+  _SoSpec(0, [
+    ['Cordless Drill 18V', 2.0, 129.0],
+    ['Wood Screws 4x40', 5.0, 7.0],
+    ['Safety Goggles', 6.0, 8.0],
+  ], 1.0, 1.0, 'confirmed', 6),
+  _SoSpec(1, [
+    ['Pine Plank 2.4m', 20.0, 5.5],
+    ['Plywood Sheet', 4.0, 32.0],
+    ['Interior Paint 5L', 8.0, 9.0],
+  ], 1.0, 0.5, 'confirmed', 18),
+  _SoSpec(2, [
+    ['Claw Hammer', 4.0, 16.0],
+    ['Tape Measure 5m', 6.0, 9.0],
+    ['Wall Plugs', 5.0, 5.0],
+  ], 1.0, 0.0, 'confirmed', 14),
+  _SoSpec(3, [
+    ['Copper Pipe 15mm', 10.0, 7.0],
+    ['PVC Elbow 32mm', 8.0, 3.0],
+    ['Pipe Wrench', 1.0, 22.0],
+  ], 1.0, 1.0, 'confirmed', 10),
+  _SoSpec(4, [
+    ['Exterior Paint 5L', 6.0, 11.0],
+    ['Paint Roller Set', 3.0, 12.0],
+  ], 0.5, 0.5, 'confirmed', 9),
+  _SoSpec(0, [
+    ['Hex Bolts M8', 8.0, 11.0],
+    ['Adjustable Wrench', 2.0, 13.0],
+  ], 0.0, 0.0, 'confirmed', 5),
+  _SoSpec(1, [
+    ['Tape Measure 5m', 4.0, 9.0],
+    ['Safety Goggles', 4.0, 8.0],
+  ], 1.0, 1.0, 'confirmed', 4),
+  _SoSpec(3, [
+    ['Cordless Drill 18V', 1.0, 129.0],
+  ], 0.0, 0.0, 'draft', 2),
 ];
 
 // A purchase order spec.
