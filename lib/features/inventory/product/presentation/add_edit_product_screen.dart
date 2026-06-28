@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/providers.dart';
 import '../../../../core/result/app_exception.dart';
-import '../../../../core/widgets/section_header.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../category/domain/category.dart';
 import '../../category/presentation/category_providers.dart';
 import '../../unit/presentation/unit_providers.dart';
@@ -59,122 +59,165 @@ class _State extends ConsumerState<AddEditProductScreen> {
     _unitId ??= ref.watch(sessionProvider).defaultUnitId;
     final categories = ref.watch(categoryTreeProvider);
     final units = ref.watch(unitsProvider);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(isEdit ? 'Edit product' : 'New product')),
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(AppTokens.space16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           children: [
             _photoPicker(),
             const SizedBox(height: AppTokens.space24),
 
-            // ── Details ──────────────────────────────────────────────────
-            const SectionHeader('Details'),
-            TextFormField(
-              controller: _name,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                prefixIcon: Icon(Icons.label_outline),
-              ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Name is required' : null,
-            ),
-            const SizedBox(height: AppTokens.space16),
-            TextFormField(
-              controller: _desc,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                prefixIcon: Icon(Icons.notes_outlined),
-              ),
-              maxLines: 2,
-            ),
-            const SizedBox(height: AppTokens.space16),
-            categories.maybeWhen(
-              data: (nodes) => DropdownButtonFormField<String?>(
-                initialValue: _categoryId,
-                decoration: const InputDecoration(
-                  labelText: 'Category',
-                  prefixIcon: Icon(Icons.folder_outlined),
-                ),
-                items: [
-                  const DropdownMenuItem(value: null, child: Text('— None —')),
-                  for (final c in _flatten(nodes))
-                    DropdownMenuItem(value: c.id, child: Text(c.name)),
-                ],
-                onChanged: (v) => setState(() => _categoryId = v),
-              ),
-              orElse: () => const SizedBox.shrink(),
-            ),
-            const SizedBox(height: AppTokens.space16),
-            units.maybeWhen(
-              data: (list) => DropdownButtonFormField<String>(
-                initialValue: _unitId,
-                decoration: const InputDecoration(
-                  labelText: 'Unit',
-                  prefixIcon: Icon(Icons.straighten_outlined),
-                ),
-                items: [
-                  for (final u in list)
-                    DropdownMenuItem(value: u.id, child: Text(u.name)),
-                ],
-                onChanged: (v) => setState(() => _unitId = v),
-              ),
-              orElse: () => const SizedBox.shrink(),
-            ),
-            const SizedBox(height: AppTokens.space24),
-
-            // ── Pricing ───────────────────────────────────────────────────
-            const SectionHeader('Pricing'),
-            Row(children: [
-              Expanded(
-                child: TextFormField(
-                  controller: _purchase,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Purchase price',
-                    prefixIcon: Icon(Icons.arrow_downward_outlined),
+            // Details card
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Details',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurface,
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(width: AppTokens.space12),
-              Expanded(
-                child: TextFormField(
-                  controller: _selling,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Selling price',
-                    prefixIcon: Icon(Icons.arrow_upward_outlined),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _name,
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.label_outline),
+                    ),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? 'Name is required' : null,
                   ),
-                ),
-              ),
-            ]),
-            const SizedBox(height: AppTokens.space24),
-
-            // ── Stock ─────────────────────────────────────────────────────
-            const SectionHeader('Stock'),
-            TextFormField(
-              controller: _min,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Minimum stock',
-                prefixIcon: Icon(Icons.inventory_2_outlined),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _desc,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      prefixIcon: Icon(Icons.notes_outlined),
+                    ),
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 16),
+                  categories.maybeWhen(
+                    data: (nodes) => DropdownButtonFormField<String?>(
+                      value: _categoryId,
+                      decoration: const InputDecoration(
+                        labelText: 'Category',
+                        prefixIcon: Icon(Icons.folder_outlined),
+                      ),
+                      items: [
+                        const DropdownMenuItem(value: null, child: Text('— None —')),
+                        for (final c in _flatten(nodes))
+                          DropdownMenuItem(value: c.id, child: Text(c.name)),
+                      ],
+                      onChanged: (v) => setState(() => _categoryId = v),
+                    ),
+                    orElse: () => const SizedBox.shrink(),
+                  ),
+                  const SizedBox(height: 16),
+                  units.maybeWhen(
+                    data: (list) => DropdownButtonFormField<String>(
+                      value: _unitId,
+                      decoration: const InputDecoration(
+                        labelText: 'Unit',
+                        prefixIcon: Icon(Icons.straighten_outlined),
+                      ),
+                      items: [
+                        for (final u in list)
+                          DropdownMenuItem(value: u.id, child: Text(u.name)),
+                      ],
+                      onChanged: (v) => setState(() => _unitId = v),
+                    ),
+                    orElse: () => const SizedBox.shrink(),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: AppTokens.space24),
+            const SizedBox(height: AppTokens.space16),
 
-            // ── Identification ────────────────────────────────────────────
-            const SectionHeader('Identification'),
-            TextFormField(
-              controller: _barcode,
-              decoration: InputDecoration(
-                labelText: 'Barcode',
-                prefixIcon: const Icon(Icons.qr_code_outlined),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.qr_code_scanner),
-                  onPressed: _scan,
-                ),
+            // Pricing Card
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Pricing',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _purchase,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          decoration: const InputDecoration(
+                            labelText: 'Purchase price',
+                            prefixIcon: Icon(Icons.arrow_downward_outlined),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: AppTokens.space12),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _selling,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          decoration: const InputDecoration(
+                            labelText: 'Selling price',
+                            prefixIcon: Icon(Icons.arrow_upward_outlined),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppTokens.space16),
+
+            // Stock & Identification Card
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Stock & Identification',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _min,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      labelText: 'Minimum stock',
+                      prefixIcon: Icon(Icons.inventory_2_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _barcode,
+                    decoration: InputDecoration(
+                      labelText: 'Barcode',
+                      prefixIcon: const Icon(Icons.qr_code_outlined),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.qr_code_scanner),
+                        onPressed: _scan,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: AppTokens.space24),
@@ -190,18 +233,29 @@ class _State extends ConsumerState<AddEditProductScreen> {
   }
 
   Widget _photoPicker() {
+    final scheme = Theme.of(context).colorScheme;
     return Center(
-      child: Column(children: [
-        if (_imagePath != null)
-          Image.file(File(_imagePath!), height: 120, fit: BoxFit.cover)
-        else
-          const Icon(Icons.inventory_2_outlined, size: 96),
-        TextButton.icon(
-          onPressed: _pickPhoto,
-          icon: const Icon(Icons.photo_camera),
-          label: const Text('Add photo'),
-        ),
-      ]),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: _imagePath != null
+                ? Image.file(File(_imagePath!), height: 100, width: 100, fit: BoxFit.cover)
+                : Container(
+                    height: 100,
+                    width: 100,
+                    color: scheme.primary.withOpacity(0.08),
+                    child: Icon(Icons.inventory_2_outlined, size: 48, color: scheme.primary),
+                  ),
+          ),
+          const SizedBox(height: 8),
+          TextButton.icon(
+            onPressed: _pickPhoto,
+            icon: const Icon(Icons.photo_camera_outlined),
+            label: Text(_imagePath != null ? 'Change photo' : 'Add photo'),
+          ),
+        ],
+      ),
     );
   }
 

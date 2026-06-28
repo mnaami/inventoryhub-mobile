@@ -32,6 +32,16 @@ class PurchaseOrderReceiptDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  /// Resolves the parent purchase order id for a receipt, or null if the
+  /// receipt no longer exists. Used to navigate from a stock movement back to
+  /// its source order.
+  Future<String?> purchaseOrderIdFor(String receiptId) async {
+    final row = await (select(purchaseOrderReceipts)
+          ..where((r) => r.id.equals(receiptId)))
+        .getSingleOrNull();
+    return row?.purchaseOrderId;
+  }
+
   Future<void> createReceipt({
     required PurchaseOrderReceiptsCompanion receipt,
     required List<PurchaseOrderReceiptItemsCompanion> items,

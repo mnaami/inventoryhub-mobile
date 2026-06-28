@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/result/app_exception.dart';
-import '../../../../core/widgets/section_header.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../product/presentation/product_providers.dart';
 import '../domain/stock_movement.dart';
 import 'stock_providers.dart';
@@ -35,53 +35,95 @@ class _State extends ConsumerState<RecordMovementScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: Text('Stock — ${widget.productName}')),
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(AppTokens.space16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           children: [
-            const SectionHeader('Movement type'),
-            SegmentedButton<MovementType>(
-              segments: const [
-                ButtonSegment(value: MovementType.inbound, label: Text('In')),
-                ButtonSegment(value: MovementType.outbound, label: Text('Out')),
-                ButtonSegment(
-                    value: MovementType.adjustment, label: Text('Adjust')),
-              ],
-              selected: {_type},
-              onSelectionChanged: (s) => setState(() => _type = s.first),
-            ),
-            const SizedBox(height: AppTokens.space24),
-            const SectionHeader('Details'),
-            TextFormField(
-              controller: _qty,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true, signed: true),
-              decoration: InputDecoration(
-                labelText: _type == MovementType.adjustment
-                    ? 'Quantity (use − to reduce)'
-                    : 'Quantity',
-                prefixIcon: const Icon(Icons.numbers),
-              ),
-              validator: (v) {
-                final n = double.tryParse(v ?? '');
-                if (n == null) return 'Enter a number';
-                if (n == 0) return 'Quantity must not be zero';
-                return null;
-              },
-            ),
-            const SizedBox(height: AppTokens.space12),
-            TextFormField(
-              controller: _notes,
-              decoration: const InputDecoration(
-                labelText: 'Notes (optional)',
-                prefixIcon: Icon(Icons.notes),
+            // Movement Type Card
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Movement type',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: SegmentedButton<MovementType>(
+                      showSelectedIcon: false,
+                      segments: const [
+                        ButtonSegment(value: MovementType.inbound, label: Text('In')),
+                        ButtonSegment(value: MovementType.outbound, label: Text('Out')),
+                        ButtonSegment(value: MovementType.adjustment, label: Text('Adjust')),
+                      ],
+                      selected: {_type},
+                      onSelectionChanged: (s) => setState(() => _type = s.first),
+                    ),
+                  ),
+                ],
               ),
             ),
+            const SizedBox(height: AppTokens.space16),
+
+            // Form Inputs Card
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Details',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _qty,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true, signed: true),
+                    decoration: InputDecoration(
+                      labelText: _type == MovementType.adjustment
+                          ? 'Quantity (use − to reduce)'
+                          : 'Quantity',
+                      prefixIcon: const Icon(Icons.numbers_outlined),
+                    ),
+                    validator: (v) {
+                      final n = double.tryParse(v ?? '');
+                      if (n == null) return 'Enter a number';
+                      if (n == 0) return 'Quantity must not be zero';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _notes,
+                    decoration: const InputDecoration(
+                      labelText: 'Notes (optional)',
+                      prefixIcon: Icon(Icons.notes_outlined),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: AppTokens.space24),
-            FilledButton(onPressed: _save, child: const Text('Record')),
+
+            // Record action button
+            FilledButton(
+              onPressed: _save,
+              child: const Text('Record'),
+            ),
           ],
         ),
       ),

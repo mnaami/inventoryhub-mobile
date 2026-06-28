@@ -171,6 +171,17 @@ void main() {
     expect(item2.shippedQuantity, 0);
   });
 
+  test('saleOrderIdFor resolves the parent SO of a shipment', () async {
+    await db.saleOrderShippingDao.createShipment(
+      shipping: shipping('1'),
+      lines: [ShipmentLine(
+          saleOrderItemId: 'i1', productId: 'p1', movementId: 'm1', quantity: 4)],
+      orgId: 'org1', createdBy: 'u1', now: now,
+    );
+    expect(await db.saleOrderShippingDao.saleOrderIdFor('1'), 'so1');
+    expect(await db.saleOrderShippingDao.saleOrderIdFor('missing'), null);
+  });
+
   test('marking a shipment delivered advances the order to delivered', () async {
     await db.saleOrderShippingDao.createShipment(
       shipping: shipping('1'),

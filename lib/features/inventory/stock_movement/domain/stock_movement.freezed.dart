@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 mixin _$StockMovement {
 
  String get id; String get organizationId; String get productId; MovementType get type; double get quantity;// signed
- String? get notes; String get createdBy; DateTime get createdAt;
+ String? get notes;// Source document this movement came from, e.g.
+// 'purchase_order_receipt' / 'sale_order_shipping' / 'production_order'.
+ String? get referenceType; String? get referenceId; String get createdBy; DateTime get createdAt;
 /// Create a copy of StockMovement
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +28,16 @@ $StockMovementCopyWith<StockMovement> get copyWith => _$StockMovementCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StockMovement&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.type, type) || other.type == type)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StockMovement&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.type, type) || other.type == type)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.referenceType, referenceType) || other.referenceType == referenceType)&&(identical(other.referenceId, referenceId) || other.referenceId == referenceId)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,organizationId,productId,type,quantity,notes,createdBy,createdAt);
+int get hashCode => Object.hash(runtimeType,id,organizationId,productId,type,quantity,notes,referenceType,referenceId,createdBy,createdAt);
 
 @override
 String toString() {
-  return 'StockMovement(id: $id, organizationId: $organizationId, productId: $productId, type: $type, quantity: $quantity, notes: $notes, createdBy: $createdBy, createdAt: $createdAt)';
+  return 'StockMovement(id: $id, organizationId: $organizationId, productId: $productId, type: $type, quantity: $quantity, notes: $notes, referenceType: $referenceType, referenceId: $referenceId, createdBy: $createdBy, createdAt: $createdAt)';
 }
 
 
@@ -46,7 +48,7 @@ abstract mixin class $StockMovementCopyWith<$Res>  {
   factory $StockMovementCopyWith(StockMovement value, $Res Function(StockMovement) _then) = _$StockMovementCopyWithImpl;
 @useResult
 $Res call({
- String id, String organizationId, String productId, MovementType type, double quantity, String? notes, String createdBy, DateTime createdAt
+ String id, String organizationId, String productId, MovementType type, double quantity, String? notes, String? referenceType, String? referenceId, String createdBy, DateTime createdAt
 });
 
 
@@ -63,7 +65,7 @@ class _$StockMovementCopyWithImpl<$Res>
 
 /// Create a copy of StockMovement
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? organizationId = null,Object? productId = null,Object? type = null,Object? quantity = null,Object? notes = freezed,Object? createdBy = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? organizationId = null,Object? productId = null,Object? type = null,Object? quantity = null,Object? notes = freezed,Object? referenceType = freezed,Object? referenceId = freezed,Object? createdBy = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,organizationId: null == organizationId ? _self.organizationId : organizationId // ignore: cast_nullable_to_non_nullable
@@ -71,6 +73,8 @@ as String,productId: null == productId ? _self.productId : productId // ignore: 
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as MovementType,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as double,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String?,referenceType: freezed == referenceType ? _self.referenceType : referenceType // ignore: cast_nullable_to_non_nullable
+as String?,referenceId: freezed == referenceId ? _self.referenceId : referenceId // ignore: cast_nullable_to_non_nullable
 as String?,createdBy: null == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
@@ -158,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String organizationId,  String productId,  MovementType type,  double quantity,  String? notes,  String createdBy,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String organizationId,  String productId,  MovementType type,  double quantity,  String? notes,  String? referenceType,  String? referenceId,  String createdBy,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StockMovement() when $default != null:
-return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.quantity,_that.notes,_that.createdBy,_that.createdAt);case _:
+return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.quantity,_that.notes,_that.referenceType,_that.referenceId,_that.createdBy,_that.createdAt);case _:
   return orElse();
 
 }
@@ -179,10 +183,10 @@ return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.q
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String organizationId,  String productId,  MovementType type,  double quantity,  String? notes,  String createdBy,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String organizationId,  String productId,  MovementType type,  double quantity,  String? notes,  String? referenceType,  String? referenceId,  String createdBy,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _StockMovement():
-return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.quantity,_that.notes,_that.createdBy,_that.createdAt);case _:
+return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.quantity,_that.notes,_that.referenceType,_that.referenceId,_that.createdBy,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +203,10 @@ return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.q
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String organizationId,  String productId,  MovementType type,  double quantity,  String? notes,  String createdBy,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String organizationId,  String productId,  MovementType type,  double quantity,  String? notes,  String? referenceType,  String? referenceId,  String createdBy,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _StockMovement() when $default != null:
-return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.quantity,_that.notes,_that.createdBy,_that.createdAt);case _:
+return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.quantity,_that.notes,_that.referenceType,_that.referenceId,_that.createdBy,_that.createdAt);case _:
   return null;
 
 }
@@ -214,7 +218,7 @@ return $default(_that.id,_that.organizationId,_that.productId,_that.type,_that.q
 
 
 class _StockMovement implements StockMovement {
-  const _StockMovement({required this.id, required this.organizationId, required this.productId, required this.type, required this.quantity, this.notes, required this.createdBy, required this.createdAt});
+  const _StockMovement({required this.id, required this.organizationId, required this.productId, required this.type, required this.quantity, this.notes, this.referenceType, this.referenceId, required this.createdBy, required this.createdAt});
   
 
 @override final  String id;
@@ -224,6 +228,10 @@ class _StockMovement implements StockMovement {
 @override final  double quantity;
 // signed
 @override final  String? notes;
+// Source document this movement came from, e.g.
+// 'purchase_order_receipt' / 'sale_order_shipping' / 'production_order'.
+@override final  String? referenceType;
+@override final  String? referenceId;
 @override final  String createdBy;
 @override final  DateTime createdAt;
 
@@ -237,16 +245,16 @@ _$StockMovementCopyWith<_StockMovement> get copyWith => __$StockMovementCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StockMovement&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.type, type) || other.type == type)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StockMovement&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.type, type) || other.type == type)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.referenceType, referenceType) || other.referenceType == referenceType)&&(identical(other.referenceId, referenceId) || other.referenceId == referenceId)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,organizationId,productId,type,quantity,notes,createdBy,createdAt);
+int get hashCode => Object.hash(runtimeType,id,organizationId,productId,type,quantity,notes,referenceType,referenceId,createdBy,createdAt);
 
 @override
 String toString() {
-  return 'StockMovement(id: $id, organizationId: $organizationId, productId: $productId, type: $type, quantity: $quantity, notes: $notes, createdBy: $createdBy, createdAt: $createdAt)';
+  return 'StockMovement(id: $id, organizationId: $organizationId, productId: $productId, type: $type, quantity: $quantity, notes: $notes, referenceType: $referenceType, referenceId: $referenceId, createdBy: $createdBy, createdAt: $createdAt)';
 }
 
 
@@ -257,7 +265,7 @@ abstract mixin class _$StockMovementCopyWith<$Res> implements $StockMovementCopy
   factory _$StockMovementCopyWith(_StockMovement value, $Res Function(_StockMovement) _then) = __$StockMovementCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String organizationId, String productId, MovementType type, double quantity, String? notes, String createdBy, DateTime createdAt
+ String id, String organizationId, String productId, MovementType type, double quantity, String? notes, String? referenceType, String? referenceId, String createdBy, DateTime createdAt
 });
 
 
@@ -274,7 +282,7 @@ class __$StockMovementCopyWithImpl<$Res>
 
 /// Create a copy of StockMovement
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? organizationId = null,Object? productId = null,Object? type = null,Object? quantity = null,Object? notes = freezed,Object? createdBy = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? organizationId = null,Object? productId = null,Object? type = null,Object? quantity = null,Object? notes = freezed,Object? referenceType = freezed,Object? referenceId = freezed,Object? createdBy = null,Object? createdAt = null,}) {
   return _then(_StockMovement(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,organizationId: null == organizationId ? _self.organizationId : organizationId // ignore: cast_nullable_to_non_nullable
@@ -282,6 +290,8 @@ as String,productId: null == productId ? _self.productId : productId // ignore: 
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as MovementType,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as double,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String?,referenceType: freezed == referenceType ? _self.referenceType : referenceType // ignore: cast_nullable_to_non_nullable
+as String?,referenceId: freezed == referenceId ? _self.referenceId : referenceId // ignore: cast_nullable_to_non_nullable
 as String?,createdBy: null == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,

@@ -100,6 +100,13 @@ void main() {
     expect(rcp.status, 'draft'); // unchanged
   });
 
+  test('purchaseOrderIdFor resolves the parent PO of a receipt', () async {
+    await db.purchaseOrderReceiptDao.createReceipt(
+        receipt: receipt('1'), items: [rItem('ri1', '1', 4)]);
+    expect(await db.purchaseOrderReceiptDao.purchaseOrderIdFor('1'), 'po1');
+    expect(await db.purchaseOrderReceiptDao.purchaseOrderIdFor('missing'), null);
+  });
+
   test('over-receipt is detected across duplicate lines for the same PO item', () async {
     await db.purchaseOrderReceiptDao.createReceipt(
         receipt: receipt('1'),

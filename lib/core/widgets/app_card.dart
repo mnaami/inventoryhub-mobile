@@ -9,18 +9,31 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final isLight = theme.brightness == Brightness.light;
+
     return Material(
       color: scheme.surfaceContainerLowest,
-      borderRadius: BorderRadius.circular(AppTokens.radiusMd),
+      borderRadius: BorderRadius.circular(AppTokens.radiusLg),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppTokens.radiusMd),
+        borderRadius: BorderRadius.circular(AppTokens.radiusLg),
         child: Container(
-          padding: padding ?? const EdgeInsets.all(AppTokens.space12),
+          padding: padding ?? const EdgeInsets.all(AppTokens.space16),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppTokens.radiusMd),
-            border: Border.all(color: scheme.outlineVariant),
+            color: scheme.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(AppTokens.radiusLg),
+            border: isLight ? null : Border.all(color: scheme.outlineVariant),
+            boxShadow: isLight
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
           ),
           child: child,
         ),

@@ -24,8 +24,7 @@ class _State extends ConsumerState<ProductListScreen> {
   void initState() {
     super.initState();
     _scroll.addListener(() {
-      if (_scroll.position.pixels >=
-          _scroll.position.maxScrollExtent - 200) {
+      if (_scroll.position.pixels >= _scroll.position.maxScrollExtent - 200) {
         ref.read(productListProvider.notifier).loadMore();
       }
     });
@@ -40,45 +39,60 @@ class _State extends ConsumerState<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     final products = ref.watch(productListProvider);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Products')),
       floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
         onPressed: () => _add(context),
         child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(AppTokens.space16, AppTokens.space12, AppTokens.space16, AppTokens.space4),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: TextField(
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 hintText: 'Search name or barcode',
               ),
-              onChanged: (q) =>
-                  ref.read(productListProvider.notifier).search(q),
+              onChanged: (q) => ref.read(productListProvider.notifier).search(q),
             ),
           ),
           Expanded(
             child: AsyncValueView<List<Product>>(
               value: products,
               data: (list) => list.isEmpty
-                  ? EmptyState(
-                      icon: Icons.inventory_2_outlined,
-                      title: 'No products yet',
-                      subtitle:
-                          'Add your first product to start tracking stock.',
-                      actionLabel: 'Add product',
-                      onAction: () => _add(context),
+                  ? RefreshIndicator(
+                      onRefresh: () => ref.read(productListProvider.notifier).refresh(),
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            child: EmptyState(
+                              icon: Icons.inventory_2_outlined,
+                              title: 'No products yet',
+                              subtitle: 'Add your first product to start tracking stock.',
+                              actionLabel: 'Add product',
+                              onAction: () => _add(context),
+                            ),
+                          ),
+                        ],
+                      ),
                     )
-                  : ListView.separated(
-                      controller: _scroll,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppTokens.space16, vertical: AppTokens.space8),
-                      itemCount: list.length,
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(height: AppTokens.space8),
-                      itemBuilder: (_, i) => _tile(context, list[i]),
+                  : RefreshIndicator(
+                      onRefresh: () => ref.read(productListProvider.notifier).refresh(),
+                      child: ListView.separated(
+                        controller: _scroll,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        itemCount: list.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        itemBuilder: (_, i) => _tile(context, list[i]),
+                      ),
                     ),
             ),
           ),
@@ -88,8 +102,8 @@ class _State extends ConsumerState<ProductListScreen> {
   }
 
   Widget _tile(BuildContext context, Product p) {
-    final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
 
     Widget trailing;
     if (p.currentStock <= 0) {
@@ -103,18 +117,21 @@ class _State extends ConsumerState<ProductListScreen> {
         children: [
           Text(
             formatQty(p.currentStock),
-            style: textTheme.titleMedium,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: scheme.onSurface,
+            ),
           ),
           Text(
             'pcs',
-            style: textTheme.bodySmall
-                ?.copyWith(color: scheme.onSurfaceVariant),
+            style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
           ),
         ],
       );
     }
 
     return AppCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => ProductDetailScreen(productId: p.id),
       )),
@@ -124,38 +141,41 @@ class _State extends ConsumerState<ProductListScreen> {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: scheme.primaryContainer,
-              borderRadius: BorderRadius.circular(AppTokens.radiusSm),
+              color: scheme.primary.withOpacity(0.08),
+              shape: BoxShape.circle,
             ),
+            alignment: Alignment.center,
             child: Icon(
               Icons.inventory_2_outlined,
-              color: scheme.onPrimaryContainer,
+              color: scheme.primary,
               size: 22,
             ),
           ),
-          const SizedBox(width: AppTokens.space12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   p.name,
-                  style: textTheme.titleMedium,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: scheme.onSurface,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: AppTokens.space2),
+                const SizedBox(height: 2),
                 Text(
-                  p.sellingPrice.toStringAsFixed(2),
-                  style: textTheme.bodySmall
-                      ?.copyWith(color: scheme.onSurfaceVariant),
+                  '\$${p.sellingPrice.toStringAsFixed(2)}',
+                  style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          const SizedBox(width: AppTokens.space12),
+          const SizedBox(width: 12),
           trailing,
         ],
       ),

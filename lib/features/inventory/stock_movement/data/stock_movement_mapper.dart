@@ -9,6 +9,8 @@ StockMovement toStockMovement(StockMovementRow r) => StockMovement(
       type: MovementType.fromWire(r.movementType),
       quantity: r.quantity,
       notes: r.notes,
+      referenceType: r.referenceType,
+      referenceId: r.referenceId,
       createdBy: r.createdBy,
       createdAt: r.createdAt,
     );
@@ -21,6 +23,8 @@ StockMovementsCompanion toCompanion(StockMovement m) =>
       movementType: m.type.wire,
       quantity: m.quantity,
       notes: Value(m.notes),
+      referenceType: Value(m.referenceType),
+      referenceId: Value(m.referenceId),
       createdBy: m.createdBy,
       createdAt: m.createdAt,
     );
