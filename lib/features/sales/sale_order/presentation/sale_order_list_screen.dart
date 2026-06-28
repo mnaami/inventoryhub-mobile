@@ -239,17 +239,11 @@ class _SecondaryFilters extends ConsumerWidget {
             items: [
               const DropdownMenuItem(value: null, child: Text('Any shipping')),
               for (final s in ShippingStatus.values)
-                DropdownMenuItem(value: s, child: Text(_shippingLabel(s))),
+                DropdownMenuItem(value: s, child: Text(shippingStatusLabel(s))),
             ],
           ),
         ],
       ),
     );
   }
-
-  String _shippingLabel(ShippingStatus s) => switch (s) {
-        ShippingStatus.notShipped => 'Not shipped',
-        ShippingStatus.partiallyShipped => 'Partially shipped',
-        ShippingStatus.fullyShipped => 'Fully shipped',
-      };
 }
