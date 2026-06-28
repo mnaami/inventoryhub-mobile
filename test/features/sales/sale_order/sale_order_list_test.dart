@@ -25,7 +25,28 @@ void main() {
 
     expect(find.text('No sale orders yet. Tap + to create one.'),
         findsOneWidget);
-    expect(find.text('Confirmed'), findsWidgets); // filter chip present
+    expect(find.text('Confirmed'), findsWidgets); // status filter chip present
+    await db.close();
+  });
+
+  testWidgets('tapping search reveals a search field', (tester) async {
+    final db = newTestDb();
+    final session = await SeedService(db, const IdGenerator()).ensureSeeded();
+    final container = ProviderContainer(overrides: [
+      appDatabaseProvider.overrideWithValue(db),
+      sessionProvider.overrideWithValue(session),
+    ]);
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: const MaterialApp(home: SaleOrderListScreen()),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.search));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextField), findsOneWidget);
     await db.close();
   });
 }
