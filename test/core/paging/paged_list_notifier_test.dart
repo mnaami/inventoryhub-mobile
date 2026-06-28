@@ -20,10 +20,6 @@ class _FakeNotifier extends PagedListNotifier<int> {
   }
 }
 
-PagedState<int> read(ProviderContainer c,
-        NotifierProvider<_FakeNotifier, PagedState<int>> p) =>
-    c.read(p);
-
 void main() {
   test('loadInitial populates items and sets hasMore on full page', () async {
     final p = NotifierProvider<_FakeNotifier, PagedState<int>>(
