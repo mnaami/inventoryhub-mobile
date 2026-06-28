@@ -17,7 +17,7 @@ class PaginatedListView<T> extends StatefulWidget {
     this.empty,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.loadMoreThreshold = 0.8,
-  });
+  }) : assert(loadMoreThreshold > 0 && loadMoreThreshold <= 1);
 
   final PagedState<T> state;
   final Widget Function(BuildContext, T) itemBuilder;
@@ -51,6 +51,8 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
     if (!_controller.hasClients) return;
     final max = _controller.position.maxScrollExtent;
     if (max <= 0) return;
+    final s = widget.state;
+    if (s.isLoadingMore || !s.hasMore) return;
     if (_controller.position.pixels >= max * widget.loadMoreThreshold) {
       widget.onLoadMore();
     }
@@ -77,7 +79,7 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
         controller: _controller,
         padding: widget.padding,
         itemCount: s.items.length + 1, // +1 footer
-        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        separatorBuilder: (_, __) => const SizedBox(height: AppTokens.space12),
         itemBuilder: (context, i) {
           if (i == s.items.length) return _Footer(state: s, onRetry: widget.onLoadMore);
           return widget.itemBuilder(context, s.items[i]);

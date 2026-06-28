@@ -65,4 +65,20 @@ void main() {
     await tester.tap(find.textContaining('Retry'));
     expect(retried, true);
   });
+
+  testWidgets('scrolling near the bottom triggers load-more', (tester) async {
+    var loaded = false;
+    await tester.pumpWidget(_wrap(view(
+      PagedState<int>(
+          items: List<int>.generate(20, (i) => i),
+          page: 0,
+          hasMore: true,
+          isLoadingInitial: false,
+          isLoadingMore: false),
+      onLoadMore: () async => loaded = true,
+    )));
+    await tester.drag(find.byType(Scrollable), const Offset(0, -5000));
+    await tester.pump();
+    expect(loaded, true);
+  });
 }
