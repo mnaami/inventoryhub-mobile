@@ -29,4 +29,19 @@ void main() {
     await tester.pump();
     expect(calls.last, '');
   });
+
+  testWidgets('cancels pending debounce on dispose (no callback, no pending timer)',
+      (tester) async {
+    final calls = <String>[];
+    await tester.pumpWidget(_wrap(SearchField(
+      debounce: const Duration(milliseconds: 100),
+      onChanged: calls.add,
+    )));
+    await tester.enterText(find.byType(TextField), 'abc');
+    // Replace the widget (disposing the SearchField) before the timer fires.
+    await tester.pumpWidget(_wrap(const SizedBox()));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(calls, isEmpty); // debounced callback was cancelled
+    // Test completing without a "Timer is still pending" error proves cleanup.
+  });
 }

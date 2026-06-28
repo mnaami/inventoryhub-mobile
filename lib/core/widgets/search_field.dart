@@ -9,12 +9,14 @@ class SearchField extends StatefulWidget {
     required this.onChanged,
     this.hint = 'Search',
     this.debounce = const Duration(milliseconds: 300),
+    this.autofocus = true,
   });
 
   final String initial;
   final ValueChanged<String> onChanged;
   final String hint;
   final Duration debounce;
+  final bool autofocus;
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -49,7 +51,7 @@ class _SearchFieldState extends State<SearchField> {
   Widget build(BuildContext context) {
     return TextField(
       controller: _controller,
-      autofocus: true,
+      autofocus: widget.autofocus,
       onChanged: _onChanged,
       decoration: InputDecoration(
         hintText: widget.hint,
