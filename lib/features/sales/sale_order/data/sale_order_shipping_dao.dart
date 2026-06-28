@@ -45,6 +45,16 @@ class SaleOrderShippingDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  /// Resolves the parent sale order id for a shipment, or null if the shipment
+  /// no longer exists. Used to navigate from a stock movement back to its
+  /// source order.
+  Future<String?> saleOrderIdFor(String shippingId) async {
+    final row = await (select(saleOrderShippings)
+          ..where((s) => s.id.equals(shippingId)))
+        .getSingleOrNull();
+    return row?.saleOrderId;
+  }
+
   Future<void> createShipment({
     required SaleOrderShippingsCompanion shipping,
     required List<ShipmentLine> lines,

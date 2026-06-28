@@ -16,9 +16,13 @@ class CategoryManagementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tree = ref.watch(categoryTreeProvider);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Categories')),
       floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
         onPressed: () => _openEditor(context),
         child: const Icon(Icons.add),
       ),
@@ -33,8 +37,10 @@ class CategoryManagementScreen extends ConsumerWidget {
                 onAction: () => _openEditor(context),
               )
             : ListView(
-                padding: const EdgeInsets.all(AppTokens.space16),
-                children: [for (final n in nodes) _tile(context, ref, n, 0)],
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                children: [
+                  for (final n in nodes) _tile(context, ref, n, 0),
+                ],
               ),
       ),
     );
@@ -42,6 +48,8 @@ class CategoryManagementScreen extends ConsumerWidget {
 
   Widget _tile(BuildContext context, WidgetRef ref, CategoryNode node, int depth) {
     final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -53,8 +61,8 @@ class CategoryManagementScreen extends ConsumerWidget {
           child: AppCard(
             onTap: () => _openEditor(context, existing: node.category),
             padding: const EdgeInsets.symmetric(
-              horizontal: AppTokens.space12,
-              vertical: AppTokens.space8,
+              horizontal: 12,
+              vertical: 8,
             ),
             child: Row(
               children: [
@@ -63,34 +71,45 @@ class CategoryManagementScreen extends ConsumerWidget {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: scheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(AppTokens.radiusSm),
+                    color: scheme.primary.withOpacity(0.08),
+                    shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.folder_outlined,
-                    size: 20,
-                    color: scheme.onPrimaryContainer,
+                    size: 18,
+                    color: scheme.primary,
                   ),
                 ),
                 const SizedBox(width: AppTokens.space12),
                 Expanded(
                   child: Text(
                     node.category.name,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: scheme.onSurface,
+                    ),
                   ),
                 ),
                 if (node.children.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(right: AppTokens.space4),
-                    child: Text(
-                      '${node.children.length}',
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: scheme.onSurfaceVariant.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        '${node.children.length}',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline),
+                  icon: Icon(Icons.delete_outline_rounded, color: scheme.error),
                   onPressed: () => _delete(context, ref, node.category),
                 ),
               ],

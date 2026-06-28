@@ -16,9 +16,13 @@ class UnitsManagementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final units = ref.watch(unitsProvider);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Units')),
       floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
         onPressed: () => _edit(context),
         child: const Icon(Icons.add),
       ),
@@ -32,63 +36,95 @@ class UnitsManagementScreen extends ConsumerWidget {
                 actionLabel: 'Add unit',
                 onAction: () => _edit(context),
               )
-            : ListView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppTokens.space16,
-                  vertical: AppTokens.space8,
-                ),
-                children: [
-                  for (final u in list) ...[
-                    AppCard(
-                      onTap: () => _edit(context, existing: u),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.straighten),
-                          const SizedBox(width: AppTokens.space12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${u.name} (${u.symbol})',
-                                  style: Theme.of(context).textTheme.titleSmall,
+            : ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                itemCount: list.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (_, i) {
+                  final u = list[i];
+                  return AppCard(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    onTap: () => _edit(context, existing: u),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: scheme.primary.withOpacity(0.08),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.straighten_outlined, color: scheme.primary, size: 22),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${u.name} (${u.symbol})',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: scheme.onSurface,
                                 ),
-                                const SizedBox(height: AppTokens.space4),
-                                Wrap(
-                                  spacing: AppTokens.space4,
-                                  children: [
-                                    Chip(label: Text(u.unitType)),
-                                    if (u.isBaseUnit)
-                                      const Chip(label: Text('base')),
-                                  ],
-                                ),
-                                if (!u.isBaseUnit) ...[
-                                  const SizedBox(height: AppTokens.space4),
-                                  Text(
-                                    '× ${u.conversionFactor}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurfaceVariant,
-                                        ),
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: scheme.onSurfaceVariant.withOpacity(0.08),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      u.unitType.toUpperCase(),
+                                      style: theme.textTheme.labelSmall?.copyWith(
+                                        color: scheme.onSurfaceVariant,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
+                                  if (u.isBaseUnit) ...[
+                                    const SizedBox(width: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.withOpacity(0.08),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Text(
+                                        'BASE',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ],
+                              ),
+                              if (!u.isBaseUnit) ...[
+                                const SizedBox(height: 6),
+                                Text(
+                                  '× ${u.conversionFactor} conversion factor',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: scheme.onSurfaceVariant,
+                                  ),
+                                ),
                               ],
-                            ),
+                            ],
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.delete_outline),
-                            onPressed: () => _delete(context, ref, u),
-                          ),
-                        ],
-                      ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete_outline_rounded, color: scheme.error),
+                          onPressed: () => _delete(context, ref, u),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: AppTokens.space8),
-                  ],
-                ],
+                  );
+                },
               ),
       ),
     );

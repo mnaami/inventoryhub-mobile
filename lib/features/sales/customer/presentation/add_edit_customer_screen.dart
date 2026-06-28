@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/widgets/app_card.dart';
+import '../../../../app/theme/app_tokens.dart';
 import '../domain/customer.dart';
 import 'customer_providers.dart';
 
@@ -76,42 +78,95 @@ class _AddEditCustomerScreenState extends ConsumerState<AddEditCustomerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
           title: Text(widget.existing == null ? 'New Customer' : 'Edit Customer')),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
-          TextField(
-              controller: _name,
-              decoration: const InputDecoration(labelText: 'Name')),
-          if (_error != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(_error!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error)),
+          // Form card
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Customer Details',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: scheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _name,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                  ),
+                ),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      _error!,
+                      style: TextStyle(
+                        color: scheme.error,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _phone,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(
+                    labelText: 'Phones (comma-separated)',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _address,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    labelText: 'Address',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _terms,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Payment terms (days)',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _credit,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Credit limit',
+                  ),
+                ),
+              ],
             ),
-          TextField(
-              controller: _email,
-              decoration: const InputDecoration(labelText: 'Email')),
-          TextField(
-              controller: _phone,
-              decoration:
-                  const InputDecoration(labelText: 'Phones (comma-separated)')),
-          TextField(
-              controller: _address,
-              decoration: const InputDecoration(labelText: 'Address')),
-          TextField(
-              controller: _terms,
-              keyboardType: TextInputType.number,
-              decoration:
-                  const InputDecoration(labelText: 'Payment terms (days)')),
-          TextField(
-              controller: _credit,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Credit limit')),
-          const SizedBox(height: 24),
-          FilledButton(onPressed: _save, child: const Text('Save')),
+          ),
+          const SizedBox(height: AppTokens.space24),
+
+          // Action Button
+          FilledButton(
+            onPressed: _save,
+            child: const Text('Save'),
+          ),
         ],
       ),
     );

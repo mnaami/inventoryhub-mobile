@@ -46,6 +46,40 @@ void main() {
     expect(again.organizationId, session.organizationId);
   });
 
+  group('bulk dataset', () {
+    test('load produces >=58 sale orders and >=16 purchase orders', () async {
+      await service.load();
+      final sos = await (db.select(db.saleOrders)..where((o) => o.isSample.equals(true))).get();
+      final pos = await (db.select(db.purchaseOrders)..where((o) => o.isSample.equals(true))).get();
+      expect(sos.length, greaterThanOrEqualTo(58));
+      expect(pos.length, greaterThanOrEqualTo(16));
+    });
+
+    test('roughly 60% of orders carry a payment', () async {
+      await service.load();
+      final sos = await (db.select(db.saleOrders)..where((o) => o.isSample.equals(true))).get();
+      final pos = await (db.select(db.purchaseOrders)..where((o) => o.isSample.equals(true))).get();
+      final soPays = await (db.select(db.saleOrderPayments)..where((p) => p.isSample.equals(true))).get();
+      final poPays = await (db.select(db.purchaseOrderPayments)..where((p) => p.isSample.equals(true))).get();
+      final paidSo = soPays.map((p) => p.saleOrderId).toSet().length / sos.length;
+      final paidPo = poPays.map((p) => p.purchaseOrderId).toSet().length / pos.length;
+      expect(paidSo, inInclusiveRange(0.45, 0.72));
+      expect(paidPo, inInclusiveRange(0.45, 0.72));
+    });
+
+    test('bulk sales never drive stock negative and reconcile with the ledger',
+        () async {
+      await service.load();
+      final products = await (db.select(db.products)..where((p) => p.isSample.equals(true))).get();
+      expect(products.every((p) => p.currentStock >= 0), isTrue);
+      for (final p in products) {
+        final moves = await db.stockMovementDao.forProduct(p.id);
+        final sum = moves.fold<double>(0, (a, m) => a + m.quantity);
+        expect(p.currentStock, moveCloseTo(sum));
+      }
+    });
+  });
+
   test('isLoaded is false on a fresh seed, true once a sample row exists', () async {
     expect(await service.isLoaded(), isFalse);
     await seedTwoProducts();

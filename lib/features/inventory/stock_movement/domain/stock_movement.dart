@@ -23,6 +23,10 @@ abstract class StockMovement with _$StockMovement {
     required MovementType type,
     required double quantity, // signed
     String? notes,
+    // Source document this movement came from, e.g.
+    // 'purchase_order_receipt' / 'sale_order_shipping' / 'production_order'.
+    String? referenceType,
+    String? referenceId,
     required String createdBy,
     required DateTime createdAt,
   }) = _StockMovement;

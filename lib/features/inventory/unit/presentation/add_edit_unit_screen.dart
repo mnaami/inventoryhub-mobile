@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
-import '../../../../core/widgets/section_header.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../domain/unit.dart';
 import 'unit_providers.dart';
 
@@ -43,85 +43,120 @@ class _State extends ConsumerState<AddEditUnitScreen> {
   Widget build(BuildContext context) {
     final isEdit = widget.existing != null;
     final units = ref.watch(unitsProvider);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: Text(isEdit ? 'Edit unit' : 'New unit')),
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(AppTokens.space16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           children: [
-            // ── Basic info ──────────────────────────────────────────────
-            const SectionHeader('Basic info'),
-            TextFormField(
-              controller: _name,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                prefixIcon: Icon(Icons.label_outline),
-              ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Required' : null,
-            ),
-            const SizedBox(height: AppTokens.space12),
-            TextFormField(
-              controller: _symbol,
-              decoration: const InputDecoration(
-                labelText: 'Symbol',
-                prefixIcon: Icon(Icons.text_fields),
-              ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Required' : null,
-            ),
-            const SizedBox(height: AppTokens.space12),
-            DropdownButtonFormField<String>(
-              initialValue: _type,
-              decoration: const InputDecoration(labelText: 'Type'),
-              items: [
-                for (final t in _unitTypes)
-                  DropdownMenuItem(value: t, child: Text(t)),
-              ],
-              onChanged: (v) => setState(() => _type = v ?? 'count'),
-            ),
-
-            // ── Conversion ──────────────────────────────────────────────
-            const SizedBox(height: AppTokens.space24),
-            const SectionHeader('Conversion'),
-            SwitchListTile(
-              title: const Text('Base unit'),
-              value: _isBase,
-              onChanged: (v) => setState(() => _isBase = v),
-              contentPadding: EdgeInsets.zero,
-            ),
-            if (!_isBase) ...[
-              const SizedBox(height: AppTokens.space12),
-              units.maybeWhen(
-                data: (list) {
-                  final candidates = list
-                      .where((u) => u.unitType == _type && u.isBaseUnit)
-                      .toList();
-                  return DropdownButtonFormField<String?>(
-                    initialValue: _baseUnitId,
-                    decoration:
-                        const InputDecoration(labelText: 'Base unit'),
+            // Basic Info Card
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Basic info',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _name,
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.label_outline),
+                    ),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _symbol,
+                    decoration: const InputDecoration(
+                      labelText: 'Symbol',
+                      prefixIcon: Icon(Icons.text_fields_outlined),
+                    ),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: _type,
+                    decoration: const InputDecoration(labelText: 'Type'),
                     items: [
-                      for (final u in candidates)
-                        DropdownMenuItem(value: u.id, child: Text(u.name)),
+                      for (final t in _unitTypes)
+                        DropdownMenuItem(value: t, child: Text(t)),
                     ],
-                    onChanged: (v) => setState(() => _baseUnitId = v),
-                  );
-                },
-                orElse: () => const SizedBox.shrink(),
+                    onChanged: (v) => setState(() => _type = v ?? 'count'),
+                  ),
+                ],
               ),
-              const SizedBox(height: AppTokens.space12),
-              TextFormField(
-                controller: _factor,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                    labelText: 'Conversion factor (to base)'),
-              ),
-            ],
+            ),
+            const SizedBox(height: AppTokens.space16),
 
+            // Conversion Card
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Conversion',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SwitchListTile(
+                    title: const Text('Base unit'),
+                    value: _isBase,
+                    onChanged: (v) => setState(() => _isBase = v),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  if (!_isBase) ...[
+                    const SizedBox(height: 16),
+                    units.maybeWhen(
+                      data: (list) {
+                        final candidates = list
+                            .where((u) => u.unitType == _type && u.isBaseUnit)
+                            .toList();
+                        return DropdownButtonFormField<String?>(
+                          value: _baseUnitId,
+                          decoration: const InputDecoration(labelText: 'Base unit'),
+                          items: [
+                            for (final u in candidates)
+                              DropdownMenuItem(value: u.id, child: Text(u.name)),
+                          ],
+                          onChanged: (v) => setState(() => _baseUnitId = v),
+                        );
+                      },
+                      orElse: () => const SizedBox.shrink(),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _factor,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Conversion factor (to base)',
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
             const SizedBox(height: AppTokens.space24),
-            FilledButton(onPressed: _save, child: const Text('Save')),
+
+            // Save action button
+            FilledButton(
+              onPressed: _save,
+              child: const Text('Save'),
+            ),
           ],
         ),
       ),
