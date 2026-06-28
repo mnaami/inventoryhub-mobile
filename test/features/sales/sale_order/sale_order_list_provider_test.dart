@@ -1,14 +1,16 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inventoryhub_mobile/core/db/app_database.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
-import 'package:inventoryhub_mobile/features/sales/sale_order/domain/sale_order_enums.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/presentation/sale_order_providers.dart';
 import '../../../helpers/test_db.dart';
 
 void main() {
-  test('list provider loads, and changing criteria reloads', () async {
+  test('list provider loads results and a criteria change reloads with the filter applied',
+      () async {
     final db = newTestDb();
     addTearDown(db.close);
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();
@@ -18,14 +20,30 @@ void main() {
     ]);
     addTearDown(c.dispose);
 
+    final now = DateTime.utc(2026, 6, 26);
+    SaleOrdersCompanion ord(String id, String soNumber) =>
+        SaleOrdersCompanion.insert(
+          id: id,
+          organizationId: session.organizationId,
+          soNumber: soNumber,
+          customerId: 'c1',
+          orderDate: now,
+          totalAmount: const Value(10),
+          createdAt: now,
+          updatedAt: now,
+        );
+    await db.saleOrderDao.createWithItems(ord('1', 'SO-0001'), const []);
+    await db.saleOrderDao.createWithItems(ord('2', 'SO-0002'), const []);
+
     c.read(saleOrderListProvider); // triggers initial load
     await Future<void>.delayed(Duration.zero);
-    expect(c.read(saleOrderListProvider).isLoadingInitial, false);
+    expect(c.read(saleOrderListProvider).items.length, 2);
 
-    // Changing criteria should put it back into a fresh load cycle.
-    c.read(saleOrderCriteriaProvider.notifier).setStatus(OrderStatus.confirmed);
+    // Changing criteria must reload from page 0 and re-apply the new filter.
+    c.read(saleOrderCriteriaProvider.notifier).setSearch('SO-0002');
     await Future<void>.delayed(Duration.zero);
     final s = c.read(saleOrderListProvider);
     expect(s.error, isNull);
+    expect(s.items.single.soNumber, 'SO-0002');
   });
 }
