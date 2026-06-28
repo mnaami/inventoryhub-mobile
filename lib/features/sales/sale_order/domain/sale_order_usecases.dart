@@ -49,10 +49,24 @@ class SaleOrderService {
   Future<int> liveOrdersForCustomer(String customerId) =>
       _repo.countLiveForCustomer(_orgId, customerId);
   Future<List<SaleOrderItem>> items(String orderId) => _repo.itemsFor(orderId);
-  Future<List<SaleOrder>> list({OrderStatus? status, String? customerId, int page = 0}) =>
+  Future<List<SaleOrder>> list({
+    OrderStatus? status,
+    String? customerId,
+    String? search,
+    PaymentStatus? paymentStatus,
+    ShippingStatus? shippingStatus,
+    DateTime? from,
+    DateTime? to,
+    int page = 0,
+  }) =>
       _repo.listOrders(_orgId,
           status: status,
           customerId: customerId,
+          search: search,
+          paymentStatus: paymentStatus,
+          shippingStatus: shippingStatus,
+          from: from,
+          to: to,
           limit: pageSize,
           offset: page * pageSize);
 

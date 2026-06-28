@@ -44,11 +44,21 @@ class SaleOrderRepositoryImpl implements SaleOrderRepository {
   Future<List<SaleOrder>> listOrders(String orgId,
           {OrderStatus? status,
           String? customerId,
+          String? search,
+          PaymentStatus? paymentStatus,
+          ShippingStatus? shippingStatus,
+          DateTime? from,
+          DateTime? to,
           required int limit,
           required int offset}) async =>
       (await _orders.paged(orgId,
               status: status?.wire,
               customerId: customerId,
+              search: search,
+              paymentStatus: paymentStatus?.wire,
+              shippingStatus: shippingStatus?.wire,
+              from: from,
+              to: to,
               limit: limit,
               offset: offset))
           .map(toSaleOrder)

@@ -13,6 +13,11 @@ abstract interface class SaleOrderRepository {
   Future<List<SaleOrder>> listOrders(String orgId,
       {OrderStatus? status,
       String? customerId,
+      String? search,
+      PaymentStatus? paymentStatus,
+      ShippingStatus? shippingStatus,
+      DateTime? from,
+      DateTime? to,
       required int limit,
       required int offset});
   Future<void> setStatus(String id, OrderStatus status);
