@@ -57,11 +57,12 @@ class _SaleOrderListScreenState extends ConsumerState<SaleOrderListScreen> {
         onPressed: () async {
           final id = await Navigator.of(context).push<String>(
               MaterialPageRoute(builder: (_) => const SaleOrderEditScreen()));
+          if (!mounted) return;
           await _notifier.refresh();
           if (id != null && context.mounted) {
             await Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => SaleOrderDetailScreen(orderId: id)));
-            await _notifier.refresh();
+            if (mounted) await _notifier.refresh();
           }
         },
         child: const Icon(Icons.add, size: 28),
@@ -86,7 +87,7 @@ class _SaleOrderListScreenState extends ConsumerState<SaleOrderListScreen> {
                 onTap: () async {
                   await Navigator.of(context).push(MaterialPageRoute(
                       builder: (_) => SaleOrderDetailScreen(orderId: o.id)));
-                  await _notifier.refresh();
+                  if (mounted) await _notifier.refresh();
                 },
                 child: Row(
                   children: [
