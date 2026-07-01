@@ -12,6 +12,11 @@ abstract interface class PurchaseOrderRepository {
   Future<List<PurchaseOrder>> listOrders(String orgId,
       {PurchaseOrderStatus? status,
       String? supplierId,
+      String? search,
+      PaymentStatus? paymentStatus,
+      ReceiptStatus? receiptStatus,
+      DateTime? from,
+      DateTime? to,
       required int limit,
       required int offset});
   Future<void> setStatus(String id, PurchaseOrderStatus status);
@@ -23,6 +28,9 @@ abstract interface class PurchaseOrderRepository {
   Future<int> countOpenOrders(String orgId);
   Future<int> countUnreceived(String orgId);
   Future<double> outstandingPayable(String orgId);
+  Future<int> countByDateRange(String orgId, DateTime from, DateTime to);
+  Future<double> totalAmountByDateRange(String orgId, DateTime from, DateTime to);
+  Future<List<PurchaseOrder>> allActive(String orgId);
 
   Future<void> createDraftPayment(PurchaseOrderPayment payment);
   Future<void> editDraftPayment(String paymentId,

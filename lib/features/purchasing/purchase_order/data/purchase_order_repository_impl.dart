@@ -44,11 +44,21 @@ class PurchaseOrderRepositoryImpl implements PurchaseOrderRepository {
   Future<List<PurchaseOrder>> listOrders(String orgId,
           {PurchaseOrderStatus? status,
           String? supplierId,
+          String? search,
+          PaymentStatus? paymentStatus,
+          ReceiptStatus? receiptStatus,
+          DateTime? from,
+          DateTime? to,
           required int limit,
           required int offset}) async =>
       (await _orders.paged(orgId,
               status: status?.wire,
               supplierId: supplierId,
+              search: search,
+              paymentStatus: paymentStatus?.wire,
+              receiptStatus: receiptStatus?.wire,
+              from: from,
+              to: to,
               limit: limit,
               offset: offset))
           .map(toPurchaseOrder)
@@ -94,6 +104,18 @@ class PurchaseOrderRepositoryImpl implements PurchaseOrderRepository {
     final paid = await _payments.postedTotalForOrg(orgId);
     return total - paid;
   }
+
+  @override
+  Future<int> countByDateRange(String orgId, DateTime from, DateTime to) =>
+      _orders.countByDateRange(orgId, from, to);
+
+  @override
+  Future<double> totalAmountByDateRange(String orgId, DateTime from, DateTime to) =>
+      _orders.totalAmountByDateRange(orgId, from, to);
+
+  @override
+  Future<List<PurchaseOrder>> allActive(String orgId) async =>
+      (await _orders.allActive(orgId)).map(toPurchaseOrder).toList();
 
   @override
   Future<void> createDraftPayment(PurchaseOrderPayment payment) =>

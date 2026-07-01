@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/paging/paged_list_notifier.dart';
+import '../../../../core/paging/paged_state.dart';
 import '../../../../core/providers.dart';
 import '../data/document_counter_dao.dart';
 import '../data/sale_order_dao.dart';
@@ -75,3 +77,126 @@ String shippingStatusLabel(ShippingStatus s) => switch (s) {
       ShippingStatus.partiallyShipped => 'Partially shipped',
       ShippingStatus.fullyShipped => 'Fully shipped',
     };
+
+enum DatePreset { all, today, week, month }
+
+class SaleOrderListCriteria {
+  const SaleOrderListCriteria({
+    this.search = '',
+    this.status,
+    this.paymentStatus,
+    this.shippingStatus,
+    this.datePreset = DatePreset.all,
+  });
+
+  final String search;
+  final OrderStatus? status;
+  final PaymentStatus? paymentStatus;
+  final ShippingStatus? shippingStatus;
+  final DatePreset datePreset;
+
+  SaleOrderListCriteria copyWith({
+    String? search,
+    OrderStatus? status,
+    bool clearStatus = false,
+    PaymentStatus? paymentStatus,
+    bool clearPaymentStatus = false,
+    ShippingStatus? shippingStatus,
+    bool clearShippingStatus = false,
+    DatePreset? datePreset,
+  }) =>
+      SaleOrderListCriteria(
+        search: search ?? this.search,
+        status: clearStatus ? null : (status ?? this.status),
+        paymentStatus:
+            clearPaymentStatus ? null : (paymentStatus ?? this.paymentStatus),
+        shippingStatus:
+            clearShippingStatus ? null : (shippingStatus ?? this.shippingStatus),
+        datePreset: datePreset ?? this.datePreset,
+      );
+
+  /// Inclusive lower bound (UTC) for the selected preset, or null for "all".
+  DateTime? get from {
+    final now = DateTime.now().toUtc();
+    switch (datePreset) {
+      case DatePreset.all:
+        return null;
+      case DatePreset.today:
+        return DateTime.utc(now.year, now.month, now.day);
+      case DatePreset.week:
+        return now.subtract(const Duration(days: 7));
+      case DatePreset.month:
+        return now.subtract(const Duration(days: 30));
+    }
+  }
+
+  bool get hasActiveFilters =>
+      search.isNotEmpty ||
+      status != null ||
+      paymentStatus != null ||
+      shippingStatus != null ||
+      datePreset != DatePreset.all;
+}
+
+class SaleOrderCriteria extends Notifier<SaleOrderListCriteria> {
+  @override
+  SaleOrderListCriteria build() => const SaleOrderListCriteria();
+
+  void setSearch(String v) => state = state.copyWith(search: v);
+  void setStatus(OrderStatus? v) =>
+      state = state.copyWith(status: v, clearStatus: v == null);
+  void setPaymentStatus(PaymentStatus? v) =>
+      state = state.copyWith(paymentStatus: v, clearPaymentStatus: v == null);
+  void setShippingStatus(ShippingStatus? v) =>
+      state = state.copyWith(shippingStatus: v, clearShippingStatus: v == null);
+  void setDatePreset(DatePreset v) => state = state.copyWith(datePreset: v);
+  void reset() => state = const SaleOrderListCriteria();
+}
+
+final saleOrderCriteriaProvider =
+    NotifierProvider<SaleOrderCriteria, SaleOrderListCriteria>(
+        SaleOrderCriteria.new);
+
+class SaleOrderListNotifier extends PagedListNotifier<SaleOrder> {
+  @override
+  int get pageSize => SaleOrderService.pageSize;
+
+  @override
+  PagedState<SaleOrder> build() {
+    ref.listen(saleOrderCriteriaProvider, (_, __) => reload());
+    return super.build();
+  }
+
+  @override
+  Future<List<SaleOrder>> fetch(int page) {
+    final c = ref.read(saleOrderCriteriaProvider);
+    return ref.read(saleOrderServiceProvider).list(
+          page: page,
+          search: c.search,
+          status: c.status,
+          paymentStatus: c.paymentStatus,
+          shippingStatus: c.shippingStatus,
+          from: c.from,
+        );
+  }
+}
+
+final saleOrderListProvider =
+    NotifierProvider<SaleOrderListNotifier, PagedState<SaleOrder>>(
+        SaleOrderListNotifier.new);
+
+final saleOrderCountProvider = FutureProvider.family<int, ({DateTime startDate, DateTime endDate})>((ref, params) async {
+  final service = ref.watch(saleOrderServiceProvider);
+  return await service.countByDateRange(params.startDate, params.endDate);
+});
+
+final saleOrderAmountProvider = FutureProvider.family<double, ({DateTime startDate, DateTime endDate})>((ref, params) async {
+  final service = ref.watch(saleOrderServiceProvider);
+  return await service.totalAmountByDateRange(params.startDate, params.endDate);
+});
+
+final allSaleOrdersProvider = FutureProvider<List<SaleOrder>>((ref) async {
+  final service = ref.watch(saleOrderServiceProvider);
+  return await service.allActive();
+});
+

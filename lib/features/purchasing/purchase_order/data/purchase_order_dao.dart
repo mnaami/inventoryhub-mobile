@@ -52,6 +52,11 @@ class PurchaseOrderDao extends DatabaseAccessor<AppDatabase>
     String orgId, {
     String? status,
     String? supplierId,
+    String? search,
+    String? paymentStatus,
+    String? receiptStatus,
+    DateTime? from,
+    DateTime? to,
     required int limit,
     required int offset,
   }) {
@@ -59,6 +64,18 @@ class PurchaseOrderDao extends DatabaseAccessor<AppDatabase>
       ..where((o) => o.organizationId.equals(orgId) & o.isActive.equals(true));
     if (status != null) q.where((o) => o.status.equals(status));
     if (supplierId != null) q.where((o) => o.supplierId.equals(supplierId));
+    if (paymentStatus != null) {
+      q.where((o) => o.paymentStatus.equals(paymentStatus));
+    }
+    if (receiptStatus != null) {
+      q.where((o) => o.receiptStatus.equals(receiptStatus));
+    }
+    if (search != null && search.trim().isNotEmpty) {
+      final like = '%${search.trim()}%';
+      q.where((o) => o.orderNumber.like(like));
+    }
+    if (from != null) q.where((o) => o.orderDate.isBiggerOrEqualValue(from));
+    if (to != null) q.where((o) => o.orderDate.isSmallerThanValue(to));
     q
       ..orderBy([
         (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)
@@ -157,5 +174,38 @@ class PurchaseOrderDao extends DatabaseAccessor<AppDatabase>
           purchaseOrders.supplierId.equals(supplierId) &
           purchaseOrders.status.equals('cancelled').not());
     return (await q.getSingle()).read(s) ?? 0;
+  }
+
+  Future<int> countByDateRange(String orgId, DateTime from, DateTime to) async {
+    final c = countAll();
+    final q = selectOnly(purchaseOrders)
+      ..addColumns([c])
+      ..where(purchaseOrders.organizationId.equals(orgId) &
+          purchaseOrders.isActive.equals(true) &
+          purchaseOrders.status.equals('cancelled').not() &
+          purchaseOrders.orderDate.isBiggerOrEqualValue(from) &
+          purchaseOrders.orderDate.isSmallerThanValue(to));
+    return (await q.getSingle()).read(c) ?? 0;
+  }
+
+  Future<double> totalAmountByDateRange(String orgId, DateTime from, DateTime to) async {
+    final s = purchaseOrders.totalAmount.sum();
+    final q = selectOnly(purchaseOrders)
+      ..addColumns([s])
+      ..where(purchaseOrders.organizationId.equals(orgId) &
+          purchaseOrders.isActive.equals(true) &
+          purchaseOrders.status.equals('cancelled').not() &
+          purchaseOrders.orderDate.isBiggerOrEqualValue(from) &
+          purchaseOrders.orderDate.isSmallerThanValue(to));
+    return (await q.getSingle()).read(s) ?? 0;
+  }
+
+  Future<List<PurchaseOrderRow>> allActive(String orgId) {
+    return (select(purchaseOrders)
+          ..where((o) => o.organizationId.equals(orgId) & o.isActive.equals(true))
+          ..orderBy([
+            (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)
+          ]))
+        .get();
   }
 }

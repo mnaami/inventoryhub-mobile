@@ -53,6 +53,11 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
     String orgId, {
     String? status,
     String? customerId,
+    String? search,
+    String? paymentStatus,
+    String? shippingStatus,
+    DateTime? from,
+    DateTime? to,
     required int limit,
     required int offset,
   }) {
@@ -60,6 +65,18 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
       ..where((o) => o.organizationId.equals(orgId) & o.isActive.equals(true));
     if (status != null) q.where((o) => o.status.equals(status));
     if (customerId != null) q.where((o) => o.customerId.equals(customerId));
+    if (paymentStatus != null) {
+      q.where((o) => o.paymentStatus.equals(paymentStatus));
+    }
+    if (shippingStatus != null) {
+      q.where((o) => o.shippingStatus.equals(shippingStatus));
+    }
+    if (search != null && search.trim().isNotEmpty) {
+      final like = '%${search.trim()}%';
+      q.where((o) => o.soNumber.like(like));
+    }
+    if (from != null) q.where((o) => o.orderDate.isBiggerOrEqualValue(from));
+    if (to != null) q.where((o) => o.orderDate.isSmallerThanValue(to));
     q
       ..orderBy([
         (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)
@@ -151,4 +168,38 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
           saleOrders.status.equals('cancelled').not());
     return (await q.getSingle()).read(s) ?? 0;
   }
+
+  Future<int> countByDateRange(String orgId, DateTime from, DateTime to) async {
+    final c = countAll();
+    final q = selectOnly(saleOrders)
+      ..addColumns([c])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.status.equals('cancelled').not() &
+          saleOrders.orderDate.isBiggerOrEqualValue(from) &
+          saleOrders.orderDate.isSmallerThanValue(to));
+    return (await q.getSingle()).read(c) ?? 0;
+  }
+
+  Future<double> totalAmountByDateRange(String orgId, DateTime from, DateTime to) async {
+    final s = saleOrders.totalAmount.sum();
+    final q = selectOnly(saleOrders)
+      ..addColumns([s])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.status.equals('cancelled').not() &
+          saleOrders.orderDate.isBiggerOrEqualValue(from) &
+          saleOrders.orderDate.isSmallerThanValue(to));
+    return (await q.getSingle()).read(s) ?? 0;
+  }
+
+  Future<List<SaleOrderRow>> allActive(String orgId) {
+    return (select(saleOrders)
+          ..where((o) => o.organizationId.equals(orgId) & o.isActive.equals(true))
+          ..orderBy([
+            (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)
+          ]))
+        .get();
+  }
 }
+

@@ -1,137 +1,350 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/async_value_view.dart';
-import '../../../../core/widgets/stat_tile.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../domain/purchase_order.dart';
+import '../domain/purchase_order_enums.dart';
 import 'purchase_order_detail_screen.dart';
 import 'purchase_order_edit_screen.dart';
 import 'purchase_order_list_screen.dart';
 import 'purchase_order_providers.dart';
+import 'widgets/purchase_order_swipeable_statistics_section.dart';
 
 class PurchaseOrderDashboardScreen extends ConsumerWidget {
   const PurchaseOrderDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kpis = ref.watch(purchaseDashboardProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final allOrdersAsync = ref.watch(allPurchaseOrdersProvider);
+    final kpisAsync = ref.watch(purchaseDashboardProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Purchasing')),
+      appBar: AppBar(
+        title: const Text('Purchasing Dashboard'),
+        actions: [
+          IconButton(
+            tooltip: 'View All Orders',
+            icon: const Icon(Icons.list_alt_rounded),
+            onPressed: () {
+              ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => const PurchaseOrderListScreen()));
+            },
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'purchasing_fab',
         onPressed: () => _createOrder(context, ref),
         child: const Icon(Icons.add, size: 28),
       ),
-      body: AsyncValueView(
-        value: kpis,
-        data: (k) => ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          children: [
-            // Overview section title
-            Text(
-              'Overview',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: scheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: AppTokens.space12),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        children: [
+          // Period Stats Section
+          const PurchaseOrderSwipeableStatisticsSection(),
+          const SizedBox(height: AppTokens.space24),
 
-            // KPIs row
-            Row(
+          // Outstanding payables
+          kpisAsync.when(
+            data: (k) => _buildOutstandingCard(context, ref, k.outstanding),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => const SizedBox(),
+          ),
+          const SizedBox(height: AppTokens.space24),
+
+          // Payment Status distribution
+          allOrdersAsync.when(
+            data: (orders) => _buildPaymentStatusDistribution(context, ref, orders),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, st) => Text('Error loading payment status distribution: $e'),
+          ),
+          const SizedBox(height: AppTokens.space24),
+
+          // Receipt Status distribution
+          allOrdersAsync.when(
+            data: (orders) => _buildReceiptStatusDistribution(context, ref, orders),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, st) => Text('Error loading receipt status distribution: $e'),
+          ),
+          const SizedBox(height: AppTokens.space16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOutstandingCard(BuildContext context, WidgetRef ref, double amount) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final hasOutstanding = amount > 0.01;
+
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.space16),
+      onTap: () {
+        ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+        ref.read(purchaseOrderCriteriaProvider.notifier).setPaymentStatus(PaymentStatus.notPaid);
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => const PurchaseOrderListScreen()));
+      },
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(AppTokens.space12),
+            decoration: BoxDecoration(
+              color: hasOutstanding ? Colors.orange.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              hasOutstanding ? Icons.warning_rounded : Icons.check_circle_rounded,
+              color: hasOutstanding ? Colors.orange.shade700 : Colors.green.shade700,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: AppTokens.space16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: StatTile(
-                    label: 'Open orders',
-                    value: '${k.openOrders}',
-                    icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: scheme.primary.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.shopping_bag_outlined, color: scheme.primary, size: 20),
-                    ),
+                Text(
+                  hasOutstanding ? 'Outstanding Payables' : 'All Payments Cleared',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: scheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(width: AppTokens.space12),
-                Expanded(
-                  child: StatTile(
-                    label: 'Unreceived',
-                    value: '${k.unreceived}',
-                    icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.archive_outlined, color: Colors.amber, size: 20),
-                    ),
+                const SizedBox(height: AppTokens.space4),
+                Text(
+                  '\$${amount.toStringAsFixed(2)}',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: hasOutstanding ? Colors.orange.shade700 : Colors.green.shade700,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: AppTokens.space12),
+          ),
+          Icon(Icons.chevron_right_rounded, color: scheme.onSurfaceVariant.withOpacity(0.5)),
+        ],
+      ),
+    );
+  }
 
-            // Outstanding Payable card
-            StatTile(
-              label: 'Outstanding payable',
-              value: '\$${k.outstanding.toStringAsFixed(2)}',
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
-                  shape: BoxShape.circle,
+  Widget _buildPaymentStatusDistribution(BuildContext context, WidgetRef ref, List<PurchaseOrder> orders) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    int notPaid = 0;
+    int partial = 0;
+    int paid = 0;
+    for (final o in orders) {
+      switch (o.paymentStatus) {
+        case PaymentStatus.notPaid:
+          notPaid++;
+          break;
+        case PaymentStatus.partial:
+          partial++;
+          break;
+        case PaymentStatus.paid:
+          paid++;
+          break;
+      }
+    }
+    final total = orders.length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Payment Status Breakdown',
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppTokens.space12),
+        AppCard(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              _buildDistributionRow(
+                context: context,
+                label: 'Paid',
+                count: paid,
+                total: total,
+                color: Colors.green.shade600,
+                onTap: () {
+                  ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+                  ref.read(purchaseOrderCriteriaProvider.notifier).setPaymentStatus(PaymentStatus.paid);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const PurchaseOrderListScreen()));
+                },
+              ),
+              const Divider(),
+              _buildDistributionRow(
+                context: context,
+                label: 'Partial',
+                count: partial,
+                total: total,
+                color: Colors.amber.shade700,
+                onTap: () {
+                  ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+                  ref.read(purchaseOrderCriteriaProvider.notifier).setPaymentStatus(PaymentStatus.partial);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const PurchaseOrderListScreen()));
+                },
+              ),
+              const Divider(),
+              _buildDistributionRow(
+                context: context,
+                label: 'Not paid',
+                count: notPaid,
+                total: total,
+                color: Colors.red.shade700,
+                onTap: () {
+                  ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+                  ref.read(purchaseOrderCriteriaProvider.notifier).setPaymentStatus(PaymentStatus.notPaid);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const PurchaseOrderListScreen()));
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReceiptStatusDistribution(BuildContext context, WidgetRef ref, List<PurchaseOrder> orders) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    int notReceived = 0;
+    int partial = 0;
+    int fullyReceived = 0;
+    for (final o in orders) {
+      switch (o.receiptStatus) {
+        case ReceiptStatus.notReceived:
+          notReceived++;
+          break;
+        case ReceiptStatus.partial:
+          partial++;
+          break;
+        case ReceiptStatus.fullyReceived:
+          fullyReceived++;
+          break;
+      }
+    }
+    final total = orders.length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Receipt Status Breakdown',
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppTokens.space12),
+        AppCard(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              _buildDistributionRow(
+                context: context,
+                label: 'Fully received',
+                count: fullyReceived,
+                total: total,
+                color: Colors.green.shade600,
+                onTap: () {
+                  ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+                  ref.read(purchaseOrderCriteriaProvider.notifier).setReceiptStatus(ReceiptStatus.fullyReceived);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const PurchaseOrderListScreen()));
+                },
+              ),
+              const Divider(),
+              _buildDistributionRow(
+                context: context,
+                label: 'Partially received',
+                count: partial,
+                total: total,
+                color: Colors.amber.shade700,
+                onTap: () {
+                  ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+                  ref.read(purchaseOrderCriteriaProvider.notifier).setReceiptStatus(ReceiptStatus.partial);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const PurchaseOrderListScreen()));
+                },
+              ),
+              const Divider(),
+              _buildDistributionRow(
+                context: context,
+                label: 'Not received',
+                count: notReceived,
+                total: total,
+                color: Colors.red.shade700,
+                onTap: () {
+                  ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+                  ref.read(purchaseOrderCriteriaProvider.notifier).setReceiptStatus(ReceiptStatus.notReceived);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const PurchaseOrderListScreen()));
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDistributionRow({
+    required BuildContext context,
+    required String label,
+    required int count,
+    required int total,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final pct = total > 0 ? (count / total * 100).toStringAsFixed(0) : '0';
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppTokens.radiusLg),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppTokens.space16, vertical: 14),
+        child: Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+            const SizedBox(width: AppTokens.space12),
+            Expanded(
+              child: Text(
+                label,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: scheme.onSurface,
                 ),
-                child: const Icon(Icons.account_balance_wallet_outlined, color: Colors.green, size: 20),
               ),
             ),
-            const SizedBox(height: AppTokens.space24),
-
-            // Main View All Purchase Orders link card
-            AppCard(
-              padding: const EdgeInsets.all(20),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => const PurchaseOrderListScreen())),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: scheme.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(Icons.list_alt_rounded, color: scheme.primary, size: 28),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'View All Purchase Orders',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: scheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Browse and manage your purchasing history',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.chevron_right_rounded, color: scheme.onSurfaceVariant),
-                ],
+            Text(
+              '$count ($pct%)',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: scheme.onSurfaceVariant,
               ),
             ),
+            const SizedBox(width: 6),
+            Icon(Icons.chevron_right_rounded, color: scheme.onSurfaceVariant.withOpacity(0.4), size: 20),
           ],
         ),
       ),
@@ -142,6 +355,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
     final id = await Navigator.of(context).push<String>(
         MaterialPageRoute(builder: (_) => const PurchaseOrderEditScreen()));
     ref.invalidate(purchaseDashboardProvider);
+    ref.invalidate(allPurchaseOrdersProvider);
     ref.invalidate(purchaseOrdersProvider);
     if (id != null && context.mounted) {
       await Navigator.of(context).push(MaterialPageRoute(

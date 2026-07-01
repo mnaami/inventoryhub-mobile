@@ -43,12 +43,32 @@ class PurchaseOrderService {
   Future<List<PurchaseOrderReceipt>> receipts(String orderId) =>
       _repo.receiptsFor(orderId);
   Future<List<PurchaseOrder>> list(
-          {PurchaseOrderStatus? status, String? supplierId, int page = 0}) =>
+          {PurchaseOrderStatus? status,
+          String? supplierId,
+          String? search,
+          PaymentStatus? paymentStatus,
+          ReceiptStatus? receiptStatus,
+          DateTime? from,
+          DateTime? to,
+          int page = 0}) =>
       _repo.listOrders(_orgId,
           status: status,
           supplierId: supplierId,
+          search: search,
+          paymentStatus: paymentStatus,
+          receiptStatus: receiptStatus,
+          from: from,
+          to: to,
           limit: pageSize,
           offset: page * pageSize);
+
+  Future<int> countByDateRange(DateTime from, DateTime to) =>
+      _repo.countByDateRange(_orgId, from, to);
+
+  Future<double> totalAmountByDateRange(DateTime from, DateTime to) =>
+      _repo.totalAmountByDateRange(_orgId, from, to);
+
+  Future<List<PurchaseOrder>> allActive() => _repo.allActive(_orgId);
 
   Future<PurchaseOrder> createDraft({
     required String supplierId,

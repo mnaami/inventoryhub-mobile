@@ -13,6 +13,11 @@ abstract interface class SaleOrderRepository {
   Future<List<SaleOrder>> listOrders(String orgId,
       {OrderStatus? status,
       String? customerId,
+      String? search,
+      PaymentStatus? paymentStatus,
+      ShippingStatus? shippingStatus,
+      DateTime? from,
+      DateTime? to,
       required int limit,
       required int offset});
   Future<void> setStatus(String id, OrderStatus status);
@@ -23,6 +28,10 @@ abstract interface class SaleOrderRepository {
   Future<int> countOpenOrders(String orgId);
   Future<int> countUnshipped(String orgId);
   Future<double> outstandingReceivables(String orgId);
+  Future<int> countByDateRange(String orgId, DateTime from, DateTime to);
+  Future<double> totalAmountByDateRange(String orgId, DateTime from, DateTime to);
+  Future<List<SaleOrder>> allActive(String orgId);
+
 
   Future<void> recordPayment(SaleOrderPayment payment);
   Future<void> editPayment(String paymentId,

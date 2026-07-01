@@ -31,7 +31,7 @@ void main() {
 
     await tester.tap(find.text('Sales'));
     await tester.pumpAndSettle();
-    expect(find.text('Unshipped'), findsOneWidget); // dashboard KPI tile unique to Sales
+    expect(find.text('Payment Status Breakdown'), findsOneWidget); // dashboard widget unique to Sales
     await db.close();
   });
 }
