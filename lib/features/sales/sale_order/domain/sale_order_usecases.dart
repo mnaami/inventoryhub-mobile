@@ -49,6 +49,15 @@ class SaleOrderService {
   Future<int> liveOrdersForCustomer(String customerId) =>
       _repo.countLiveForCustomer(_orgId, customerId);
   Future<List<SaleOrderItem>> items(String orderId) => _repo.itemsFor(orderId);
+
+  Future<int> countByDateRange(DateTime from, DateTime to) =>
+      _repo.countByDateRange(_orgId, from, to);
+
+  Future<double> totalAmountByDateRange(DateTime from, DateTime to) =>
+      _repo.totalAmountByDateRange(_orgId, from, to);
+
+  Future<List<SaleOrder>> allActive() => _repo.allActive(_orgId);
+
   Future<List<SaleOrder>> list({
     OrderStatus? status,
     String? customerId,

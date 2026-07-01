@@ -261,24 +261,31 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                 ),
               ),
               
-              // Fixed Bottom Actions Container
-              Container(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-                decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 10,
-                      offset: const Offset(0, -4),
+              // Fixed Bottom Actions Container (Only rendered when there are actions)
+              Builder(
+                builder: (context) {
+                  final actions = _actions(context, ref, service, o);
+                  if (actions.isEmpty) return const SizedBox.shrink();
+                  
+                  return Container(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                    decoration: BoxDecoration(
+                      color: theme.scaffoldBackgroundColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 10,
+                          offset: const Offset(0, -4),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: _actions(context, ref, service, o),
-                ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: actions,
+                    ),
+                  );
+                },
               ),
             ],
           );
@@ -296,48 +303,171 @@ class SaleOrderDetailScreen extends ConsumerWidget {
         o.status == OrderStatus.confirmed ||
         o.status == OrderStatus.processing;
     final canPay = o.status != OrderStatus.draft &&
-        o.status != OrderStatus.cancelled;
-    final canShip = o.status == OrderStatus.confirmed ||
-        o.status == OrderStatus.processing;
+        o.status != OrderStatus.cancelled &&
+        o.paymentStatus != PaymentStatus.paid;
+    final canShip = (o.status == OrderStatus.confirmed ||
+        o.status == OrderStatus.processing) &&
+        o.shippingStatus != ShippingStatus.fullyShipped;
         
-    return [
-      if (o.status == OrderStatus.draft) ...[
+    final List<Widget> widgets = [];
+
+    // 1. Primary transitions (Confirm or Process)
+    if (o.status == OrderStatus.draft) {
+      widgets.add(
         FilledButton(
           onPressed: () => _run(context, ref, () => service.confirm(o)),
-          child: const Text('Confirm'),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.check_circle_outline, size: 20),
+              SizedBox(width: 8),
+              Text('Confirm Order'),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-      ],
-      if (o.status == OrderStatus.confirmed) ...[
+      );
+    } else if (o.status == OrderStatus.confirmed) {
+      widgets.add(
         FilledButton(
           onPressed: () => _run(context, ref, () => service.process(o)),
-          child: const Text('Process'),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.play_circle_outline, size: 20),
+              SizedBox(width: 8),
+              Text('Start Processing'),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-      ],
-      if (canShip) ...[
+      );
+    }
+
+    // Spacing between primary and secondary
+    if (widgets.isNotEmpty && (canPay || canShip)) {
+      widgets.add(const SizedBox(height: 12));
+    }
+
+    // 2. Secondary operational actions (Ship / Pay)
+    if (canShip && canPay) {
+      widgets.add(
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () async {
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => RecordPaymentScreen(order: o)));
+                  _refresh(ref);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.payment, size: 18),
+                    SizedBox(width: 8),
+                    Text('Add Payment'),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () async {
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => CreateShipmentScreen(order: o)));
+                  _refresh(ref);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.local_shipping_outlined, size: 18),
+                    SizedBox(width: 8),
+                    Text('Ship Items'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (canShip) {
+      widgets.add(
         OutlinedButton(
           onPressed: () async {
             await Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => CreateShipmentScreen(order: o)));
             _refresh(ref);
           },
-          child: const Text('Create Shipment'),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.local_shipping_outlined, size: 18),
+              SizedBox(width: 8),
+              Text('Create Shipment'),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-      ],
-      if (canPay) ...[
-        OutlinedButton(
-          onPressed: () async {
-            await Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => RecordPaymentScreen(order: o)));
-            _refresh(ref);
-          },
-          child: const Text('Add Payment'),
-        ),
-        const SizedBox(height: 12),
-      ],
-      if (canCancel) ...[
+      );
+    } else if (canPay) {
+      final isPostProcessing = o.status == OrderStatus.shipped || o.status == OrderStatus.delivered;
+      if (isPostProcessing) {
+        widgets.add(
+          FilledButton(
+            onPressed: () async {
+              await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => RecordPaymentScreen(order: o)));
+              _refresh(ref);
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.green.shade700,
+              foregroundColor: Colors.white,
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.payment, size: 20),
+                SizedBox(width: 8),
+                Text('Record Payment'),
+              ],
+            ),
+          ),
+        );
+      } else {
+        widgets.add(
+          OutlinedButton(
+            onPressed: () async {
+              await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => RecordPaymentScreen(order: o)));
+              _refresh(ref);
+            },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.payment, size: 18),
+                SizedBox(width: 8),
+                Text('Add Payment'),
+              ],
+            ),
+          ),
+        );
+      }
+    }
+
+    // Spacing before Cancel
+    if (widgets.isNotEmpty && canCancel) {
+      widgets.add(const SizedBox(height: 12));
+    }
+
+    // 3. Destructive actions (Cancel)
+    if (canCancel) {
+      widgets.add(
         TextButton(
           onPressed: () async {
             final ok = await confirmDialog(context,
@@ -348,13 +478,23 @@ class SaleOrderDetailScreen extends ConsumerWidget {
               await _run(context, ref, () => service.cancel(o));
             }
           },
-          child: Text(
-            'Cancel order',
-            style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.close_rounded, color: scheme.error, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                'Cancel Order',
+                style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600),
+              ),
+            ],
           ),
         ),
-      ],
-    ];
+      );
+    }
+
+    return widgets;
   }
 
   Widget _buildStatusBadge(BuildContext context, OrderStatus status) {

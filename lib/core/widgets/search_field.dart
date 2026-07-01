@@ -49,18 +49,44 @@ class _SearchFieldState extends State<SearchField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final isLight = theme.brightness == Brightness.light;
+
     return TextField(
       controller: _controller,
       autofocus: widget.autofocus,
       onChanged: _onChanged,
       decoration: InputDecoration(
         hintText: widget.hint,
-        prefixIcon: const Icon(Icons.search),
+        prefixIcon: const Icon(Icons.search, size: 20),
         suffixIcon: _controller.text.isEmpty
             ? null
-            : IconButton(icon: const Icon(Icons.clear), onPressed: _clear),
-        border: const OutlineInputBorder(),
+            : IconButton(
+                icon: const Icon(Icons.clear, size: 18),
+                onPressed: _clear,
+              ),
+        filled: true,
+        fillColor: isLight
+            ? Colors.black.withOpacity(0.04)
+            : scheme.surfaceContainerHighest.withOpacity(0.5),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide.none,
+        ),
         isDense: true,
+      ),
+      style: theme.textTheme.bodyMedium?.copyWith(
+        color: scheme.onSurface,
       ),
     );
   }

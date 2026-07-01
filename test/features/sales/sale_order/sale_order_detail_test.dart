@@ -31,9 +31,9 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.widgetWithText(FilledButton, 'Confirm'), findsOneWidget);
-    expect(find.widgetWithText(FilledButton, 'Process'), findsNothing);
-    expect(find.text('Cancel order'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Confirm Order'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Start Processing'), findsNothing);
+    expect(find.text('Cancel Order'), findsOneWidget);
     await db.close();
   });
 }

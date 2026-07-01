@@ -150,4 +150,17 @@ class SaleOrderRepositoryImpl implements SaleOrderRepository {
   @override
   Future<List<SaleOrderShipping>> shipmentsFor(String orderId) async =>
       (await _shipping.shipmentsFor(orderId)).map(toSaleOrderShipping).toList();
+
+  @override
+  Future<int> countByDateRange(String orgId, DateTime from, DateTime to) =>
+      _orders.countByDateRange(orgId, from, to);
+
+  @override
+  Future<double> totalAmountByDateRange(String orgId, DateTime from, DateTime to) =>
+      _orders.totalAmountByDateRange(orgId, from, to);
+
+  @override
+  Future<List<SaleOrder>> allActive(String orgId) async =>
+      (await _orders.allActive(orgId)).map(toSaleOrder).toList();
 }
+

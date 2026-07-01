@@ -168,4 +168,38 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
           saleOrders.status.equals('cancelled').not());
     return (await q.getSingle()).read(s) ?? 0;
   }
+
+  Future<int> countByDateRange(String orgId, DateTime from, DateTime to) async {
+    final c = countAll();
+    final q = selectOnly(saleOrders)
+      ..addColumns([c])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.status.equals('cancelled').not() &
+          saleOrders.orderDate.isBiggerOrEqualValue(from) &
+          saleOrders.orderDate.isSmallerThanValue(to));
+    return (await q.getSingle()).read(c) ?? 0;
+  }
+
+  Future<double> totalAmountByDateRange(String orgId, DateTime from, DateTime to) async {
+    final s = saleOrders.totalAmount.sum();
+    final q = selectOnly(saleOrders)
+      ..addColumns([s])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.status.equals('cancelled').not() &
+          saleOrders.orderDate.isBiggerOrEqualValue(from) &
+          saleOrders.orderDate.isSmallerThanValue(to));
+    return (await q.getSingle()).read(s) ?? 0;
+  }
+
+  Future<List<SaleOrderRow>> allActive(String orgId) {
+    return (select(saleOrders)
+          ..where((o) => o.organizationId.equals(orgId) & o.isActive.equals(true))
+          ..orderBy([
+            (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)
+          ]))
+        .get();
+  }
 }
+

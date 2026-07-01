@@ -129,6 +129,13 @@ class SaleOrderListCriteria {
         return now.subtract(const Duration(days: 30));
     }
   }
+
+  bool get hasActiveFilters =>
+      search.isNotEmpty ||
+      status != null ||
+      paymentStatus != null ||
+      shippingStatus != null ||
+      datePreset != DatePreset.all;
 }
 
 class SaleOrderCriteria extends Notifier<SaleOrderListCriteria> {
@@ -143,6 +150,7 @@ class SaleOrderCriteria extends Notifier<SaleOrderListCriteria> {
   void setShippingStatus(ShippingStatus? v) =>
       state = state.copyWith(shippingStatus: v, clearShippingStatus: v == null);
   void setDatePreset(DatePreset v) => state = state.copyWith(datePreset: v);
+  void reset() => state = const SaleOrderListCriteria();
 }
 
 final saleOrderCriteriaProvider =
@@ -176,3 +184,19 @@ class SaleOrderListNotifier extends PagedListNotifier<SaleOrder> {
 final saleOrderListProvider =
     NotifierProvider<SaleOrderListNotifier, PagedState<SaleOrder>>(
         SaleOrderListNotifier.new);
+
+final saleOrderCountProvider = FutureProvider.family<int, ({DateTime startDate, DateTime endDate})>((ref, params) async {
+  final service = ref.watch(saleOrderServiceProvider);
+  return await service.countByDateRange(params.startDate, params.endDate);
+});
+
+final saleOrderAmountProvider = FutureProvider.family<double, ({DateTime startDate, DateTime endDate})>((ref, params) async {
+  final service = ref.watch(saleOrderServiceProvider);
+  return await service.totalAmountByDateRange(params.startDate, params.endDate);
+});
+
+final allSaleOrdersProvider = FutureProvider<List<SaleOrder>>((ref) async {
+  final service = ref.watch(saleOrderServiceProvider);
+  return await service.allActive();
+});
+

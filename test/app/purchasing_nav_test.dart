@@ -31,11 +31,13 @@ void main() {
 
     await tester.tap(find.text('Purchasing'));
     await tester.pumpAndSettle();
-    // 'Unreceived' is unique to the Purchasing dashboard. (Do NOT assert
-    // 'Open orders' — both the Sales and Purchasing dashboards render it, and
-    // IndexedStack builds all tab children eagerly, so it appears twice.)
-    expect(find.text('Unreceived'), findsOneWidget);
-    expect(find.text('Outstanding payable'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((w) =>
+          w is Text &&
+          (w.data == 'Outstanding Payables' ||
+              w.data == 'All Payments Cleared')),
+      findsOneWidget,
+    );
     await db.close();
   });
 }

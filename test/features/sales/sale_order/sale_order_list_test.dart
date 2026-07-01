@@ -25,7 +25,10 @@ void main() {
 
     expect(find.text('No sale orders yet. Tap + to create one.'),
         findsOneWidget);
-    expect(find.text('Confirmed'), findsWidgets); // status filter chip present
+    expect(find.text('Status'), findsOneWidget);
+    expect(find.text('Date'), findsOneWidget);
+    expect(find.text('Payment'), findsOneWidget);
+    expect(find.text('Shipping'), findsOneWidget);
     await db.close();
   });
 
