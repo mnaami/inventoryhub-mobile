@@ -5,6 +5,8 @@ import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/format/money_format.dart';
+import '../../customer/presentation/customer_providers.dart';
 import '../domain/sale_order.dart';
 import '../domain/sale_order_enums.dart';
 import 'create_shipment_screen.dart';
@@ -68,19 +70,72 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                o.soNumber,
-                                style: theme.textTheme.headlineMedium?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: scheme.onSurface,
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    _buildStatusIcon(o.status),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            o.soNumber,
+                                            style: theme.textTheme.headlineMedium?.copyWith(
+                                              fontWeight: FontWeight.w800,
+                                              color: scheme.onSurface,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            formatMoney(o.totalAmount),
+                                            style: theme.textTheme.titleLarge?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: scheme.primary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Text(
-                                '\$${o.totalAmount.toStringAsFixed(2)}',
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: scheme.primary,
-                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(Icons.person_outline,
+                                  size: 16, color: scheme.onSurfaceVariant),
+                              const SizedBox(width: 4),
+                              Consumer(
+                                builder: (context, ref, child) {
+                                  final customerAsync =
+                                      ref.watch(customerProvider(o.customerId));
+                                  return customerAsync.when(
+                                    data: (customer) => Text(
+                                      customer?.name ?? 'Unknown Customer',
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: scheme.onSurfaceVariant,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    loading: () => Text(
+                                      'Loading customer...',
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: scheme.onSurfaceVariant
+                                            .withOpacity(0.6),
+                                      ),
+                                    ),
+                                    error: (_, __) => Text(
+                                      'Unknown Customer',
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: scheme.onSurfaceVariant
+                                            .withOpacity(0.6),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -126,7 +181,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                                 trailing: Text(
-                                  '\$${list[i].totalPrice.toStringAsFixed(2)}',
+                                  formatMoney(list[i].totalPrice),
                                   style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
                                 ),
                               ),
@@ -183,7 +238,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                         style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                                       ),
                                       trailing: Text(
-                                        '\$${list[i].amount.toStringAsFixed(2)}',
+                                        formatMoney(list[i].amount),
                                         style: theme.textTheme.bodyLarge?.copyWith(
                                           fontWeight: FontWeight.w700,
                                           color: Colors.green,
@@ -497,25 +552,41 @@ class SaleOrderDetailScreen extends ConsumerWidget {
     return widgets;
   }
 
-  Widget _buildStatusBadge(BuildContext context, OrderStatus status) {
-    final color = switch (status) {
-      OrderStatus.draft => Colors.blueGrey,
-      OrderStatus.confirmed => Colors.blue,
-      OrderStatus.processing => Colors.indigo,
-      OrderStatus.shipped => Colors.purple,
-      OrderStatus.delivered => Colors.green,
-      OrderStatus.cancelled => Colors.red,
-    };
+  Color _orderStatusColor(OrderStatus status) => switch (status) {
+        OrderStatus.draft => Colors.blueGrey,
+        OrderStatus.confirmed => Colors.blue,
+        OrderStatus.processing => Colors.indigo,
+        OrderStatus.shipped => Colors.purple,
+        OrderStatus.delivered => Colors.green,
+        OrderStatus.cancelled => Colors.red,
+      };
+
+  IconData _orderStatusIcon(OrderStatus status) => switch (status) {
+        OrderStatus.draft => Icons.edit_note_rounded,
+        OrderStatus.confirmed => Icons.check_circle_outline_rounded,
+        OrderStatus.processing => Icons.autorenew_rounded,
+        OrderStatus.shipped => Icons.local_shipping_outlined,
+        OrderStatus.delivered => Icons.task_alt_rounded,
+        OrderStatus.cancelled => Icons.cancel_outlined,
+      };
+
+  Widget _buildStatusIcon(OrderStatus status) {
+    final color = _orderStatusColor(status);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
+        shape: BoxShape.circle,
       ),
-      child: Text(
-        orderStatusLabel(status),
-        style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
-      ),
+      child: Icon(_orderStatusIcon(status), color: color, size: 22),
+    );
+  }
+
+  Widget _buildStatusBadge(BuildContext context, OrderStatus status) {
+    return _statusBadge(
+      color: _orderStatusColor(status),
+      icon: _orderStatusIcon(status),
+      label: orderStatusLabel(status),
     );
   }
 
@@ -525,17 +596,12 @@ class SaleOrderDetailScreen extends ConsumerWidget {
       PaymentStatus.partial => Colors.amber,
       PaymentStatus.paid => Colors.green,
     };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        paymentStatusLabel(status),
-        style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
-      ),
-    );
+    final icon = switch (status) {
+      PaymentStatus.notPaid => Icons.money_off_rounded,
+      PaymentStatus.partial => Icons.pie_chart_outline_rounded,
+      PaymentStatus.paid => Icons.check_circle_outline_rounded,
+    };
+    return _statusBadge(color: color, icon: icon, label: paymentStatusLabel(status));
   }
 
   Widget _buildShippingStatusBadge(BuildContext context, ShippingStatus status) {
@@ -544,15 +610,31 @@ class SaleOrderDetailScreen extends ConsumerWidget {
       ShippingStatus.partiallyShipped => Colors.amber,
       ShippingStatus.fullyShipped => Colors.green,
     };
+    final icon = switch (status) {
+      ShippingStatus.notShipped => Icons.inventory_2_outlined,
+      ShippingStatus.partiallyShipped => Icons.local_shipping_outlined,
+      ShippingStatus.fullyShipped => Icons.local_shipping_rounded,
+    };
+    return _statusBadge(color: color, icon: icon, label: shippingStatusLabel(status));
+  }
+
+  Widget _statusBadge({required Color color, required IconData icon, required String label}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(
-        shippingStatusLabel(status),
-        style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 12),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

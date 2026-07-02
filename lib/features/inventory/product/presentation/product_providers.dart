@@ -1,11 +1,73 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../../../core/paging/paged_list_notifier.dart';
+import '../../../../core/paging/paged_state.dart';
 import '../../../../core/providers.dart';
 import '../data/photo_storage.dart';
 import '../data/product_dao.dart';
 import '../data/product_repository_impl.dart';
 import '../domain/product.dart';
 import '../domain/product_usecases.dart';
+
+class ProductCriteria {
+  const ProductCriteria({
+    this.searchQuery,
+    this.lowStock,
+    this.outOfStock,
+    this.categoryId,
+  });
+
+  final String? searchQuery;
+  final bool? lowStock;
+  final bool? outOfStock;
+  final String? categoryId;
+
+  ProductCriteria copyWith({
+    String? searchQuery,
+    bool? Function()? lowStock,
+    bool? Function()? outOfStock,
+    String? Function()? categoryId,
+  }) {
+    return ProductCriteria(
+      searchQuery: searchQuery ?? this.searchQuery,
+      lowStock: lowStock != null ? lowStock() : this.lowStock,
+      outOfStock: outOfStock != null ? outOfStock() : this.outOfStock,
+      categoryId: categoryId != null ? categoryId() : this.categoryId,
+    );
+  }
+
+  ProductCriteria clearFilters() {
+    return ProductCriteria(searchQuery: searchQuery);
+  }
+}
+
+class ProductCriteriaNotifier extends Notifier<ProductCriteria> {
+  @override
+  ProductCriteria build() => const ProductCriteria();
+
+  void set(ProductCriteria criteria) {
+    state = criteria;
+  }
+
+  void update(ProductCriteria Function(ProductCriteria) update) {
+    state = update(state);
+  }
+}
+
+final productCriteriaProvider = NotifierProvider<ProductCriteriaNotifier, ProductCriteria>(
+  ProductCriteriaNotifier.new,
+);
+
+class ProductSearchQueryNotifier extends Notifier<String> {
+  @override
+  String build() => '';
+
+  void set(String q) => state = q;
+}
+
+final productSearchQueryProvider = NotifierProvider<ProductSearchQueryNotifier, String>(
+  ProductSearchQueryNotifier.new,
+);
 
 final productServiceProvider = Provider<ProductService>((ref) {
   return ProductService(
@@ -29,62 +91,58 @@ final photoStorageProvider = FutureProvider<PhotoStorage>((ref) async {
   return PhotoStorage(dir, ref.watch(idGeneratorProvider));
 });
 
+class ProductDashboardData {
+  ProductDashboardData({
+    required this.totalProducts,
+    required this.activeProducts,
+    required this.totalValue,
+    required this.lowStockCount,
+    required this.outOfStockCount,
+  });
+  final int totalProducts;
+  final int activeProducts;
+  final double totalValue;
+  final int lowStockCount;
+  final int outOfStockCount;
+}
+
+final productDashboardProvider = FutureProvider<ProductDashboardData>((ref) async {
+  final service = ref.watch(productServiceProvider);
+  final total = await service.countProducts(onlyActive: false);
+  final active = await service.countProducts(onlyActive: true);
+  final value = await service.totalStockValue();
+  final low = await service.lowStock();
+  final out = await service.outOfStock();
+
+  return ProductDashboardData(
+    totalProducts: total,
+    activeProducts: active,
+    totalValue: value,
+    lowStockCount: low.length,
+    outOfStockCount: out.length,
+  );
+});
+
 final productListProvider =
-    NotifierProvider<ProductListNotifier, AsyncValue<List<Product>>>(
+    NotifierProvider<ProductListNotifier, PagedState<Product>>(
         ProductListNotifier.new);
 
-class ProductListNotifier extends Notifier<AsyncValue<List<Product>>> {
-  int _page = 0;
-  bool _hasMore = true;
-  bool _loading = false;
-  String _query = '';
-  final List<Product> _items = [];
+class ProductListNotifier extends PagedListNotifier<Product> {
+  @override
+  PagedState<Product> build() {
+    ref.watch(productCriteriaProvider);
+    return super.build();
+  }
 
   @override
-  AsyncValue<List<Product>> build() {
-    _loadInitial();
-    return const AsyncValue.loading();
+  Future<List<Product>> fetch(int page) {
+    final criteria = ref.read(productCriteriaProvider);
+    return ref.read(productServiceProvider).list(
+      page: page,
+      query: criteria.searchQuery,
+      lowStock: criteria.lowStock,
+      outOfStock: criteria.outOfStock,
+      categoryId: criteria.categoryId,
+    );
   }
-
-  ProductService get _service => ref.read(productServiceProvider);
-
-  Future<List<Product>> _fetch(int page) =>
-      _query.trim().isEmpty ? _service.list(page) : _service.search(_query);
-
-  Future<void> _loadInitial() async {
-    _page = 0;
-    _hasMore = true;
-    _items.clear();
-    state = const AsyncValue.loading();
-    try {
-      final first = await _fetch(0);
-      _items.addAll(first);
-      if (_query.trim().isNotEmpty || first.length < ProductService.pageSize) {
-        _hasMore = false;
-      }
-      state = AsyncValue.data(List.unmodifiable(_items));
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
-  }
-
-  Future<void> search(String query) async {
-    _query = query;
-    await _loadInitial();
-  }
-
-  Future<void> loadMore() async {
-    if (_loading || !_hasMore || _query.trim().isNotEmpty) return;
-    _loading = true;
-    final next = await _fetch(_page + 1);
-    if (next.length < ProductService.pageSize) _hasMore = false;
-    if (next.isNotEmpty) {
-      _page += 1;
-      _items.addAll(next);
-      state = AsyncValue.data(List.unmodifiable(_items));
-    }
-    _loading = false;
-  }
-
-  Future<void> refresh() => _loadInitial();
 }

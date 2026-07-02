@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/money_format.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -81,7 +82,7 @@ class _PurchaseOrderEditScreenState
   }
 
   Future<void> _addProduct() async {
-    final products = await ref.read(productServiceProvider).list(0);
+    final products = await ref.read(productServiceProvider).list(page: 0);
     if (!mounted) return;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -117,7 +118,7 @@ class _PurchaseOrderEditScreenState
                         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       subtitle: Text(
-                        '\$${p.purchasePrice.toStringAsFixed(2)} each',
+                        '${formatMoney(p.purchasePrice)} each',
                         style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                       ),
                       onTap: () => Navigator.pop(context, p),
@@ -250,7 +251,7 @@ class _PurchaseOrderEditScreenState
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  '\$${_lines[i].product.purchasePrice.toStringAsFixed(2)} each',
+                                  '${formatMoney(_lines[i].product.purchasePrice)} each',
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                               ],
@@ -307,7 +308,7 @@ class _PurchaseOrderEditScreenState
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  '\$${_total.toStringAsFixed(2)}',
+                  formatMoney(_total),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: scheme.primary,

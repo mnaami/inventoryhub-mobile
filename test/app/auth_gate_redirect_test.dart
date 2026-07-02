@@ -35,7 +35,7 @@ void main() {
 
   testWidgets('seen but logged out lands on login', (tester) async {
     await _boot(tester, {'onboarding.seen': true});
-    expect(find.text('Demo: admin / admin'), findsOneWidget);
+    expect(find.text('Tap to fill demo: admin / admin'), findsOneWidget);
   });
 
   testWidgets('logged in lands on the app shell', (tester) async {
@@ -60,6 +60,6 @@ void main() {
     final container = ProviderScope.containerOf(context);
     await container.read(authControllerProvider.notifier).logout();
     await tester.pumpAndSettle();
-    expect(find.text('Demo: admin / admin'), findsOneWidget);
+    expect(find.text('Tap to fill demo: admin / admin'), findsOneWidget);
   });
 }

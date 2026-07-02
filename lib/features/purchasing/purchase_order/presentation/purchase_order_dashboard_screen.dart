@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/money_format.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -117,7 +118,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppTokens.space4),
                 Text(
-                  '\$${amount.toStringAsFixed(2)}',
+                  formatMoney(amount),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: hasOutstanding ? Colors.orange.shade700 : Colors.green.shade700,

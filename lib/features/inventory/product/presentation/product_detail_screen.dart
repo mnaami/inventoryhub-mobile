@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/money_format.dart';
 import '../../../../core/format/quantity_format.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/stat_tile.dart';
+import '../../../../core/widgets/status_badge.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../domain/product.dart';
 import '../../stock_movement/presentation/product_history_view.dart';
@@ -109,7 +111,7 @@ class ProductDetailScreen extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            '\$${p.sellingPrice.toStringAsFixed(2)}',
+                            formatMoney(p.sellingPrice),
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: scheme.primary,
                               fontWeight: FontWeight.bold,
@@ -122,55 +124,12 @@ class ProductDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppTokens.space16),
 
-                // Stats Dashboard Row
-                Row(
-                  children: [
-                    Expanded(
-                      child: StatTile(
-                        label: 'Stock',
-                        value: formatQty(p.currentStock),
-                        icon: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: scheme.primary.withOpacity(0.08),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(Icons.inventory_2_outlined, color: scheme.primary, size: 16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppTokens.space12),
-                    Expanded(
-                      child: StatTile(
-                        label: 'Minimum',
-                        value: formatQty(p.minimumStock),
-                        icon: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.amber.withOpacity(0.08),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppTokens.space12),
-                    Expanded(
-                      child: StatTile(
-                        label: 'Value',
-                        value: '\$${(p.currentStock * p.purchasePrice).toStringAsFixed(2)}',
-                        icon: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.08),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.attach_money_rounded, color: Colors.green, size: 16),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Stock Status Card
+                _buildStockStatusCard(context, p),
+                const SizedBox(height: AppTokens.space16),
+
+                // Valuation Card
+                _buildValuationCard(context, p),
                 const SizedBox(height: AppTokens.space24),
 
                 // Details & Identification Info Card
@@ -186,9 +145,9 @@ class ProductDetailScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: Column(
                     children: [
-                      _infoRow(context, 'Purchase Price', '\$${p.purchasePrice.toStringAsFixed(2)}'),
+                      _infoRow(context, 'Purchase Price', formatMoney(p.purchasePrice)),
                       const Divider(height: 1),
-                      _infoRow(context, 'Selling Price', '\$${p.sellingPrice.toStringAsFixed(2)}'),
+                      _infoRow(context, 'Selling Price', formatMoney(p.sellingPrice)),
                       if (p.barcode != null && p.barcode!.isNotEmpty) ...[
                         const Divider(height: 1),
                         _infoRow(context, 'Barcode', p.barcode!),
@@ -228,6 +187,212 @@ class ProductDetailScreen extends ConsumerWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildStockStatusCard(BuildContext context, Product p) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    final hasMinStock = p.minimumStock > 0;
+    double progress = 1.0;
+    Color progressColor = Colors.green;
+
+    if (p.currentStock <= 0) {
+      progress = 0.0;
+      progressColor = Colors.red;
+    } else if (hasMinStock && p.currentStock <= p.minimumStock) {
+      progress = p.currentStock / p.minimumStock;
+      progressColor = Colors.orange;
+    }
+
+    Widget statusBadge;
+    if (p.currentStock <= 0) {
+      statusBadge = const StatusBadge.out();
+    } else if (p.isLowStock) {
+      statusBadge = const StatusBadge.low();
+    } else {
+      statusBadge = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.green.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          'HEALTHY',
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: Colors.green.shade800,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.space16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.inventory_2_outlined, color: scheme.primary, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Stock Level',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              statusBadge,
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Current Stock',
+                    style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        formatQty(p.currentStock),
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: scheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'pcs',
+                        style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Min Required',
+                    style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        formatQty(p.minimumStock),
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: scheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'pcs',
+                        style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          if (hasMinStock) ...[
+            const SizedBox(height: 16),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 8,
+                backgroundColor: scheme.surfaceContainerHighest,
+                valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildValuationCard(BuildContext context, Product p) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final totalValue = p.currentStock * p.purchasePrice;
+
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.space16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.analytics_rounded, color: Colors.green, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Inventory Valuation',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  formatMoney(totalValue),
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: scheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Based on ${formatQty(p.currentStock)} pcs @ ${formatMoney(p.purchasePrice)} purchase price',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.attach_money_rounded,
+              color: Colors.green,
+              size: 24,
+            ),
+          ),
+        ],
       ),
     );
   }

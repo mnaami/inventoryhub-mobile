@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/money_format.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -95,7 +96,7 @@ class CustomerDetailScreen extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              '\$${v.toStringAsFixed(2)}',
+                              formatMoney(v),
                               style: theme.textTheme.titleMedium?.copyWith(
                                 color: v > 0 ? scheme.error : scheme.primary,
                                 fontWeight: FontWeight.bold,
@@ -218,7 +219,7 @@ class CustomerDetailScreen extends ConsumerWidget {
                                 ),
                               ),
                               trailing: Text(
-                                '\$${list[i].totalAmount.toStringAsFixed(2)}',
+                                formatMoney(list[i].totalAmount),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: scheme.onSurface,

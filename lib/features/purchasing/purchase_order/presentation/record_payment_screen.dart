@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/money_format.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -69,7 +70,7 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${widget.order.orderNumber} · Order Total: \$${widget.order.totalAmount.toStringAsFixed(2)}',
+                        '${widget.order.orderNumber} · Order Total: ${formatMoney(widget.order.totalAmount)}',
                         style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],

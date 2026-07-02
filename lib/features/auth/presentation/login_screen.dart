@@ -23,6 +23,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  void _fillDemo() {
+    setState(() {
+      _username.text = 'admin';
+      _password.text = 'admin';
+      _error = false;
+    });
+  }
+
   Future<void> _submit() async {
     setState(() {
       _submitting = true;
@@ -106,10 +114,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: AppTokens.space16),
-                Text('Demo: admin / admin',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: scheme.onSurfaceVariant)),
+                InkWell(
+                  key: const Key('login_demo_hint'),
+                  onTap: _submitting ? null : _fillDemo,
+                  borderRadius: BorderRadius.circular(AppTokens.radiusSm),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppTokens.space8, vertical: AppTokens.space4),
+                    child: Text('Tap to fill demo: admin / admin',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: scheme.primary)),
+                  ),
+                ),
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/async_value_view.dart';
+import '../../../../core/format/money_format.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -80,7 +81,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                 ),
                               ),
                               Text(
-                                '\$${o.totalAmount.toStringAsFixed(2)}',
+                                formatMoney(o.totalAmount),
                                 style: theme.textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.w800,
                                   color: scheme.primary,
@@ -130,7 +131,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                                 trailing: Text(
-                                  '\$${list[i].totalPrice.toStringAsFixed(2)}',
+                                  formatMoney(list[i].totalPrice),
                                   style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
                                 ),
                               ),
@@ -260,7 +261,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            '\$${list[i].amount.toStringAsFixed(2)}',
+                                            formatMoney(list[i].amount),
                                             style: theme.textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.w700,
                                               color: list[i].status == PaymentDocStatus.posted ? Colors.green : null,
