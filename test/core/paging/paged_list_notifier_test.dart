@@ -134,9 +134,13 @@ void main() {
     n.reload();                   // bumps gen 2 -> gate[2] = fetch(0)
     await Future.microtask(() {});
 
-    n.gates[1].complete(List.filled(5, 9));   // stale page-1 resolves first
+    // Resolve the FRESH reload first, then the STALE loadMore last: only the
+    // generation guard stops the late-arriving stale page from clobbering
+    // the fresh state. Without it, whichever fetch resolves last always
+    // wins, so completion order must put the stale one last to discriminate.
+    n.gates[2].complete(List.filled(3, 2));   // fresh page-0 resolves first
     await Future.microtask(() {});
-    n.gates[2].complete(List.filled(3, 2));   // fresh page-0 resolves
+    n.gates[1].complete(List.filled(5, 9));   // stale page-1 resolves last
     await Future.microtask(() {});
 
     final s = container.read(gatedProvider);
@@ -157,9 +161,13 @@ void main() {
     n.reload();                              // gen 3 -> gate[2]
     await Future.microtask(() {});
 
-    n.gates[1].complete(List.filled(2, 7));  // gen-2 result (stale)
+    // Resolve the newest generation (3) first and the older one (2) last:
+    // the guard must drop gen 2's late result so the newest reload still
+    // wins. Without the guard, last-to-resolve always wins regardless of
+    // generation, so this ordering is what makes the test discriminating.
+    n.gates[2].complete(List.filled(2, 8));  // gen-3 result resolves first
     await Future.microtask(() {});
-    n.gates[2].complete(List.filled(2, 8));  // gen-3 result (wins)
+    n.gates[1].complete(List.filled(2, 7));  // gen-2 result (stale) resolves last
     await Future.microtask(() {});
 
     expect(container.read(gatedProvider).items, [8, 8]);
