@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../features/inventory/product/presentation/product_list_screen.dart';
+import '../features/inventory/product/presentation/product_dashboard_screen.dart';
 import '../features/inventory/stock_movement/presentation/stock_movements_screen.dart';
 import '../features/sales/customer/presentation/customer_list_screen.dart';
 import '../features/sales/sale_order/presentation/sale_order_dashboard_screen.dart';
@@ -9,12 +10,36 @@ import '../features/purchasing/purchase_order/presentation/purchase_order_dashbo
 import '../features/purchasing/supplier/presentation/supplier_list_screen.dart';
 import '../features/production/presentation/production_home_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/auth/domain/auth_state.dart';
+import '../features/auth/presentation/auth_controller.dart';
+import '../features/auth/presentation/login_screen.dart';
+import '../features/onboarding/presentation/onboarding_controller.dart';
+import '../features/onboarding/presentation/onboarding_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
+  final refresh = ValueNotifier<int>(0);
+  ref.onDispose(refresh.dispose);
+  ref.listen(authControllerProvider, (_, __) => refresh.value++);
+  ref.listen(onboardingSeenProvider, (_, __) => refresh.value++);
+
   return GoRouter(
+    initialLocation: '/',
+    refreshListenable: refresh,
     routes: [
+      GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
+      GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/', builder: (_, __) => const MainScaffold()),
     ],
+    redirect: (context, state) {
+      final seen = ref.read(onboardingSeenProvider);
+      final loggedIn = ref.read(authControllerProvider) == AuthState.loggedIn;
+      final loc = state.matchedLocation;
+
+      if (!seen) return loc == '/onboarding' ? null : '/onboarding';
+      if (!loggedIn) return loc == '/login' ? null : '/login';
+      if (loc == '/onboarding' || loc == '/login') return '/';
+      return null;
+    },
   );
 });
 
@@ -28,7 +53,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   int _index = 0;
 
   static const _tabs = [
-    ProductListScreen(),
+    ProductDashboardScreen(),
     SaleOrderDashboardScreen(),
     PurchaseOrderDashboardScreen(),
   ];

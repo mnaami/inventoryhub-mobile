@@ -8,9 +8,24 @@ class ProductRepositoryImpl implements ProductRepository {
   final ProductDao _dao;
 
   @override
-  Future<List<Product>> listPaged(String organizationId,
-          {required int limit, required int offset}) async =>
-      (await _dao.paged(organizationId, limit: limit, offset: offset))
+  Future<List<Product>> listPaged(
+    String organizationId, {
+    required int limit,
+    required int offset,
+    String? query,
+    bool? lowStock,
+    bool? outOfStock,
+    String? categoryId,
+  }) async =>
+      (await _dao.paged(
+        organizationId,
+        limit: limit,
+        offset: offset,
+        query: query,
+        lowStock: lowStock,
+        outOfStock: outOfStock,
+        categoryId: categoryId,
+      ))
           .map(toProduct)
           .toList();
 
@@ -57,4 +72,12 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<void> softDelete(String id) =>
       _dao.softDelete(id, DateTime.now().toUtc());
+
+  @override
+  Future<int> countProducts(String organizationId, {required bool onlyActive}) =>
+      _dao.countProducts(organizationId, onlyActive: onlyActive);
+
+  @override
+  Future<double> totalStockValue(String organizationId) =>
+      _dao.totalStockValue(organizationId);
 }

@@ -1,8 +1,15 @@
 import 'product.dart';
 
 abstract interface class ProductRepository {
-  Future<List<Product>> listPaged(String organizationId,
-      {required int limit, required int offset});
+  Future<List<Product>> listPaged(
+    String organizationId, {
+    required int limit,
+    required int offset,
+    String? query,
+    bool? lowStock,
+    bool? outOfStock,
+    String? categoryId,
+  });
   Future<List<Product>> search(String organizationId, String query);
   Future<Product?> getById(String id);
   Future<Product?> findByBarcode(String organizationId, String barcode);
@@ -12,4 +19,6 @@ abstract interface class ProductRepository {
   Future<Product> create(Product product);
   Future<Product> update(Product product);
   Future<void> softDelete(String id);
+  Future<int> countProducts(String organizationId, {required bool onlyActive});
+  Future<double> totalStockValue(String organizationId);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inventoryhub_mobile/core/format/money_format.dart';
 import '../purchase_order_providers.dart';
 import 'package:inventoryhub_mobile/app/theme/app_tokens.dart';
 
@@ -236,7 +237,7 @@ class _PurchaseOrderSwipeableStatisticsSectionState
           value.when(
             data: (data) {
               final displayValue = isCurrency
-                  ? '\$${(data as double).toStringAsFixed(2)}'
+                  ? formatMoney(data as double)
                   : data.toString();
               return Text(
                 displayValue,

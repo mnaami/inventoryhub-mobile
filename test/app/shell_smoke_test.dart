@@ -11,7 +11,8 @@ import '../helpers/test_db.dart';
 void main() {
   testWidgets('app boots to the Products tab with the bottom nav',
       (tester) async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues(
+        {'onboarding.seen': true, 'auth.loggedIn': true});
     final prefs = await SharedPreferences.getInstance();
     final db = newTestDb();
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();
@@ -26,9 +27,10 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text('Products'), findsWidgets); // app bar + nav label
+    expect(find.text('Inventory Dashboard'), findsOneWidget); // app bar
+    expect(find.text('Products'), findsOneWidget); // nav label
     expect(find.text('More'), findsOneWidget); // nav label
-    expect(find.textContaining('No products yet'), findsOneWidget);
+    expect(find.text('Stock Status Breakdown'), findsOneWidget);
     await db.close();
   });
 }

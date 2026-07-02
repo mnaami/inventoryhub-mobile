@@ -23,3 +23,9 @@ final categoryServiceProvider = Provider<CategoryService>((ref) {
 final categoryTreeProvider = FutureProvider<List<CategoryNode>>((ref) {
   return ref.watch(categoryServiceProvider).tree();
 });
+
+final activeCategoriesProvider = FutureProvider<List<Category>>((ref) {
+  final db = ref.watch(appDatabaseProvider);
+  final orgId = ref.watch(sessionProvider).organizationId;
+  return CategoryRepositoryImpl(CategoryDao(db)).listActive(orgId);
+});

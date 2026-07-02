@@ -8,14 +8,55 @@ part 'product_dao.g.dart';
 class ProductDao extends DatabaseAccessor<AppDatabase> with _$ProductDaoMixin {
   ProductDao(super.db);
 
-  Future<List<ProductRow>> paged(String orgId,
-      {required int limit, required int offset}) {
-    return (select(products)
-          ..where((p) =>
-              p.organizationId.equals(orgId) & p.isActive.equals(true))
-          ..orderBy([(p) => OrderingTerm(expression: p.name)])
-          ..limit(limit, offset: offset))
-        .get();
+  Future<List<ProductRow>> paged(
+    String orgId, {
+    required int limit,
+    required int offset,
+    String? query,
+    bool? lowStock,
+    bool? outOfStock,
+    String? categoryId,
+  }) {
+    final q = select(products)
+      ..where((p) {
+        Expression<bool> expr = p.organizationId.equals(orgId) & p.isActive.equals(true);
+        if (query != null && query.trim().isNotEmpty) {
+          final like = '%${query.trim()}%';
+          expr = expr & (p.name.like(like) | p.barcode.like(like));
+        }
+        if (lowStock == true) {
+          expr = expr & p.minimumStock.isBiggerThanValue(0) & p.currentStock.isSmallerOrEqual(p.minimumStock);
+        }
+        if (outOfStock == true) {
+          expr = expr & p.currentStock.isSmallerOrEqualValue(0);
+        }
+        if (categoryId != null) {
+          expr = expr & p.categoryId.equals(categoryId);
+        }
+        return expr;
+      })
+      ..orderBy([(p) => OrderingTerm(expression: p.name)])
+      ..limit(limit, offset: offset);
+    return q.get();
+  }
+
+  Future<int> countProducts(String orgId, {required bool onlyActive}) async {
+    final c = countAll();
+    final query = selectOnly(products)
+      ..addColumns([c])
+      ..where(products.organizationId.equals(orgId) &
+          (onlyActive ? products.isActive.equals(true) : const Constant(true)));
+    final row = await query.getSingle();
+    return row.read(c) ?? 0;
+  }
+
+  Future<double> totalStockValue(String orgId) async {
+    final val = products.currentStock * products.purchasePrice;
+    final query = selectOnly(products)
+      ..addColumns([val.sum()])
+      ..where(products.organizationId.equals(orgId) & products.isActive.equals(true));
+    final row = await query.getSingle();
+    return row.read(val.sum()) ?? 0.0;
   }
 
   Future<List<ProductRow>> search(String orgId, String query) {

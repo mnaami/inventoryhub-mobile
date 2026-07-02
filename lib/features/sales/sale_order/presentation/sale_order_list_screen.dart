@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/format/money_format.dart';
 import '../../../../core/widgets/paginated_list_view.dart';
 import '../../../../core/widgets/search_field.dart';
 import '../domain/sale_order.dart';
@@ -132,7 +133,7 @@ class _SaleOrderListScreenState extends ConsumerState<SaleOrderListScreen> {
                                 ),
                               ),
                               Text(
-                                '\$${o.totalAmount.toStringAsFixed(2)}',
+                                formatMoney(o.totalAmount),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w800,
                                   color: scheme.onSurface,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/money_format.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -74,7 +75,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
   }
 
   Future<void> _addProduct() async {
-    final products = await ref.read(productServiceProvider).list(0);
+    final products = await ref.read(productServiceProvider).list(page: 0);
     if (!mounted) return;
     final chosen = await showModalBottomSheet<Product>(
       context: context,
@@ -98,7 +99,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
                 title: Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-                subtitle: Text('\$${p.sellingPrice.toStringAsFixed(2)}'),
+                subtitle: Text(formatMoney(p.sellingPrice)),
                 trailing: const Icon(Icons.add_circle_outline),
                 onTap: () => Navigator.pop(context, p),
               ),
@@ -227,7 +228,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  '\$${_lines[i].product.sellingPrice.toStringAsFixed(2)} each',
+                                  '${formatMoney(_lines[i].product.sellingPrice)} each',
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                               ],
@@ -284,7 +285,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  '\$${_total.toStringAsFixed(2)}',
+                  formatMoney(_total),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: scheme.primary,

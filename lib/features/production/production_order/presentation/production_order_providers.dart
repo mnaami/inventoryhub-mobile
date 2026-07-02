@@ -13,7 +13,7 @@ import '../domain/production_order_usecases.dart';
 /// First page of products, for output/ingredient selection dropdowns. Mirrors
 /// the purchasing edit screen, which selects from `productServiceProvider.list(0)`.
 final allProductsProvider = FutureProvider<List<Product>>(
-    (ref) => ref.watch(productServiceProvider).list(0));
+    (ref) => ref.watch(productServiceProvider).list(page: 0));
 
 final productionOrderServiceProvider =
     Provider<ProductionOrderService>((ref) {

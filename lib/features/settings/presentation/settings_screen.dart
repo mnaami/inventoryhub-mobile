@@ -4,6 +4,7 @@ import '../../../app/theme/app_tokens.dart';
 import '../../../app/theme/theme_controller.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/section_header.dart';
+import '../../auth/presentation/auth_controller.dart';
 import '../../inventory/category/presentation/category_management_screen.dart';
 import '../../inventory/unit/presentation/units_management_screen.dart';
 import 'sample_data_section.dart';
@@ -53,6 +54,30 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Log out?'),
+        content: const Text('You will need to sign in again to continue.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            key: const Key('settings_logout_confirm'),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Log out'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed ?? false) {
+      await ref.read(authControllerProvider.notifier).logout();
+    }
   }
 
   @override
@@ -161,6 +186,37 @@ class SettingsScreen extends ConsumerWidget {
               ),
               applicationVersion: '0.1.0 (inventory core)',
               dense: false,
+            ),
+          ),
+          const SizedBox(height: AppTokens.space24),
+          const SectionHeader('Account'),
+          AppCard(
+            key: const Key('settings_logout'),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            onTap: () => _confirmLogout(context, ref),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: scheme.error.withOpacity(0.08),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.logout_rounded,
+                      color: scheme.error, size: 18),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    'Log out',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: scheme.error,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

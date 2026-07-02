@@ -18,17 +18,37 @@ class ProductService {
   final IdGenerator _ids;
   final String _orgId;
 
-  Future<List<Product>> list(int page) =>
-      _repo.listPaged(_orgId, limit: pageSize, offset: page * pageSize);
+  Future<List<Product>> list({
+    required int page,
+    String? query,
+    bool? lowStock,
+    bool? outOfStock,
+    String? categoryId,
+  }) =>
+      _repo.listPaged(
+        _orgId,
+        limit: pageSize,
+        offset: page * pageSize,
+        query: query,
+        lowStock: lowStock,
+        outOfStock: outOfStock,
+        categoryId: categoryId,
+      );
 
   Future<List<Product>> search(String query) =>
-      query.trim().isEmpty ? list(0) : _repo.search(_orgId, query.trim());
+      query.trim().isEmpty ? list(page: 0) : _repo.search(_orgId, query.trim());
 
   Future<Product?> get(String id) => _repo.getById(id);
   Future<Product?> findByBarcode(String code) =>
       _repo.findByBarcode(_orgId, code);
   Future<List<Product>> lowStock() => _repo.lowStock(_orgId);
   Future<List<Product>> outOfStock() => _repo.outOfStock(_orgId);
+
+  Future<int> countProducts({required bool onlyActive}) =>
+      _repo.countProducts(_orgId, onlyActive: onlyActive);
+
+  Future<double> totalStockValue() =>
+      _repo.totalStockValue(_orgId);
 
   Future<Product> create({
     required String name,
