@@ -172,4 +172,16 @@ void main() {
 
     expect(container.read(gatedProvider).items, [8, 8]);
   });
+
+  test('disposed mid-fetch does not throw and does not set state', () async {
+    final container = ProviderContainer();
+    final n = container.read(gatedProvider.notifier);
+    await Future.microtask(() {}); // fetch(0) pending in gate[0]
+
+    container.dispose(); // dispose before completion
+    n.gates[0].complete(List.filled(3, 1)); // must be a no-op, not a StateError
+    await Future.microtask(() {});
+    // Reaching here without an exception is the assertion.
+    expect(true, isTrue);
+  });
 }

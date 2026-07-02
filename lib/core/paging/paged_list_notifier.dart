@@ -7,12 +7,17 @@ abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
   int get pageSize => 20;
 
   int _generation = 0;
+  bool _disposed = false;
+
+  bool _stale(int gen) => _disposed || gen != _generation;
 
   /// Loads page [page] (0-based) of results for the current criteria.
   Future<List<T>> fetch(int page);
 
   @override
   PagedState<T> build() {
+    _disposed = false;
+    ref.onDispose(() => _disposed = true);
     Future.microtask(loadInitial);
     return PagedState<T>.initial();
   }
@@ -22,7 +27,7 @@ abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
     state = PagedState<T>.initial();
     try {
       final items = await fetch(0);
-      if (gen != _generation) return;
+      if (_stale(gen)) return;
       state = PagedState<T>(
         items: items,
         page: 0,
@@ -31,7 +36,7 @@ abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
         isLoadingMore: false,
       );
     } catch (e) {
-      if (gen != _generation) return;
+      if (_stale(gen)) return;
       state = state.copyWith(isLoadingInitial: false, error: e);
     }
   }
@@ -44,7 +49,7 @@ abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
     try {
       final next = s.page + 1;
       final items = await fetch(next);
-      if (gen != _generation) return;
+      if (_stale(gen)) return;
       state = state.copyWith(
         items: [...s.items, ...items],
         page: next,
@@ -52,7 +57,7 @@ abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
         isLoadingMore: false,
       );
     } catch (e) {
-      if (gen != _generation) return;
+      if (_stale(gen)) return;
       state = state.copyWith(isLoadingMore: false, error: e);
     }
   }
