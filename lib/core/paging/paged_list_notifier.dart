@@ -6,6 +6,8 @@ import 'paged_state.dart';
 abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
   int get pageSize => 20;
 
+  int _generation = 0;
+
   /// Loads page [page] (0-based) of results for the current criteria.
   Future<List<T>> fetch(int page);
 
@@ -16,9 +18,11 @@ abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
   }
 
   Future<void> loadInitial() async {
+    final gen = ++_generation;
     state = PagedState<T>.initial();
     try {
       final items = await fetch(0);
+      if (gen != _generation) return;
       state = PagedState<T>(
         items: items,
         page: 0,
@@ -27,17 +31,20 @@ abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
         isLoadingMore: false,
       );
     } catch (e) {
+      if (gen != _generation) return;
       state = state.copyWith(isLoadingInitial: false, error: e);
     }
   }
 
   Future<void> loadMore() async {
+    final gen = _generation;
     final s = state;
     if (s.isLoadingInitial || s.isLoadingMore || !s.hasMore) return;
     state = s.copyWith(isLoadingMore: true, error: null);
     try {
       final next = s.page + 1;
       final items = await fetch(next);
+      if (gen != _generation) return;
       state = state.copyWith(
         items: [...s.items, ...items],
         page: next,
@@ -45,6 +52,7 @@ abstract class PagedListNotifier<T> extends Notifier<PagedState<T>> {
         isLoadingMore: false,
       );
     } catch (e) {
+      if (gen != _generation) return;
       state = state.copyWith(isLoadingMore: false, error: e);
     }
   }

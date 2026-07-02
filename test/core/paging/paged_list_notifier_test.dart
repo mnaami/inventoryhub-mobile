@@ -1,7 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inventoryhub_mobile/core/paging/paged_list_notifier.dart';
 import 'package:inventoryhub_mobile/core/paging/paged_state.dart';
+
+class _GatedNotifier extends PagedListNotifier<int> {
+  final List<Completer<List<int>>> gates = [];
+  final List<int> requestedPages = [];
+  @override
+  Future<List<int>> fetch(int page) {
+    requestedPages.add(page);
+    final c = Completer<List<int>>();
+    gates.add(c);
+    return c.future;
+  }
+}
+
+final gatedProvider =
+    NotifierProvider<_GatedNotifier, PagedState<int>>(_GatedNotifier.new);
 
 class _FakeNotifier extends PagedListNotifier<int> {
   _FakeNotifier(this._pages);
@@ -100,5 +117,51 @@ void main() {
     final s = c.read(p);
     expect(s.page, 0);
     expect(s.items, [1, 2, 3]);
+  });
+
+  test('stale loadMore is dropped when a reload supersedes it', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final n = container.read(gatedProvider.notifier);
+
+    // build() schedules loadInitial -> gate[0] is fetch(0), gen 1
+    await Future.microtask(() {});
+    n.gates[0].complete(List.filled(20, 1)); // full page -> hasMore
+    await Future.microtask(() {});
+
+    n.loadMore();                 // captures gen 1 -> gate[1] = fetch(1)
+    await Future.microtask(() {});
+    n.reload();                   // bumps gen 2 -> gate[2] = fetch(0)
+    await Future.microtask(() {});
+
+    n.gates[1].complete(List.filled(5, 9));   // stale page-1 resolves first
+    await Future.microtask(() {});
+    n.gates[2].complete(List.filled(3, 2));   // fresh page-0 resolves
+    await Future.microtask(() {});
+
+    final s = container.read(gatedProvider);
+    expect(s.items, [2, 2, 2]);   // only fresh page-0, no foreign 9s
+    expect(s.page, 0);
+  });
+
+  test('rapid reloads are last-write-wins', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final n = container.read(gatedProvider.notifier);
+    await Future.microtask(() {});
+    n.gates[0].complete(const []);          // initial gen 1
+    await Future.microtask(() {});
+
+    n.reload();                              // gen 2 -> gate[1]
+    await Future.microtask(() {});
+    n.reload();                              // gen 3 -> gate[2]
+    await Future.microtask(() {});
+
+    n.gates[1].complete(List.filled(2, 7));  // gen-2 result (stale)
+    await Future.microtask(() {});
+    n.gates[2].complete(List.filled(2, 8));  // gen-3 result (wins)
+    await Future.microtask(() {});
+
+    expect(container.read(gatedProvider).items, [8, 8]);
   });
 }
