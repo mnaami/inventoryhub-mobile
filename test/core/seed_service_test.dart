@@ -22,4 +22,12 @@ void main() {
     expect(unitRows.single.isBaseUnit, isTrue);
     await db.close();
   });
+
+  test('seeded user is named admin', () async {
+    final db = newTestDb();
+    await SeedService(db, const IdGenerator()).ensureSeeded();
+    final user = await db.select(db.users).getSingle();
+    expect(user.name, 'admin');
+    await db.close();
+  });
 }

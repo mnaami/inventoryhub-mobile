@@ -37,7 +37,7 @@ class SeedService {
             id: orgId, name: 'My Business', createdAt: now, updatedAt: now,
           ));
       await _db.into(_db.users).insert(UsersCompanion.insert(
-            id: userId, name: 'Me', organizationId: orgId,
+            id: userId, name: 'admin', organizationId: orgId,
             createdAt: now, updatedAt: now,
           ));
       await _db.into(_db.units).insert(UnitsCompanion.insert(
