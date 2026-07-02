@@ -14,6 +14,7 @@ void main() {
     String paymentStatus = 'not_paid',
     String shippingStatus = 'not_shipped',
     DateTime? orderDate,
+    DateTime? createdAt,
   }) =>
       SaleOrdersCompanion.insert(
         id: id,
@@ -25,7 +26,7 @@ void main() {
         paymentStatus: Value(paymentStatus),
         shippingStatus: Value(shippingStatus),
         totalAmount: const Value(50),
-        createdAt: now,
+        createdAt: createdAt ?? now,
         updatedAt: now,
       );
 
@@ -97,11 +98,11 @@ void main() {
     expect(notShipped.single.id, '2');
   });
 
-  test('paged filters by order_date range', () async {
+  test('paged filters by created_at range', () async {
     await db.saleOrderDao.createWithItems(
-        order('1', orderDate: DateTime.utc(2026, 1, 1)), const []);
+        order('1', createdAt: DateTime.utc(2026, 1, 1)), const []);
     await db.saleOrderDao.createWithItems(
-        order('2', orderDate: DateTime.utc(2026, 6, 1)), const []);
+        order('2', createdAt: DateTime.utc(2026, 6, 1)), const []);
     final recent = await db.saleOrderDao.paged('org1',
         from: DateTime.utc(2026, 5, 1), to: DateTime.utc(2026, 7, 1),
         limit: 20, offset: 0);
