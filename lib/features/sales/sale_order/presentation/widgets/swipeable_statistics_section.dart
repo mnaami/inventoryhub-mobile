@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inventoryhub_mobile/core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../sale_order_providers.dart';
 import 'package:inventoryhub_mobile/app/theme/app_tokens.dart';
 import 'package:inventoryhub_mobile/core/l10n/l10n_ext.dart';
@@ -195,6 +195,7 @@ class _SwipeableStatisticsSectionState extends ConsumerState<SwipeableStatistics
     Color primaryColor, {
     bool isCurrency = false,
   }) {
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -229,7 +230,7 @@ class _SwipeableStatisticsSectionState extends ConsumerState<SwipeableStatistics
           value.when(
             data: (data) {
               final displayValue = isCurrency
-                  ? formatMoney(data as double)
+                  ? money(data as double)
                   : data.toString();
               return Text(
                 displayValue,

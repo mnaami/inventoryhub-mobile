@@ -11,8 +11,11 @@ import '../helpers/test_db.dart';
 void main() {
   testWidgets('app boots to the Products tab with the bottom nav',
       (tester) async {
-    SharedPreferences.setMockInitialValues(
-        {'onboarding.seen': true, 'auth.loggedIn': true});
+    SharedPreferences.setMockInitialValues({
+      'onboarding.seen': true,
+      'app.currency': 'usd',
+      'auth.loggedIn': true,
+    });
     final prefs = await SharedPreferences.getInstance();
     final db = newTestDb();
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -81,6 +81,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildOutstandingCard(BuildContext context, WidgetRef ref, double amount) {
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final hasOutstanding = amount > 0.01;
@@ -123,7 +124,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppTokens.space4),
                 Text(
-                  formatMoney(amount),
+                  money(amount),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: hasOutstanding ? Colors.orange.shade700 : Colors.green.shade700,

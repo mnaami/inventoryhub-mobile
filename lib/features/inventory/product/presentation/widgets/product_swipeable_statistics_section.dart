@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inventoryhub_mobile/core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../product_providers.dart';
 import 'package:inventoryhub_mobile/app/theme/app_tokens.dart';
 import 'package:inventoryhub_mobile/core/l10n/l10n_ext.dart';
@@ -138,13 +138,14 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
 
   Widget _buildInventorySummaryPage(BuildContext context, ProductDashboardData stats) {
     final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     return Row(
       children: [
         Expanded(
           child: _buildStatItem(
             context,
             label: l10n.productStatTotalValue,
-            value: formatMoney(stats.totalValue),
+            value: money(stats.totalValue),
             icon: Icons.attach_money_rounded,
             iconColor: Colors.purple,
           ),

@@ -16,29 +16,43 @@ import '../features/auth/presentation/auth_controller.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/onboarding/presentation/onboarding_controller.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
+import '../features/onboarding/presentation/currency_select_screen.dart';
+import 'currency/currency_controller.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
   ref.onDispose(refresh.dispose);
   ref.listen(authControllerProvider, (_, __) => refresh.value++);
   ref.listen(onboardingSeenProvider, (_, __) => refresh.value++);
+  ref.listen(currencyControllerProvider, (_, __) => refresh.value++);
 
   return GoRouter(
     initialLocation: '/',
     refreshListenable: refresh,
     routes: [
       GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
+      GoRoute(
+          path: '/currency-select',
+          builder: (_, __) => const CurrencySelectScreen()),
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/', builder: (_, __) => const MainScaffold()),
     ],
     redirect: (context, state) {
       final seen = ref.read(onboardingSeenProvider);
+      final currencyChosen = ref.read(currencyControllerProvider) != null;
       final loggedIn = ref.read(authControllerProvider) == AuthState.loggedIn;
       final loc = state.matchedLocation;
 
       if (!seen) return loc == '/onboarding' ? null : '/onboarding';
+      if (!currencyChosen) {
+        return loc == '/currency-select' ? null : '/currency-select';
+      }
       if (!loggedIn) return loc == '/login' ? null : '/login';
-      if (loc == '/onboarding' || loc == '/login') return '/';
+      if (loc == '/onboarding' ||
+          loc == '/currency-select' ||
+          loc == '/login') {
+        return '/';
+      }
       return null;
     },
   );

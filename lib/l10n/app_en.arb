@@ -9,9 +9,15 @@
   "settingsTitle": "Settings",
   "sectionAppearance": "Appearance",
   "sectionLanguage": "Language",
+  "sectionCurrency": "Currency",
   "sectionCatalog": "Catalog",
   "sectionAbout": "About",
   "sectionAccount": "Account",
+
+  "currencyUsd": "US Dollar ($)",
+  "currencyDzd": "Algerian Dinar (دج)",
+  "currencySelectTitle": "Choose your currency",
+  "currencySelectSubtitle": "All prices and totals will be shown in this currency. You can change it later in Settings.",
 
   "themeSystem": "System",
   "themeLight": "Light",

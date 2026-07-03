@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../app/currency/currency_controller.dart';
 import '../../../app/locale/locale_controller.dart';
+import '../../../core/format/money_format.dart';
 import '../../../app/theme/app_tokens.dart';
 import '../../../app/theme/theme_controller.dart';
 import '../../../core/l10n/l10n_ext.dart';
@@ -115,6 +117,8 @@ class SettingsScreen extends ConsumerWidget {
     final themeController = ref.read(themeControllerProvider.notifier);
     final locale = ref.watch(localeControllerProvider);
     final localeController = ref.read(localeControllerProvider.notifier);
+    final currency = ref.watch(currencyControllerProvider);
+    final currencyController = ref.read(currencyControllerProvider.notifier);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -189,6 +193,40 @@ class SettingsScreen extends ConsumerWidget {
                     value: const Locale('ar'),
                     groupValue: locale,
                     onChanged: (l) => localeController.set(l),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: AppTokens.space24),
+          SectionHeader(l10n.sectionCurrency),
+          AppCard(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            child: RadioGroup<Currency?>(
+              groupValue: currency,
+              onChanged: (c) {
+                if (c != null) currencyController.set(c);
+              },
+              child: Column(
+                children: [
+                  _radioTile<Currency?>(
+                    context,
+                    title: l10n.currencyUsd,
+                    value: Currency.usd,
+                    groupValue: currency,
+                    onChanged: (c) {
+                      if (c != null) currencyController.set(c);
+                    },
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  _radioTile<Currency?>(
+                    context,
+                    title: l10n.currencyDzd,
+                    value: Currency.dzd,
+                    groupValue: currency,
+                    onChanged: (c) {
+                      if (c != null) currencyController.set(c);
+                    },
                   ),
                 ],
               ),

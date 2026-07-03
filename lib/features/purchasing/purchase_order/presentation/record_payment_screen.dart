@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -47,6 +47,7 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -73,7 +74,7 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
                       const SizedBox(height: 2),
                       Text(
                         l10n.poOrderTotalLine(widget.order.orderNumber,
-                            formatMoney(widget.order.totalAmount)),
+                            money(widget.order.totalAmount)),
                         style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],

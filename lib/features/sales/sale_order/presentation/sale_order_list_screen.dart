@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/empty_state.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/paginated_list_view.dart';
 import '../../../../core/widgets/search_field.dart';
@@ -31,6 +31,7 @@ class _SaleOrderListScreenState extends ConsumerState<SaleOrderListScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     final state = ref.watch(saleOrderListProvider);
     final criteria = ref.watch(saleOrderCriteriaProvider);
     final theme = Theme.of(context);
@@ -136,7 +137,7 @@ class _SaleOrderListScreenState extends ConsumerState<SaleOrderListScreen> {
                                 ),
                               ),
                               Text(
-                                formatMoney(o.totalAmount),
+                                money(o.totalAmount),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w800,
                                   color: scheme.onSurface,

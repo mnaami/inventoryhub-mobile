@@ -21,6 +21,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sectionLanguage => 'اللغة';
 
   @override
+  String get sectionCurrency => 'العملة';
+
+  @override
   String get sectionCatalog => 'الكتالوج';
 
   @override
@@ -28,6 +31,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get sectionAccount => 'الحساب';
+
+  @override
+  String get currencyUsd => 'الدولار الأمريكي (\$)';
+
+  @override
+  String get currencyDzd => 'الدينار الجزائري (دج)';
+
+  @override
+  String get currencySelectTitle => 'اختر عملتك';
+
+  @override
+  String get currencySelectSubtitle =>
+      'ستظهر جميع الأسعار والمجاميع بهذه العملة. يمكنك تغييرها لاحقًا من الإعدادات.';
 
   @override
   String get themeSystem => 'النظام';

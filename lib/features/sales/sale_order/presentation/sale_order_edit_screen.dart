@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -77,6 +77,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
   }
 
   Future<void> _addProduct() async {
+    final money = ref.watch(moneyFormatterProvider);
     final products = await ref.read(productServiceProvider).list(page: 0);
     if (!mounted) return;
     final l10n = context.l10n;
@@ -102,7 +103,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
                 title: Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-                subtitle: Text(formatMoney(p.sellingPrice)),
+                subtitle: Text(money(p.sellingPrice)),
                 trailing: const Icon(Icons.add_circle_outline),
                 onTap: () => Navigator.pop(context, p),
               ),
@@ -141,6 +142,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -232,7 +234,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  l10n.poPriceEach(formatMoney(_lines[i].product.sellingPrice)),
+                                  l10n.poPriceEach(money(_lines[i].product.sellingPrice)),
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                               ],
@@ -289,7 +291,7 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  formatMoney(_total),
+                  money(_total),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: scheme.primary,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -39,6 +39,7 @@ class CustomerDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final money = ref.watch(moneyFormatterProvider);
     final customer = ref.watch(customerProvider(customerId));
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -97,7 +98,7 @@ class CustomerDetailScreen extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              formatMoney(v),
+                              money(v),
                               style: theme.textTheme.titleMedium?.copyWith(
                                 color: v > 0 ? scheme.error : scheme.primary,
                                 fontWeight: FontWeight.bold,
@@ -220,7 +221,7 @@ class CustomerDetailScreen extends ConsumerWidget {
                                 ),
                               ),
                               trailing: Text(
-                                formatMoney(list[i].totalAmount),
+                                money(list[i].totalAmount),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: scheme.onSurface,

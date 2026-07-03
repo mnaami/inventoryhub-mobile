@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import '../../../../app/currency/currency_controller.dart';
 import '../../../../core/format/quantity_format.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
@@ -22,6 +22,7 @@ class ProductDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     final product = ref.watch(productProvider(productId));
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -113,7 +114,7 @@ class ProductDetailScreen extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            formatMoney(p.sellingPrice),
+                            money(p.sellingPrice),
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: scheme.primary,
                               fontWeight: FontWeight.bold,
@@ -131,7 +132,7 @@ class ProductDetailScreen extends ConsumerWidget {
                 const SizedBox(height: AppTokens.space16),
 
                 // Valuation Card
-                _buildValuationCard(context, p),
+                _buildValuationCard(context, p, money),
                 const SizedBox(height: AppTokens.space24),
 
                 // Details & Identification Info Card
@@ -147,9 +148,9 @@ class ProductDetailScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: Column(
                     children: [
-                      _infoRow(context, l10n.productPurchasePriceRow, formatMoney(p.purchasePrice)),
+                      _infoRow(context, l10n.productPurchasePriceRow, money(p.purchasePrice)),
                       const Divider(height: 1),
-                      _infoRow(context, l10n.productSellingPriceRow, formatMoney(p.sellingPrice)),
+                      _infoRow(context, l10n.productSellingPriceRow, money(p.sellingPrice)),
                       if (p.barcode != null && p.barcode!.isNotEmpty) ...[
                         const Divider(height: 1),
                         _infoRow(context, l10n.productBarcodeRow, p.barcode!),
@@ -337,7 +338,8 @@ class ProductDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildValuationCard(BuildContext context, Product p) {
+  Widget _buildValuationCard(
+    BuildContext context, Product p, String Function(num) money) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -366,7 +368,7 @@ class ProductDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  formatMoney(totalValue),
+                  money(totalValue),
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: scheme.onSurface,
@@ -375,7 +377,7 @@ class ProductDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   l10n.productValuationBasedOn(
-                      formatQty(p.currentStock), formatMoney(p.purchasePrice)),
+                      formatQty(p.currentStock), money(p.purchasePrice)),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: scheme.onSurfaceVariant,
                   ),

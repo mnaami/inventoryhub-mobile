@@ -13,6 +13,7 @@ import '../helpers/test_db.dart';
 Future<void> _boot(WidgetTester tester, Map<String, Object> seedPrefs) async {
   SharedPreferences.setMockInitialValues({
     'onboarding.seen': true,
+    'app.currency': 'usd',
     'auth.loggedIn': true,
     ...seedPrefs,
   });

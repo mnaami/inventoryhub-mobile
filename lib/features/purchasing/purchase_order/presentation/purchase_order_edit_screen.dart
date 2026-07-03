@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -86,6 +86,7 @@ class _PurchaseOrderEditScreenState
   Future<void> _addProduct() async {
     final products = await ref.read(productServiceProvider).list(page: 0);
     if (!mounted) return;
+    final money = ref.watch(moneyFormatterProvider);
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -121,7 +122,7 @@ class _PurchaseOrderEditScreenState
                         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       subtitle: Text(
-                        l10n.poPriceEach(formatMoney(p.purchasePrice)),
+                        l10n.poPriceEach(money(p.purchasePrice)),
                         style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                       ),
                       onTap: () => Navigator.pop(context, p),
@@ -164,6 +165,7 @@ class _PurchaseOrderEditScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -255,7 +257,7 @@ class _PurchaseOrderEditScreenState
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  l10n.poPriceEach(formatMoney(_lines[i].product.purchasePrice)),
+                                  l10n.poPriceEach(money(_lines[i].product.purchasePrice)),
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                               ],
@@ -312,7 +314,7 @@ class _PurchaseOrderEditScreenState
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  formatMoney(_total),
+                  money(_total),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: scheme.primary,

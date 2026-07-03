@@ -122,6 +122,12 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get sectionLanguage;
 
+  /// No description provided for @sectionCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get sectionCurrency;
+
   /// No description provided for @sectionCatalog.
   ///
   /// In en, this message translates to:
@@ -139,6 +145,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account'**
   String get sectionAccount;
+
+  /// No description provided for @currencyUsd.
+  ///
+  /// In en, this message translates to:
+  /// **'US Dollar (\$)'**
+  String get currencyUsd;
+
+  /// No description provided for @currencyDzd.
+  ///
+  /// In en, this message translates to:
+  /// **'Algerian Dinar (دج)'**
+  String get currencyDzd;
+
+  /// No description provided for @currencySelectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your currency'**
+  String get currencySelectTitle;
+
+  /// No description provided for @currencySelectSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All prices and totals will be shown in this currency. You can change it later in Settings.'**
+  String get currencySelectSubtitle;
 
   /// No description provided for @themeSystem.
   ///

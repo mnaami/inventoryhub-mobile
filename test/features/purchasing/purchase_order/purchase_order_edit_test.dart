@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
+import 'package:inventoryhub_mobile/core/format/money_format.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
@@ -15,6 +17,7 @@ void main() {
     final container = ProviderContainer(overrides: [
       appDatabaseProvider.overrideWithValue(db),
       sessionProvider.overrideWithValue(session),
+      moneyFormatterProvider.overrideWithValue((v) => formatMoney(v, Currency.usd)),
     ]);
     addTearDown(container.dispose);
     tester.view.physicalSize = const Size(1080, 2400);

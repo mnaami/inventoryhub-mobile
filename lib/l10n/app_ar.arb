@@ -6,9 +6,15 @@
   "settingsTitle": "الإعدادات",
   "sectionAppearance": "المظهر",
   "sectionLanguage": "اللغة",
+  "sectionCurrency": "العملة",
   "sectionCatalog": "الكتالوج",
   "sectionAbout": "حول التطبيق",
   "sectionAccount": "الحساب",
+
+  "currencyUsd": "الدولار الأمريكي ($)",
+  "currencyDzd": "الدينار الجزائري (دج)",
+  "currencySelectTitle": "اختر عملتك",
+  "currencySelectSubtitle": "ستظهر جميع الأسعار والمجاميع بهذه العملة. يمكنك تغييرها لاحقًا من الإعدادات.",
 
   "themeSystem": "النظام",
   "themeLight": "فاتح",

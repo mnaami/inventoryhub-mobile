@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import '../../../../app/currency/currency_controller.dart';
 import '../../../../core/format/quantity_format.dart';
 import '../../../../core/paging/paged_state.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -191,6 +191,7 @@ class _State extends ConsumerState<ProductListScreen> {
   }
 
   Widget _tile(BuildContext context, Product p) {
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -256,7 +257,7 @@ class _State extends ConsumerState<ProductListScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  formatMoney(p.sellingPrice),
+                  money(p.sellingPrice),
                   style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
