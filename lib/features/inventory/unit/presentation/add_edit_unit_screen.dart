@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../domain/unit.dart';
 import 'unit_providers.dart';
 
@@ -41,13 +42,14 @@ class _State extends ConsumerState<AddEditUnitScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final isEdit = widget.existing != null;
     final units = ref.watch(unitsProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(isEdit ? 'Edit unit' : 'New unit')),
+      appBar: AppBar(title: Text(isEdit ? l10n.unitEditTitle : l10n.unitNewTitle)),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -59,7 +61,7 @@ class _State extends ConsumerState<AddEditUnitScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Basic info',
+                    l10n.unitBasicInfoHeading,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -68,27 +70,29 @@ class _State extends ConsumerState<AddEditUnitScreen> {
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _name,
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      prefixIcon: Icon(Icons.label_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.unitNameLabel,
+                      prefixIcon: const Icon(Icons.label_outline),
                     ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? 'Required' : null,
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? l10n.unitFieldRequired
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _symbol,
-                    decoration: const InputDecoration(
-                      labelText: 'Symbol',
-                      prefixIcon: Icon(Icons.text_fields_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.unitSymbolLabel,
+                      prefixIcon: const Icon(Icons.text_fields_outlined),
                     ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? 'Required' : null,
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? l10n.unitFieldRequired
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     value: _type,
-                    decoration: const InputDecoration(labelText: 'Type'),
+                    decoration: InputDecoration(labelText: l10n.unitTypeLabel),
                     items: [
                       for (final t in _unitTypes)
                         DropdownMenuItem(value: t, child: Text(t)),
@@ -106,7 +110,7 @@ class _State extends ConsumerState<AddEditUnitScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Conversion',
+                    l10n.unitConversionHeading,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -114,7 +118,7 @@ class _State extends ConsumerState<AddEditUnitScreen> {
                   ),
                   const SizedBox(height: 16),
                   SwitchListTile(
-                    title: const Text('Base unit'),
+                    title: Text(l10n.unitBaseUnitLabel),
                     value: _isBase,
                     onChanged: (v) => setState(() => _isBase = v),
                     contentPadding: EdgeInsets.zero,
@@ -128,7 +132,8 @@ class _State extends ConsumerState<AddEditUnitScreen> {
                             .toList();
                         return DropdownButtonFormField<String?>(
                           value: _baseUnitId,
-                          decoration: const InputDecoration(labelText: 'Base unit'),
+                          decoration:
+                              InputDecoration(labelText: l10n.unitBaseUnitLabel),
                           items: [
                             for (final u in candidates)
                               DropdownMenuItem(value: u.id, child: Text(u.name)),
@@ -142,8 +147,8 @@ class _State extends ConsumerState<AddEditUnitScreen> {
                     TextFormField(
                       controller: _factor,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        labelText: 'Conversion factor (to base)',
+                      decoration: InputDecoration(
+                        labelText: l10n.unitConversionFactorLabel,
                       ),
                     ),
                   ],
@@ -155,7 +160,7 @@ class _State extends ConsumerState<AddEditUnitScreen> {
             // Save action button
             FilledButton(
               onPressed: _save,
-              child: const Text('Save'),
+              child: Text(l10n.unitSave),
             ),
           ],
         ),

@@ -66,5 +66,166 @@
   "navProduction": "Production",
   "navSuppliers": "Suppliers",
   "navCustomers": "Customers",
-  "navSettings": "Settings"
+  "navSettings": "Settings",
+
+  "categoryEditTitle": "Edit category",
+  "categoryNewTitle": "New category",
+  "categoryDetailsHeading": "Category Details",
+  "categoryNameLabel": "Name",
+  "categoryNameRequired": "Name is required",
+  "categoryParentLabel": "Parent (optional)",
+  "categoryParentNone": "— None —",
+  "categorySave": "Save",
+  "categoriesTitle": "Categories",
+  "categoryEmptyTitle": "No categories yet",
+  "categoryEmptySubtitle": "Group your products with categories.",
+  "categoryEmptyAction": "Add category",
+  "categoryDeleteTitle": "Delete category",
+  "categoryDeleteConfirm": "Delete \"{name}\"?",
+  "@categoryDeleteConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "unitEditTitle": "Edit unit",
+  "unitNewTitle": "New unit",
+  "unitBasicInfoHeading": "Basic info",
+  "unitNameLabel": "Name",
+  "unitFieldRequired": "Required",
+  "unitSymbolLabel": "Symbol",
+  "unitTypeLabel": "Type",
+  "unitConversionHeading": "Conversion",
+  "unitBaseUnitLabel": "Base unit",
+  "unitConversionFactorLabel": "Conversion factor (to base)",
+  "unitSave": "Save",
+  "unitsTitle": "Units",
+  "unitEmptyTitle": "No units yet",
+  "unitEmptySubtitle": "Define units like piece, kg, or litre.",
+  "unitEmptyAction": "Add unit",
+  "unitBaseTag": "BASE",
+  "unitConversionFactorSuffix": "× {factor} conversion factor",
+  "@unitConversionFactorSuffix": {
+    "placeholders": {
+      "factor": {"type": "String"}
+    }
+  },
+  "unitDeleteTitle": "Delete unit",
+  "unitDeleteConfirm": "Delete \"{name}\"?",
+  "@unitDeleteConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "productEditTitle": "Edit product",
+  "productNewTitle": "New product",
+  "productDetailsHeading": "Details",
+  "productNameLabel": "Name",
+  "productNameRequired": "Name is required",
+  "productDescriptionLabel": "Description",
+  "productCategoryLabel": "Category",
+  "productCategoryNone": "— None —",
+  "productUnitLabel": "Unit",
+  "productPricingHeading": "Pricing",
+  "productPurchasePriceLabel": "Purchase price",
+  "productSellingPriceLabel": "Selling price",
+  "productStockIdHeading": "Stock & Identification",
+  "productMinimumStockLabel": "Minimum stock",
+  "productBarcodeLabel": "Barcode",
+  "productSave": "Save",
+  "productChangePhoto": "Change photo",
+  "productAddPhoto": "Add photo",
+  "productTitle": "Product",
+  "productNotFound": "Product not found.",
+  "productSellingPriceRow": "Selling Price",
+  "productPricingDetailsHeading": "Pricing & Details",
+  "productPurchasePriceRow": "Purchase Price",
+  "productBarcodeRow": "Barcode",
+  "productRecordStockMovement": "Record stock movement",
+  "productViewStockHistory": "View stock history",
+  "productStockLevelHeading": "Stock Level",
+  "productCurrentStockLabel": "Current Stock",
+  "productMinRequiredLabel": "Min Required",
+  "productUnitSuffixPcs": "pcs",
+  "productHealthyBadge": "HEALTHY",
+  "productValuationHeading": "Inventory Valuation",
+  "productValuationBasedOn": "Based on {qty} pcs @ {price} purchase price",
+  "@productValuationBasedOn": {
+    "placeholders": {
+      "qty": {"type": "String"},
+      "price": {"type": "String"}
+    }
+  },
+  "productsTitle": "Products",
+  "productSearchHint": "Search product name or barcode",
+  "productFilterLowStock": "Low Stock",
+  "productFilterLowStockOnly": "Low Stock Only",
+  "productFilterOutOfStock": "Out of Stock",
+  "productFilterOutOfStockOnly": "Out of Stock Only",
+  "productFilterCategory": "Category",
+  "productFilterAllCategories": "All Categories",
+  "productFilterAll": "All",
+  "productEmptyTitle": "No products yet",
+  "productDashboardTitle": "Inventory Dashboard",
+  "productDashboardErrorLoading": "Error loading dashboard: {error}",
+  "@productDashboardErrorLoading": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "productDashboardRetry": "Retry",
+  "productDashboardRestockRequiredTitle": "Restock Required",
+  "productDashboardRestockRequiredSubtitle": "{count} products are out of stock. Tap to restock.",
+  "@productDashboardRestockRequiredSubtitle": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "productDashboardLowStockAlertTitle": "Low Stock Alert",
+  "productDashboardLowStockAlertSubtitle": "{count} products are running low. Tap to review.",
+  "@productDashboardLowStockAlertSubtitle": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "productDashboardHealthyTitle": "Stock Levels Healthy",
+  "productDashboardHealthySubtitle": "All products are well stocked. No alerts.",
+  "productDashboardBreakdownHeading": "Stock Status Breakdown",
+  "productDashboardWellStocked": "Well Stocked",
+  "productDashboardLowStock": "Low Stock",
+  "productDashboardOutOfStock": "Out of Stock",
+  "productDashboardQuickActionsHeading": "Quick Actions",
+  "productDashboardManageProducts": "Manage Products",
+  "productStatTotalValue": "Total Value",
+  "productStatActiveProducts": "Active Products",
+  "productStatLowStockItems": "Low Stock Items",
+  "productStatOutOfStock": "Out of Stock",
+  "productStatInventorySummary": "Inventory Summary",
+  "productStatStockAlerts": "Stock Alerts",
+  "productStatStatistics": "Statistics",
+
+  "barcodeScanTitle": "Scan barcode",
+  "barcodeScanHint": "Align barcode within the frame",
+
+  "stockMovementScreenTitle": "Stock — {productName}",
+  "@stockMovementScreenTitle": {
+    "placeholders": {
+      "productName": {"type": "String"}
+    }
+  },
+  "stockMovementTypeHeading": "Movement type",
+  "stockMovementTypeIn": "In",
+  "stockMovementTypeOut": "Out",
+  "stockMovementTypeAdjust": "Adjust",
+  "stockMovementDetailsHeading": "Details",
+  "stockMovementQuantityAdjustLabel": "Quantity (use − to reduce)",
+  "stockMovementQuantityLabel": "Quantity",
+  "stockMovementQuantityInvalid": "Enter a number",
+  "stockMovementQuantityZero": "Quantity must not be zero",
+  "stockMovementNotesLabel": "Notes (optional)",
+  "stockMovementRecordButton": "Record",
+  "stockMovementsTitle": "Stock movements",
+  "stockMovementEmptyTitle": "No stock movements yet",
+  "stockMovementEmptySubtitle": "Record stock in or out to see the ledger."
 }

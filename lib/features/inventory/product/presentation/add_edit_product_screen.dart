@@ -6,6 +6,8 @@ import '../../../../core/providers.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../../core/l10n/l10n_ext.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../category/domain/category.dart';
 import '../../category/presentation/category_providers.dart';
 import '../../unit/presentation/unit_providers.dart';
@@ -55,6 +57,7 @@ class _State extends ConsumerState<AddEditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final isEdit = widget.existing != null;
     _unitId ??= ref.watch(sessionProvider).defaultUnitId;
     final categories = ref.watch(categoryTreeProvider);
@@ -63,13 +66,14 @@ class _State extends ConsumerState<AddEditProductScreen> {
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(isEdit ? 'Edit product' : 'New product')),
+      appBar: AppBar(
+          title: Text(isEdit ? l10n.productEditTitle : l10n.productNewTitle)),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           children: [
-            _photoPicker(),
+            _photoPicker(l10n),
             const SizedBox(height: AppTokens.space24),
 
             // Details card
@@ -78,7 +82,7 @@ class _State extends ConsumerState<AddEditProductScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Details',
+                    l10n.productDetailsHeading,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -87,19 +91,20 @@ class _State extends ConsumerState<AddEditProductScreen> {
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _name,
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      prefixIcon: Icon(Icons.label_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.productNameLabel,
+                      prefixIcon: const Icon(Icons.label_outline),
                     ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? 'Name is required' : null,
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? l10n.productNameRequired
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _desc,
-                    decoration: const InputDecoration(
-                      labelText: 'Description',
-                      prefixIcon: Icon(Icons.notes_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.productDescriptionLabel,
+                      prefixIcon: const Icon(Icons.notes_outlined),
                     ),
                     maxLines: 2,
                   ),
@@ -107,12 +112,13 @@ class _State extends ConsumerState<AddEditProductScreen> {
                   categories.maybeWhen(
                     data: (nodes) => DropdownButtonFormField<String?>(
                       value: _categoryId,
-                      decoration: const InputDecoration(
-                        labelText: 'Category',
-                        prefixIcon: Icon(Icons.folder_outlined),
+                      decoration: InputDecoration(
+                        labelText: l10n.productCategoryLabel,
+                        prefixIcon: const Icon(Icons.folder_outlined),
                       ),
                       items: [
-                        const DropdownMenuItem(value: null, child: Text('— None —')),
+                        DropdownMenuItem(
+                            value: null, child: Text(l10n.productCategoryNone)),
                         for (final c in _flatten(nodes))
                           DropdownMenuItem(value: c.id, child: Text(c.name)),
                       ],
@@ -124,9 +130,9 @@ class _State extends ConsumerState<AddEditProductScreen> {
                   units.maybeWhen(
                     data: (list) => DropdownButtonFormField<String>(
                       value: _unitId,
-                      decoration: const InputDecoration(
-                        labelText: 'Unit',
-                        prefixIcon: Icon(Icons.straighten_outlined),
+                      decoration: InputDecoration(
+                        labelText: l10n.productUnitLabel,
+                        prefixIcon: const Icon(Icons.straighten_outlined),
                       ),
                       items: [
                         for (final u in list)
@@ -147,7 +153,7 @@ class _State extends ConsumerState<AddEditProductScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Pricing',
+                    l10n.productPricingHeading,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -160,9 +166,9 @@ class _State extends ConsumerState<AddEditProductScreen> {
                         child: TextFormField(
                           controller: _purchase,
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          decoration: const InputDecoration(
-                            labelText: 'Purchase price',
-                            prefixIcon: Icon(Icons.arrow_downward_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.productPurchasePriceLabel,
+                            prefixIcon: const Icon(Icons.arrow_downward_outlined),
                           ),
                         ),
                       ),
@@ -171,9 +177,9 @@ class _State extends ConsumerState<AddEditProductScreen> {
                         child: TextFormField(
                           controller: _selling,
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          decoration: const InputDecoration(
-                            labelText: 'Selling price',
-                            prefixIcon: Icon(Icons.arrow_upward_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.productSellingPriceLabel,
+                            prefixIcon: const Icon(Icons.arrow_upward_outlined),
                           ),
                         ),
                       ),
@@ -190,7 +196,7 @@ class _State extends ConsumerState<AddEditProductScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Stock & Identification',
+                    l10n.productStockIdHeading,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -200,16 +206,16 @@ class _State extends ConsumerState<AddEditProductScreen> {
                   TextFormField(
                     controller: _min,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: const InputDecoration(
-                      labelText: 'Minimum stock',
-                      prefixIcon: Icon(Icons.inventory_2_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.productMinimumStockLabel,
+                      prefixIcon: const Icon(Icons.inventory_2_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _barcode,
                     decoration: InputDecoration(
-                      labelText: 'Barcode',
+                      labelText: l10n.productBarcodeLabel,
                       prefixIcon: const Icon(Icons.qr_code_outlined),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.qr_code_scanner),
@@ -224,7 +230,7 @@ class _State extends ConsumerState<AddEditProductScreen> {
 
             FilledButton(
               onPressed: _save,
-              child: const Text('Save'),
+              child: Text(l10n.productSave),
             ),
           ],
         ),
@@ -232,7 +238,7 @@ class _State extends ConsumerState<AddEditProductScreen> {
     );
   }
 
-  Widget _photoPicker() {
+  Widget _photoPicker(AppLocalizations l10n) {
     final scheme = Theme.of(context).colorScheme;
     return Center(
       child: Column(
@@ -252,7 +258,8 @@ class _State extends ConsumerState<AddEditProductScreen> {
           TextButton.icon(
             onPressed: _pickPhoto,
             icon: const Icon(Icons.photo_camera_outlined),
-            label: Text(_imagePath != null ? 'Change photo' : 'Add photo'),
+            label: Text(
+                _imagePath != null ? l10n.productChangePhoto : l10n.productAddPhoto),
           ),
         ],
       ),

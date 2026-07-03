@@ -415,6 +415,696 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get navSettings;
+
+  /// No description provided for @categoryEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit category'**
+  String get categoryEditTitle;
+
+  /// No description provided for @categoryNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get categoryNewTitle;
+
+  /// No description provided for @categoryDetailsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Details'**
+  String get categoryDetailsHeading;
+
+  /// No description provided for @categoryNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get categoryNameLabel;
+
+  /// No description provided for @categoryNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get categoryNameRequired;
+
+  /// No description provided for @categoryParentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent (optional)'**
+  String get categoryParentLabel;
+
+  /// No description provided for @categoryParentNone.
+  ///
+  /// In en, this message translates to:
+  /// **'— None —'**
+  String get categoryParentNone;
+
+  /// No description provided for @categorySave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get categorySave;
+
+  /// No description provided for @categoriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categoriesTitle;
+
+  /// No description provided for @categoryEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories yet'**
+  String get categoryEmptyTitle;
+
+  /// No description provided for @categoryEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Group your products with categories.'**
+  String get categoryEmptySubtitle;
+
+  /// No description provided for @categoryEmptyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add category'**
+  String get categoryEmptyAction;
+
+  /// No description provided for @categoryDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete category'**
+  String get categoryDeleteTitle;
+
+  /// No description provided for @categoryDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"?'**
+  String categoryDeleteConfirm(String name);
+
+  /// No description provided for @unitEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit unit'**
+  String get unitEditTitle;
+
+  /// No description provided for @unitNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New unit'**
+  String get unitNewTitle;
+
+  /// No description provided for @unitBasicInfoHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic info'**
+  String get unitBasicInfoHeading;
+
+  /// No description provided for @unitNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get unitNameLabel;
+
+  /// No description provided for @unitFieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get unitFieldRequired;
+
+  /// No description provided for @unitSymbolLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Symbol'**
+  String get unitSymbolLabel;
+
+  /// No description provided for @unitTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get unitTypeLabel;
+
+  /// No description provided for @unitConversionHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversion'**
+  String get unitConversionHeading;
+
+  /// No description provided for @unitBaseUnitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Base unit'**
+  String get unitBaseUnitLabel;
+
+  /// No description provided for @unitConversionFactorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversion factor (to base)'**
+  String get unitConversionFactorLabel;
+
+  /// No description provided for @unitSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get unitSave;
+
+  /// No description provided for @unitsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get unitsTitle;
+
+  /// No description provided for @unitEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No units yet'**
+  String get unitEmptyTitle;
+
+  /// No description provided for @unitEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Define units like piece, kg, or litre.'**
+  String get unitEmptySubtitle;
+
+  /// No description provided for @unitEmptyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add unit'**
+  String get unitEmptyAction;
+
+  /// No description provided for @unitBaseTag.
+  ///
+  /// In en, this message translates to:
+  /// **'BASE'**
+  String get unitBaseTag;
+
+  /// No description provided for @unitConversionFactorSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'× {factor} conversion factor'**
+  String unitConversionFactorSuffix(String factor);
+
+  /// No description provided for @unitDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete unit'**
+  String get unitDeleteTitle;
+
+  /// No description provided for @unitDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"?'**
+  String unitDeleteConfirm(String name);
+
+  /// No description provided for @productEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit product'**
+  String get productEditTitle;
+
+  /// No description provided for @productNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New product'**
+  String get productNewTitle;
+
+  /// No description provided for @productDetailsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get productDetailsHeading;
+
+  /// No description provided for @productNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get productNameLabel;
+
+  /// No description provided for @productNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get productNameRequired;
+
+  /// No description provided for @productDescriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get productDescriptionLabel;
+
+  /// No description provided for @productCategoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get productCategoryLabel;
+
+  /// No description provided for @productCategoryNone.
+  ///
+  /// In en, this message translates to:
+  /// **'— None —'**
+  String get productCategoryNone;
+
+  /// No description provided for @productUnitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get productUnitLabel;
+
+  /// No description provided for @productPricingHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing'**
+  String get productPricingHeading;
+
+  /// No description provided for @productPurchasePriceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase price'**
+  String get productPurchasePriceLabel;
+
+  /// No description provided for @productSellingPriceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Selling price'**
+  String get productSellingPriceLabel;
+
+  /// No description provided for @productStockIdHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock & Identification'**
+  String get productStockIdHeading;
+
+  /// No description provided for @productMinimumStockLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum stock'**
+  String get productMinimumStockLabel;
+
+  /// No description provided for @productBarcodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode'**
+  String get productBarcodeLabel;
+
+  /// No description provided for @productSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get productSave;
+
+  /// No description provided for @productChangePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change photo'**
+  String get productChangePhoto;
+
+  /// No description provided for @productAddPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photo'**
+  String get productAddPhoto;
+
+  /// No description provided for @productTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get productTitle;
+
+  /// No description provided for @productNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found.'**
+  String get productNotFound;
+
+  /// No description provided for @productSellingPriceRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Selling Price'**
+  String get productSellingPriceRow;
+
+  /// No description provided for @productPricingDetailsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing & Details'**
+  String get productPricingDetailsHeading;
+
+  /// No description provided for @productPurchasePriceRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase Price'**
+  String get productPurchasePriceRow;
+
+  /// No description provided for @productBarcodeRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode'**
+  String get productBarcodeRow;
+
+  /// No description provided for @productRecordStockMovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Record stock movement'**
+  String get productRecordStockMovement;
+
+  /// No description provided for @productViewStockHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'View stock history'**
+  String get productViewStockHistory;
+
+  /// No description provided for @productStockLevelHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Level'**
+  String get productStockLevelHeading;
+
+  /// No description provided for @productCurrentStockLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Stock'**
+  String get productCurrentStockLabel;
+
+  /// No description provided for @productMinRequiredLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Min Required'**
+  String get productMinRequiredLabel;
+
+  /// No description provided for @productUnitSuffixPcs.
+  ///
+  /// In en, this message translates to:
+  /// **'pcs'**
+  String get productUnitSuffixPcs;
+
+  /// No description provided for @productHealthyBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'HEALTHY'**
+  String get productHealthyBadge;
+
+  /// No description provided for @productValuationHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory Valuation'**
+  String get productValuationHeading;
+
+  /// No description provided for @productValuationBasedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on {qty} pcs @ {price} purchase price'**
+  String productValuationBasedOn(String qty, String price);
+
+  /// No description provided for @productsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get productsTitle;
+
+  /// No description provided for @productSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search product name or barcode'**
+  String get productSearchHint;
+
+  /// No description provided for @productFilterLowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock'**
+  String get productFilterLowStock;
+
+  /// No description provided for @productFilterLowStockOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock Only'**
+  String get productFilterLowStockOnly;
+
+  /// No description provided for @productFilterOutOfStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get productFilterOutOfStock;
+
+  /// No description provided for @productFilterOutOfStockOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock Only'**
+  String get productFilterOutOfStockOnly;
+
+  /// No description provided for @productFilterCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get productFilterCategory;
+
+  /// No description provided for @productFilterAllCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get productFilterAllCategories;
+
+  /// No description provided for @productFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get productFilterAll;
+
+  /// No description provided for @productEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No products yet'**
+  String get productEmptyTitle;
+
+  /// No description provided for @productDashboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory Dashboard'**
+  String get productDashboardTitle;
+
+  /// No description provided for @productDashboardErrorLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading dashboard: {error}'**
+  String productDashboardErrorLoading(String error);
+
+  /// No description provided for @productDashboardRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get productDashboardRetry;
+
+  /// No description provided for @productDashboardRestockRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restock Required'**
+  String get productDashboardRestockRequiredTitle;
+
+  /// No description provided for @productDashboardRestockRequiredSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} products are out of stock. Tap to restock.'**
+  String productDashboardRestockRequiredSubtitle(int count);
+
+  /// No description provided for @productDashboardLowStockAlertTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock Alert'**
+  String get productDashboardLowStockAlertTitle;
+
+  /// No description provided for @productDashboardLowStockAlertSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} products are running low. Tap to review.'**
+  String productDashboardLowStockAlertSubtitle(int count);
+
+  /// No description provided for @productDashboardHealthyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Levels Healthy'**
+  String get productDashboardHealthyTitle;
+
+  /// No description provided for @productDashboardHealthySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All products are well stocked. No alerts.'**
+  String get productDashboardHealthySubtitle;
+
+  /// No description provided for @productDashboardBreakdownHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Status Breakdown'**
+  String get productDashboardBreakdownHeading;
+
+  /// No description provided for @productDashboardWellStocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Well Stocked'**
+  String get productDashboardWellStocked;
+
+  /// No description provided for @productDashboardLowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock'**
+  String get productDashboardLowStock;
+
+  /// No description provided for @productDashboardOutOfStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get productDashboardOutOfStock;
+
+  /// No description provided for @productDashboardQuickActionsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get productDashboardQuickActionsHeading;
+
+  /// No description provided for @productDashboardManageProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Products'**
+  String get productDashboardManageProducts;
+
+  /// No description provided for @productStatTotalValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Value'**
+  String get productStatTotalValue;
+
+  /// No description provided for @productStatActiveProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Products'**
+  String get productStatActiveProducts;
+
+  /// No description provided for @productStatLowStockItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock Items'**
+  String get productStatLowStockItems;
+
+  /// No description provided for @productStatOutOfStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get productStatOutOfStock;
+
+  /// No description provided for @productStatInventorySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory Summary'**
+  String get productStatInventorySummary;
+
+  /// No description provided for @productStatStockAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Alerts'**
+  String get productStatStockAlerts;
+
+  /// No description provided for @productStatStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get productStatStatistics;
+
+  /// No description provided for @barcodeScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan barcode'**
+  String get barcodeScanTitle;
+
+  /// No description provided for @barcodeScanHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Align barcode within the frame'**
+  String get barcodeScanHint;
+
+  /// No description provided for @stockMovementScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock — {productName}'**
+  String stockMovementScreenTitle(String productName);
+
+  /// No description provided for @stockMovementTypeHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Movement type'**
+  String get stockMovementTypeHeading;
+
+  /// No description provided for @stockMovementTypeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'In'**
+  String get stockMovementTypeIn;
+
+  /// No description provided for @stockMovementTypeOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Out'**
+  String get stockMovementTypeOut;
+
+  /// No description provided for @stockMovementTypeAdjust.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust'**
+  String get stockMovementTypeAdjust;
+
+  /// No description provided for @stockMovementDetailsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get stockMovementDetailsHeading;
+
+  /// No description provided for @stockMovementQuantityAdjustLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity (use − to reduce)'**
+  String get stockMovementQuantityAdjustLabel;
+
+  /// No description provided for @stockMovementQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get stockMovementQuantityLabel;
+
+  /// No description provided for @stockMovementQuantityInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a number'**
+  String get stockMovementQuantityInvalid;
+
+  /// No description provided for @stockMovementQuantityZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity must not be zero'**
+  String get stockMovementQuantityZero;
+
+  /// No description provided for @stockMovementNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get stockMovementNotesLabel;
+
+  /// No description provided for @stockMovementRecordButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get stockMovementRecordButton;
+
+  /// No description provided for @stockMovementsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock movements'**
+  String get stockMovementsTitle;
+
+  /// No description provided for @stockMovementEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No stock movements yet'**
+  String get stockMovementEmptyTitle;
+
+  /// No description provided for @stockMovementEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record stock in or out to see the ledger.'**
+  String get stockMovementEmptySubtitle;
 }
 
 class _AppLocalizationsDelegate

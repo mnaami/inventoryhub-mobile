@@ -6,6 +6,7 @@ import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../domain/category.dart';
 import 'add_edit_category_screen.dart';
 import 'category_providers.dart';
@@ -15,12 +16,11 @@ class CategoryManagementScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final tree = ref.watch(categoryTreeProvider);
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Categories')),
+      appBar: AppBar(title: Text(l10n.categoriesTitle)),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () => _openEditor(context),
@@ -31,9 +31,9 @@ class CategoryManagementScreen extends ConsumerWidget {
         data: (nodes) => nodes.isEmpty
             ? EmptyState(
                 icon: Icons.category_outlined,
-                title: 'No categories yet',
-                subtitle: 'Group your products with categories.',
-                actionLabel: 'Add category',
+                title: l10n.categoryEmptyTitle,
+                subtitle: l10n.categoryEmptySubtitle,
+                actionLabel: l10n.categoryEmptyAction,
                 onAction: () => _openEditor(context),
               )
             : ListView(
@@ -128,8 +128,10 @@ class CategoryManagementScreen extends ConsumerWidget {
   }
 
   Future<void> _delete(BuildContext context, WidgetRef ref, Category c) async {
+    final l10n = context.l10n;
     if (!await confirmDialog(context,
-        title: 'Delete category', message: 'Delete "${c.name}"?')) {
+        title: l10n.categoryDeleteTitle,
+        message: l10n.categoryDeleteConfirm(c.name))) {
       return;
     }
     try {

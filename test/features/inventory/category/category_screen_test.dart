@@ -7,6 +7,7 @@ import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/inventory/category/presentation/category_management_screen.dart';
 import 'package:inventoryhub_mobile/features/inventory/category/presentation/category_providers.dart';
 import '../../../helpers/test_db.dart';
+import '../../../helpers/l10n.dart';
 
 void main() {
   testWidgets('shows empty state then a created category', (tester) async {
@@ -20,7 +21,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: CategoryManagementScreen()),
+      child: localizedApp(home: const CategoryManagementScreen()),
     ));
     await tester.pumpAndSettle();
     expect(find.textContaining('No categories yet'), findsOneWidget);

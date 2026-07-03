@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../domain/category.dart';
 import 'category_providers.dart';
 
@@ -34,13 +35,15 @@ class _State extends ConsumerState<AddEditCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final isEdit = widget.existing != null;
     final treeAsync = ref.watch(categoryTreeProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(isEdit ? 'Edit category' : 'New category')),
+      appBar: AppBar(
+          title: Text(isEdit ? l10n.categoryEditTitle : l10n.categoryNewTitle)),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -52,7 +55,7 @@ class _State extends ConsumerState<AddEditCategoryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Category Details',
+                    l10n.categoryDetailsHeading,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -61,23 +64,25 @@ class _State extends ConsumerState<AddEditCategoryScreen> {
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _name,
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      prefixIcon: Icon(Icons.label_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.categoryNameLabel,
+                      prefixIcon: const Icon(Icons.label_outline),
                     ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? 'Name is required' : null,
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? l10n.categoryNameRequired
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   treeAsync.maybeWhen(
                     data: (nodes) => DropdownButtonFormField<String?>(
                       value: _parentId,
-                      decoration: const InputDecoration(
-                        labelText: 'Parent (optional)',
-                        prefixIcon: Icon(Icons.account_tree_outlined),
+                      decoration: InputDecoration(
+                        labelText: l10n.categoryParentLabel,
+                        prefixIcon: const Icon(Icons.account_tree_outlined),
                       ),
                       items: [
-                        const DropdownMenuItem(value: null, child: Text('— None —')),
+                        DropdownMenuItem(
+                            value: null, child: Text(l10n.categoryParentNone)),
                         for (final c in _flatten(nodes))
                           if (c.id != widget.existing?.id)
                             DropdownMenuItem(value: c.id, child: Text(c.name)),
@@ -90,7 +95,7 @@ class _State extends ConsumerState<AddEditCategoryScreen> {
               ),
             ),
             const SizedBox(height: AppTokens.space24),
-            FilledButton(onPressed: _save, child: const Text('Save')),
+            FilledButton(onPressed: _save, child: Text(l10n.categorySave)),
           ],
         ),
       ),

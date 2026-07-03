@@ -8,6 +8,7 @@ import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/stat_tile.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../domain/product.dart';
 import '../../stock_movement/presentation/product_history_view.dart';
 import '../../stock_movement/presentation/record_movement_screen.dart';
@@ -20,13 +21,14 @@ class ProductDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final product = ref.watch(productProvider(productId));
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product'),
+        title: Text(l10n.productTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
@@ -38,7 +40,7 @@ class ProductDetailScreen extends ConsumerWidget {
         value: product,
         data: (p) {
           if (p == null) {
-            return const Center(child: Text('Product not found.'));
+            return Center(child: Text(l10n.productNotFound));
           }
           return RefreshIndicator(
             onRefresh: () async {
@@ -104,7 +106,7 @@ class ProductDetailScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Selling Price',
+                            l10n.productSellingPriceRow,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: scheme.onSurfaceVariant,
                               fontWeight: FontWeight.w500,
@@ -134,7 +136,7 @@ class ProductDetailScreen extends ConsumerWidget {
 
                 // Details & Identification Info Card
                 Text(
-                  'Pricing & Details',
+                  l10n.productPricingDetailsHeading,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: scheme.onSurfaceVariant,
@@ -145,12 +147,12 @@ class ProductDetailScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: Column(
                     children: [
-                      _infoRow(context, 'Purchase Price', formatMoney(p.purchasePrice)),
+                      _infoRow(context, l10n.productPurchasePriceRow, formatMoney(p.purchasePrice)),
                       const Divider(height: 1),
-                      _infoRow(context, 'Selling Price', formatMoney(p.sellingPrice)),
+                      _infoRow(context, l10n.productSellingPriceRow, formatMoney(p.sellingPrice)),
                       if (p.barcode != null && p.barcode!.isNotEmpty) ...[
                         const Divider(height: 1),
-                        _infoRow(context, 'Barcode', p.barcode!),
+                        _infoRow(context, l10n.productBarcodeRow, p.barcode!),
                       ],
                     ],
                   ),
@@ -160,7 +162,7 @@ class ProductDetailScreen extends ConsumerWidget {
                 // Actions Container at bottom
                 FilledButton.icon(
                   icon: const Icon(Icons.swap_vert_rounded),
-                  label: const Text('Record stock movement'),
+                  label: Text(l10n.productRecordStockMovement),
                   onPressed: () async {
                     final recorded = await Navigator.of(context).push<bool>(
                       MaterialPageRoute(
@@ -178,7 +180,7 @@ class ProductDetailScreen extends ConsumerWidget {
                 const SizedBox(height: AppTokens.space8),
                 OutlinedButton.icon(
                   icon: const Icon(Icons.history_rounded),
-                  label: const Text('View stock history'),
+                  label: Text(l10n.productViewStockHistory),
                   onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => ProductHistoryView(productId: p.id),
                   )),
@@ -192,6 +194,7 @@ class ProductDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildStockStatusCard(BuildContext context, Product p) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -220,7 +223,7 @@ class ProductDetailScreen extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
-          'HEALTHY',
+          l10n.productHealthyBadge,
           style: theme.textTheme.labelSmall?.copyWith(
             color: Colors.green.shade800,
             fontWeight: FontWeight.bold,
@@ -242,7 +245,7 @@ class ProductDetailScreen extends ConsumerWidget {
                   Icon(Icons.inventory_2_outlined, color: scheme.primary, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    'Stock Level',
+                    l10n.productStockLevelHeading,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurfaceVariant,
@@ -263,7 +266,7 @@ class ProductDetailScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Current Stock',
+                    l10n.productCurrentStockLabel,
                     style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                   ),
                   const SizedBox(height: 4),
@@ -280,7 +283,7 @@ class ProductDetailScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'pcs',
+                        l10n.productUnitSuffixPcs,
                         style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                       ),
                     ],
@@ -291,7 +294,7 @@ class ProductDetailScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'Min Required',
+                    l10n.productMinRequiredLabel,
                     style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                   ),
                   const SizedBox(height: 4),
@@ -308,7 +311,7 @@ class ProductDetailScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'pcs',
+                        l10n.productUnitSuffixPcs,
                         style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                       ),
                     ],
@@ -335,6 +338,7 @@ class ProductDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildValuationCard(BuildContext context, Product p) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final totalValue = p.currentStock * p.purchasePrice;
@@ -352,7 +356,7 @@ class ProductDetailScreen extends ConsumerWidget {
                     Icon(Icons.analytics_rounded, color: Colors.green, size: 20),
                     const SizedBox(width: 8),
                     Text(
-                      'Inventory Valuation',
+                      l10n.productValuationHeading,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: scheme.onSurfaceVariant,
@@ -370,7 +374,8 @@ class ProductDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Based on ${formatQty(p.currentStock)} pcs @ ${formatMoney(p.purchasePrice)} purchase price',
+                  l10n.productValuationBasedOn(
+                      formatQty(p.currentStock), formatMoney(p.purchasePrice)),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: scheme.onSurfaceVariant,
                   ),

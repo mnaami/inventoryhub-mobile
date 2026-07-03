@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventoryhub_mobile/core/format/money_format.dart';
 import '../product_providers.dart';
 import 'package:inventoryhub_mobile/app/theme/app_tokens.dart';
+import 'package:inventoryhub_mobile/core/l10n/l10n_ext.dart';
+import 'package:inventoryhub_mobile/l10n/app_localizations.dart';
 
 class ProductSwipeableStatisticsSection extends ConsumerStatefulWidget {
   const ProductSwipeableStatisticsSection({super.key});
@@ -29,6 +31,7 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final statsAsync = ref.watch(productDashboardProvider);
@@ -58,7 +61,7 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
                   Icon(Icons.inventory_2_outlined, color: scheme.primary, size: 20),
                   const SizedBox(width: AppTokens.space8),
                   Text(
-                    _getCurrentPageTitle(),
+                    _getCurrentPageTitle(l10n),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: scheme.onSurface,
@@ -94,7 +97,7 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
               height: 96,
               child: Center(
                 child: Text(
-                  'Error loading stats: $e',
+                  l10n.productDashboardErrorLoading('$e'),
                   style: const TextStyle(color: Colors.red),
                 ),
               ),
@@ -105,14 +108,14 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
     );
   }
 
-  String _getCurrentPageTitle() {
+  String _getCurrentPageTitle(AppLocalizations l10n) {
     switch (_currentPage) {
       case 0:
-        return 'Inventory Summary';
+        return l10n.productStatInventorySummary;
       case 1:
-        return 'Stock Alerts';
+        return l10n.productStatStockAlerts;
       default:
-        return 'Statistics';
+        return l10n.productStatStatistics;
     }
   }
 
@@ -134,12 +137,13 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
   }
 
   Widget _buildInventorySummaryPage(BuildContext context, ProductDashboardData stats) {
+    final l10n = context.l10n;
     return Row(
       children: [
         Expanded(
           child: _buildStatItem(
             context,
-            label: 'Total Value',
+            label: l10n.productStatTotalValue,
             value: formatMoney(stats.totalValue),
             icon: Icons.attach_money_rounded,
             iconColor: Colors.purple,
@@ -149,7 +153,7 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
         Expanded(
           child: _buildStatItem(
             context,
-            label: 'Active Products',
+            label: l10n.productStatActiveProducts,
             value: '${stats.activeProducts} / ${stats.totalProducts}',
             icon: Icons.check_circle_outline_rounded,
             iconColor: Colors.green,
@@ -160,6 +164,7 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
   }
 
   Widget _buildStockAlertsPage(BuildContext context, ProductDashboardData stats) {
+    final l10n = context.l10n;
     final lowStockColor = stats.lowStockCount > 0 ? Colors.orange : Colors.green;
     final outOfStockColor = stats.outOfStockCount > 0 ? Colors.red : Colors.green;
 
@@ -168,7 +173,7 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
         Expanded(
           child: _buildStatItem(
             context,
-            label: 'Low Stock Items',
+            label: l10n.productStatLowStockItems,
             value: '${stats.lowStockCount}',
             icon: Icons.warning_amber_rounded,
             iconColor: lowStockColor,
@@ -178,7 +183,7 @@ class _ProductSwipeableStatisticsSectionState extends ConsumerState<ProductSwipe
         Expanded(
           child: _buildStatItem(
             context,
-            label: 'Out of Stock',
+            label: l10n.productStatOutOfStock,
             value: '${stats.outOfStockCount}',
             icon: Icons.remove_shopping_cart_outlined,
             iconColor: outOfStockColor,
