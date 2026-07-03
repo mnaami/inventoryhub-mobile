@@ -30,8 +30,8 @@ void main() {
   testWidgets('shows outstanding / limit text and clamps the bar at 100%',
       (tester) async {
     await _pump(tester, outstanding: 150, creditLimit: 100);
-    expect(find.textContaining('150.00'), findsOneWidget);
-    expect(find.textContaining('100.00'), findsOneWidget);
+    expect(find.textContaining(formatMoney(150, Currency.usd)), findsOneWidget);
+    expect(find.textContaining(formatMoney(100, Currency.usd)), findsOneWidget);
     final bar = tester.widget<LinearProgressIndicator>(
         find.byType(LinearProgressIndicator));
     expect(bar.value, 1.0);
