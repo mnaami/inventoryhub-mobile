@@ -83,4 +83,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get authDemoHint => 'اضغط لتعبئة بيانات تجريبية: admin / admin';
+
+  @override
+  String get onboardingSkip => 'تخطي';
+
+  @override
+  String get onboardingSlide1Title => 'اعرف مخزونك';
+
+  @override
+  String get onboardingSlide1Body =>
+      'تتبّع كل منتج وفئة وحركة مخزون — فورًا، وبدون اتصال بالإنترنت.';
+
+  @override
+  String get onboardingSlide2Title => 'بِع وأعد التخزين';
+
+  @override
+  String get onboardingSlide2Body =>
+      'أنشئ طلبات بيع وشراء، وسجّل المدفوعات، وحافظ على تزامن المخزون تلقائيًا.';
+
+  @override
+  String get onboardingSlide3Title => 'صنّع وأدر';
+
+  @override
+  String get onboardingSlide3Body =>
+      'حوّل المكونات إلى منتجات باستخدام الوصفات، وتابع كل ذلك من لوحات معلومات حية.';
+
+  @override
+  String get onboardingNext => 'التالي';
+
+  @override
+  String get onboardingGetStarted => 'ابدأ الآن';
 }

@@ -35,5 +35,15 @@
   "authPasswordLabel": "Password",
   "authInvalidCredentials": "Invalid username or password",
   "authSignInButton": "Sign in",
-  "authDemoHint": "Tap to fill demo: admin / admin"
+  "authDemoHint": "Tap to fill demo: admin / admin",
+
+  "onboardingSkip": "Skip",
+  "onboardingSlide1Title": "Know your stock",
+  "onboardingSlide1Body": "Track every product, category, and stock movement — instantly, and fully offline.",
+  "onboardingSlide2Title": "Sell and restock",
+  "onboardingSlide2Body": "Raise sale and purchase orders, record payments, and keep stock in sync automatically.",
+  "onboardingSlide3Title": "Make and manage",
+  "onboardingSlide3Body": "Turn ingredients into products with recipes, and track it all from live dashboards.",
+  "onboardingNext": "Next",
+  "onboardingGetStarted": "Get started"
 }

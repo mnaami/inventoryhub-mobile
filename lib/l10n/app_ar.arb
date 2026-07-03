@@ -32,5 +32,15 @@
   "authPasswordLabel": "كلمة المرور",
   "authInvalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة",
   "authSignInButton": "تسجيل الدخول",
-  "authDemoHint": "اضغط لتعبئة بيانات تجريبية: admin / admin"
+  "authDemoHint": "اضغط لتعبئة بيانات تجريبية: admin / admin",
+
+  "onboardingSkip": "تخطي",
+  "onboardingSlide1Title": "اعرف مخزونك",
+  "onboardingSlide1Body": "تتبّع كل منتج وفئة وحركة مخزون — فورًا، وبدون اتصال بالإنترنت.",
+  "onboardingSlide2Title": "بِع وأعد التخزين",
+  "onboardingSlide2Body": "أنشئ طلبات بيع وشراء، وسجّل المدفوعات، وحافظ على تزامن المخزون تلقائيًا.",
+  "onboardingSlide3Title": "صنّع وأدر",
+  "onboardingSlide3Body": "حوّل المكونات إلى منتجات باستخدام الوصفات، وتابع كل ذلك من لوحات معلومات حية.",
+  "onboardingNext": "التالي",
+  "onboardingGetStarted": "ابدأ الآن"
 }

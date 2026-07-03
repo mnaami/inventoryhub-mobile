@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:inventoryhub_mobile/app/theme/theme_controller.dart';
 import 'package:inventoryhub_mobile/features/onboarding/presentation/onboarding_controller.dart';
 import 'package:inventoryhub_mobile/features/onboarding/presentation/onboarding_screen.dart';
+import '../../helpers/l10n.dart';
 
 Future<ProviderContainer> _pump(WidgetTester tester) async {
   SharedPreferences.setMockInitialValues({});
@@ -15,7 +16,7 @@ Future<ProviderContainer> _pump(WidgetTester tester) async {
   addTearDown(container.dispose);
   await tester.pumpWidget(UncontrolledProviderScope(
     container: container,
-    child: const MaterialApp(home: OnboardingScreen()),
+    child: localizedApp(home: const OnboardingScreen()),
   ));
   return container;
 }

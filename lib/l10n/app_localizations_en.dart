@@ -83,4 +83,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authDemoHint => 'Tap to fill demo: admin / admin';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingSlide1Title => 'Know your stock';
+
+  @override
+  String get onboardingSlide1Body =>
+      'Track every product, category, and stock movement — instantly, and fully offline.';
+
+  @override
+  String get onboardingSlide2Title => 'Sell and restock';
+
+  @override
+  String get onboardingSlide2Body =>
+      'Raise sale and purchase orders, record payments, and keep stock in sync automatically.';
+
+  @override
+  String get onboardingSlide3Title => 'Make and manage';
+
+  @override
+  String get onboardingSlide3Body =>
+      'Turn ingredients into products with recipes, and track it all from live dashboards.';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingGetStarted => 'Get started';
 }
