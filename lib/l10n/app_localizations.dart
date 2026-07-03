@@ -1855,6 +1855,384 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Purchases'**
   String get poStatTotalPurchases;
+
+  /// No description provided for @soStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get soStatusDraft;
+
+  /// No description provided for @soStatusConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get soStatusConfirmed;
+
+  /// No description provided for @soStatusProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get soStatusProcessing;
+
+  /// No description provided for @soStatusShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipped'**
+  String get soStatusShipped;
+
+  /// No description provided for @soStatusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get soStatusDelivered;
+
+  /// No description provided for @soStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get soStatusCancelled;
+
+  /// No description provided for @soPaymentStatusNotPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Not paid'**
+  String get soPaymentStatusNotPaid;
+
+  /// No description provided for @soPaymentStatusPartial.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial'**
+  String get soPaymentStatusPartial;
+
+  /// No description provided for @soPaymentStatusPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get soPaymentStatusPaid;
+
+  /// No description provided for @soShippingStatusNotShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Not shipped'**
+  String get soShippingStatusNotShipped;
+
+  /// No description provided for @soShippingStatusPartiallyShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Partially shipped'**
+  String get soShippingStatusPartiallyShipped;
+
+  /// No description provided for @soShippingStatusFullyShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully shipped'**
+  String get soShippingStatusFullyShipped;
+
+  /// No description provided for @soDashboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales Dashboard'**
+  String get soDashboardTitle;
+
+  /// No description provided for @soViewAllOrdersTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Orders'**
+  String get soViewAllOrdersTooltip;
+
+  /// No description provided for @soOutstandingReceivables.
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding Receivables'**
+  String get soOutstandingReceivables;
+
+  /// No description provided for @soAllPaymentsCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'All Payments Cleared'**
+  String get soAllPaymentsCleared;
+
+  /// No description provided for @soPaymentStatusBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Status Breakdown'**
+  String get soPaymentStatusBreakdown;
+
+  /// No description provided for @soShippingStatusBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping Status Breakdown'**
+  String get soShippingStatusBreakdown;
+
+  /// No description provided for @soSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search SO number'**
+  String get soSearchHint;
+
+  /// No description provided for @soClearAllFiltersTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all filters'**
+  String get soClearAllFiltersTooltip;
+
+  /// No description provided for @soListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale Orders'**
+  String get soListTitle;
+
+  /// No description provided for @soListEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No sale orders yet. Tap + to create one.'**
+  String get soListEmpty;
+
+  /// No description provided for @soUnknownCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Customer'**
+  String get soUnknownCustomer;
+
+  /// No description provided for @soLoadingCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading customer...'**
+  String get soLoadingCustomer;
+
+  /// No description provided for @soClearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get soClearAll;
+
+  /// No description provided for @soFilterStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get soFilterStatusLabel;
+
+  /// No description provided for @soFilterAnyStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Any status'**
+  String get soFilterAnyStatus;
+
+  /// No description provided for @soFilterDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get soFilterDateLabel;
+
+  /// No description provided for @soFilterPaymentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get soFilterPaymentLabel;
+
+  /// No description provided for @soFilterAnyPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Any payment'**
+  String get soFilterAnyPayment;
+
+  /// No description provided for @soFilterShippingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping'**
+  String get soFilterShippingLabel;
+
+  /// No description provided for @soFilterAnyShipping.
+  ///
+  /// In en, this message translates to:
+  /// **'Any shipping'**
+  String get soFilterAnyShipping;
+
+  /// No description provided for @soDateToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get soDateToday;
+
+  /// No description provided for @soDateWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get soDateWeek;
+
+  /// No description provided for @soDateMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get soDateMonth;
+
+  /// No description provided for @soDateAllDates.
+  ///
+  /// In en, this message translates to:
+  /// **'All dates'**
+  String get soDateAllDates;
+
+  /// No description provided for @soDateAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get soDateAll;
+
+  /// No description provided for @soSelectCustomerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Customer'**
+  String get soSelectCustomerTitle;
+
+  /// No description provided for @soPickCustomerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a customer.'**
+  String get soPickCustomerError;
+
+  /// No description provided for @soCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Sale Order'**
+  String get soCreateTitle;
+
+  /// No description provided for @soCustomerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get soCustomerLabel;
+
+  /// No description provided for @soSelectCustomerPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select customer...'**
+  String get soSelectCustomerPlaceholder;
+
+  /// No description provided for @soDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Details'**
+  String get soDetailTitle;
+
+  /// No description provided for @soOrderNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Order not found'**
+  String get soOrderNotFound;
+
+  /// No description provided for @soLineItemsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Line Items'**
+  String get soLineItemsHeading;
+
+  /// No description provided for @soLineQtyOrderedShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty ordered: {ordered} · shipped: {shipped}'**
+  String soLineQtyOrderedShipped(String ordered, String shipped);
+
+  /// No description provided for @soShipmentsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipments'**
+  String get soShipmentsHeading;
+
+  /// No description provided for @soNoShipmentsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No shipments recorded yet.'**
+  String get soNoShipmentsYet;
+
+  /// No description provided for @soConfirmOrderButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Order'**
+  String get soConfirmOrderButton;
+
+  /// No description provided for @soStartProcessingButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Processing'**
+  String get soStartProcessingButton;
+
+  /// No description provided for @soAddPaymentButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Payment'**
+  String get soAddPaymentButton;
+
+  /// No description provided for @soShipItemsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Ship Items'**
+  String get soShipItemsButton;
+
+  /// No description provided for @soCreateShipmentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Shipment'**
+  String get soCreateShipmentTitle;
+
+  /// No description provided for @soCancelOrderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Order'**
+  String get soCancelOrderLabel;
+
+  /// No description provided for @soShippingForOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping for order:'**
+  String get soShippingForOrder;
+
+  /// No description provided for @soSelectQtyToShipHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Select quantities to ship'**
+  String get soSelectQtyToShipHeading;
+
+  /// No description provided for @soShipQtyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ship Qty'**
+  String get soShipQtyLabel;
+
+  /// No description provided for @soShipButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Ship'**
+  String get soShipButton;
+
+  /// No description provided for @soRecordPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Payment'**
+  String get soRecordPaymentTitle;
+
+  /// No description provided for @soAmountPaidLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount Paid'**
+  String get soAmountPaidLabel;
+
+  /// No description provided for @soPaymentMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get soPaymentMethodLabel;
+
+  /// No description provided for @soSavePaymentButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Payment'**
+  String get soSavePaymentButton;
+
+  /// No description provided for @soStatTotalSales.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sales'**
+  String get soStatTotalSales;
 }
 
 class _AppLocalizationsDelegate

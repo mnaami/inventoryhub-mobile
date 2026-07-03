@@ -932,4 +932,195 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get poStatTotalPurchases => 'Total Purchases';
+
+  @override
+  String get soStatusDraft => 'Draft';
+
+  @override
+  String get soStatusConfirmed => 'Confirmed';
+
+  @override
+  String get soStatusProcessing => 'Processing';
+
+  @override
+  String get soStatusShipped => 'Shipped';
+
+  @override
+  String get soStatusDelivered => 'Delivered';
+
+  @override
+  String get soStatusCancelled => 'Cancelled';
+
+  @override
+  String get soPaymentStatusNotPaid => 'Not paid';
+
+  @override
+  String get soPaymentStatusPartial => 'Partial';
+
+  @override
+  String get soPaymentStatusPaid => 'Paid';
+
+  @override
+  String get soShippingStatusNotShipped => 'Not shipped';
+
+  @override
+  String get soShippingStatusPartiallyShipped => 'Partially shipped';
+
+  @override
+  String get soShippingStatusFullyShipped => 'Fully shipped';
+
+  @override
+  String get soDashboardTitle => 'Sales Dashboard';
+
+  @override
+  String get soViewAllOrdersTooltip => 'View All Orders';
+
+  @override
+  String get soOutstandingReceivables => 'Outstanding Receivables';
+
+  @override
+  String get soAllPaymentsCleared => 'All Payments Cleared';
+
+  @override
+  String get soPaymentStatusBreakdown => 'Payment Status Breakdown';
+
+  @override
+  String get soShippingStatusBreakdown => 'Shipping Status Breakdown';
+
+  @override
+  String get soSearchHint => 'Search SO number';
+
+  @override
+  String get soClearAllFiltersTooltip => 'Clear all filters';
+
+  @override
+  String get soListTitle => 'Sale Orders';
+
+  @override
+  String get soListEmpty => 'No sale orders yet. Tap + to create one.';
+
+  @override
+  String get soUnknownCustomer => 'Unknown Customer';
+
+  @override
+  String get soLoadingCustomer => 'Loading customer...';
+
+  @override
+  String get soClearAll => 'Clear All';
+
+  @override
+  String get soFilterStatusLabel => 'Status';
+
+  @override
+  String get soFilterAnyStatus => 'Any status';
+
+  @override
+  String get soFilterDateLabel => 'Date';
+
+  @override
+  String get soFilterPaymentLabel => 'Payment';
+
+  @override
+  String get soFilterAnyPayment => 'Any payment';
+
+  @override
+  String get soFilterShippingLabel => 'Shipping';
+
+  @override
+  String get soFilterAnyShipping => 'Any shipping';
+
+  @override
+  String get soDateToday => 'Today';
+
+  @override
+  String get soDateWeek => 'This week';
+
+  @override
+  String get soDateMonth => 'This month';
+
+  @override
+  String get soDateAllDates => 'All dates';
+
+  @override
+  String get soDateAll => 'All';
+
+  @override
+  String get soSelectCustomerTitle => 'Select Customer';
+
+  @override
+  String get soPickCustomerError => 'Pick a customer.';
+
+  @override
+  String get soCreateTitle => 'New Sale Order';
+
+  @override
+  String get soCustomerLabel => 'Customer';
+
+  @override
+  String get soSelectCustomerPlaceholder => 'Select customer...';
+
+  @override
+  String get soDetailTitle => 'Order Details';
+
+  @override
+  String get soOrderNotFound => 'Order not found';
+
+  @override
+  String get soLineItemsHeading => 'Line Items';
+
+  @override
+  String soLineQtyOrderedShipped(String ordered, String shipped) {
+    return 'Qty ordered: $ordered · shipped: $shipped';
+  }
+
+  @override
+  String get soShipmentsHeading => 'Shipments';
+
+  @override
+  String get soNoShipmentsYet => 'No shipments recorded yet.';
+
+  @override
+  String get soConfirmOrderButton => 'Confirm Order';
+
+  @override
+  String get soStartProcessingButton => 'Start Processing';
+
+  @override
+  String get soAddPaymentButton => 'Add Payment';
+
+  @override
+  String get soShipItemsButton => 'Ship Items';
+
+  @override
+  String get soCreateShipmentTitle => 'Create Shipment';
+
+  @override
+  String get soCancelOrderLabel => 'Cancel Order';
+
+  @override
+  String get soShippingForOrder => 'Shipping for order:';
+
+  @override
+  String get soSelectQtyToShipHeading => 'Select quantities to ship';
+
+  @override
+  String get soShipQtyLabel => 'Ship Qty';
+
+  @override
+  String get soShipButton => 'Ship';
+
+  @override
+  String get soRecordPaymentTitle => 'Record Payment';
+
+  @override
+  String get soAmountPaidLabel => 'Amount Paid';
+
+  @override
+  String get soPaymentMethodLabel => 'Payment Method';
+
+  @override
+  String get soSavePaymentButton => 'Save Payment';
+
+  @override
+  String get soStatTotalSales => 'Total Sales';
 }

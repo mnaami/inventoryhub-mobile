@@ -932,4 +932,195 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get poStatTotalPurchases => 'إجمالي المشتريات';
+
+  @override
+  String get soStatusDraft => 'مسودة';
+
+  @override
+  String get soStatusConfirmed => 'مؤكد';
+
+  @override
+  String get soStatusProcessing => 'قيد المعالجة';
+
+  @override
+  String get soStatusShipped => 'تم الشحن';
+
+  @override
+  String get soStatusDelivered => 'تم التسليم';
+
+  @override
+  String get soStatusCancelled => 'ملغى';
+
+  @override
+  String get soPaymentStatusNotPaid => 'غير مدفوع';
+
+  @override
+  String get soPaymentStatusPartial => 'جزئي';
+
+  @override
+  String get soPaymentStatusPaid => 'مدفوع';
+
+  @override
+  String get soShippingStatusNotShipped => 'لم يُشحن';
+
+  @override
+  String get soShippingStatusPartiallyShipped => 'شحن جزئي';
+
+  @override
+  String get soShippingStatusFullyShipped => 'شحن كامل';
+
+  @override
+  String get soDashboardTitle => 'لوحة المبيعات';
+
+  @override
+  String get soViewAllOrdersTooltip => 'عرض جميع الطلبات';
+
+  @override
+  String get soOutstandingReceivables => 'مستحقات معلقة';
+
+  @override
+  String get soAllPaymentsCleared => 'جميع المدفوعات مسددة';
+
+  @override
+  String get soPaymentStatusBreakdown => 'توزيع حالة الدفع';
+
+  @override
+  String get soShippingStatusBreakdown => 'توزيع حالة الشحن';
+
+  @override
+  String get soSearchHint => 'ابحث برقم أمر البيع';
+
+  @override
+  String get soClearAllFiltersTooltip => 'مسح جميع الفلاتر';
+
+  @override
+  String get soListTitle => 'أوامر البيع';
+
+  @override
+  String get soListEmpty => 'لا توجد أوامر بيع بعد. اضغط + لإنشاء واحد.';
+
+  @override
+  String get soUnknownCustomer => 'عميل غير معروف';
+
+  @override
+  String get soLoadingCustomer => 'جارٍ تحميل العميل...';
+
+  @override
+  String get soClearAll => 'مسح الكل';
+
+  @override
+  String get soFilterStatusLabel => 'الحالة';
+
+  @override
+  String get soFilterAnyStatus => 'أي حالة';
+
+  @override
+  String get soFilterDateLabel => 'التاريخ';
+
+  @override
+  String get soFilterPaymentLabel => 'الدفع';
+
+  @override
+  String get soFilterAnyPayment => 'أي دفعة';
+
+  @override
+  String get soFilterShippingLabel => 'الشحن';
+
+  @override
+  String get soFilterAnyShipping => 'أي شحن';
+
+  @override
+  String get soDateToday => 'اليوم';
+
+  @override
+  String get soDateWeek => 'هذا الأسبوع';
+
+  @override
+  String get soDateMonth => 'هذا الشهر';
+
+  @override
+  String get soDateAllDates => 'كل التواريخ';
+
+  @override
+  String get soDateAll => 'الكل';
+
+  @override
+  String get soSelectCustomerTitle => 'اختر العميل';
+
+  @override
+  String get soPickCustomerError => 'اختر عميلاً.';
+
+  @override
+  String get soCreateTitle => 'أمر بيع جديد';
+
+  @override
+  String get soCustomerLabel => 'العميل';
+
+  @override
+  String get soSelectCustomerPlaceholder => 'اختر عميلاً...';
+
+  @override
+  String get soDetailTitle => 'تفاصيل الطلب';
+
+  @override
+  String get soOrderNotFound => 'الطلب غير موجود';
+
+  @override
+  String get soLineItemsHeading => 'بنود الطلب';
+
+  @override
+  String soLineQtyOrderedShipped(String ordered, String shipped) {
+    return 'الكمية المطلوبة: $ordered · المشحونة: $shipped';
+  }
+
+  @override
+  String get soShipmentsHeading => 'الشحنات';
+
+  @override
+  String get soNoShipmentsYet => 'لا توجد شحنات مسجلة بعد.';
+
+  @override
+  String get soConfirmOrderButton => 'تأكيد الطلب';
+
+  @override
+  String get soStartProcessingButton => 'بدء المعالجة';
+
+  @override
+  String get soAddPaymentButton => 'إضافة دفعة';
+
+  @override
+  String get soShipItemsButton => 'شحن العناصر';
+
+  @override
+  String get soCreateShipmentTitle => 'إنشاء شحنة';
+
+  @override
+  String get soCancelOrderLabel => 'إلغاء الطلب';
+
+  @override
+  String get soShippingForOrder => 'الشحن لأمر:';
+
+  @override
+  String get soSelectQtyToShipHeading => 'اختر الكميات المراد شحنها';
+
+  @override
+  String get soShipQtyLabel => 'كمية الشحن';
+
+  @override
+  String get soShipButton => 'شحن';
+
+  @override
+  String get soRecordPaymentTitle => 'تسجيل دفعة';
+
+  @override
+  String get soAmountPaidLabel => 'المبلغ المدفوع';
+
+  @override
+  String get soPaymentMethodLabel => 'طريقة الدفع';
+
+  @override
+  String get soSavePaymentButton => 'حفظ الدفعة';
+
+  @override
+  String get soStatTotalSales => 'إجمالي المبيعات';
 }

@@ -8,6 +8,7 @@ import 'package:inventoryhub_mobile/features/sales/sale_order/presentation/sale_
 import 'package:inventoryhub_mobile/features/sales/sale_order/presentation/sale_order_providers.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/domain/sale_order_usecases.dart';
 import 'package:inventoryhub_mobile/features/sales/customer/presentation/customer_providers.dart';
+import '../../../helpers/l10n.dart';
 import '../../../helpers/test_db.dart';
 
 void main() {
@@ -32,7 +33,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(home: SaleOrderDetailScreen(orderId: order.id)),
+      child: localizedApp(home: SaleOrderDetailScreen(orderId: order.id)),
     ));
     await tester.pumpAndSettle();
 
@@ -57,7 +58,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(home: SaleOrderDetailScreen(orderId: order.id)),
+      child: localizedApp(home: SaleOrderDetailScreen(orderId: order.id)),
     ));
     await tester.pumpAndSettle();
 

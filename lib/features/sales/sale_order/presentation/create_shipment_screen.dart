@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -39,12 +40,13 @@ class _CreateShipmentState extends ConsumerState<CreateShipmentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final items = ref.watch(saleOrderItemsProvider(widget.order.id));
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Shipment')),
+      appBar: AppBar(title: Text(l10n.soCreateShipmentTitle)),
       body: AsyncValueView(
         value: items,
         data: (list) => ListView(
@@ -62,7 +64,7 @@ class _CreateShipmentState extends ConsumerState<CreateShipmentScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Shipping for order:',
+                          l10n.soShippingForOrder,
                           style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                         ),
                         const SizedBox(height: 2),
@@ -80,7 +82,7 @@ class _CreateShipmentState extends ConsumerState<CreateShipmentScreen> {
 
             // Section Header
             Text(
-              'Select quantities to ship',
+              l10n.soSelectQtyToShipHeading,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: scheme.onSurfaceVariant,
@@ -108,7 +110,7 @@ class _CreateShipmentState extends ConsumerState<CreateShipmentScreen> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  'Remaining: ${list[i].remainingQuantity}',
+                                  l10n.poRemainingQty('${list[i].remainingQuantity}'),
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                               ],
@@ -121,7 +123,7 @@ class _CreateShipmentState extends ConsumerState<CreateShipmentScreen> {
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
-                                labelText: 'Ship Qty',
+                                labelText: l10n.soShipQtyLabel,
                                 filled: true,
                                 fillColor: scheme.surfaceContainerLow,
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -155,7 +157,7 @@ class _CreateShipmentState extends ConsumerState<CreateShipmentScreen> {
             // Ship button
             FilledButton(
               onPressed: _save,
-              child: const Text('Ship'),
+              child: Text(l10n.soShipButton),
             ),
           ],
         ),

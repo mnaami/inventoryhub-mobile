@@ -6,6 +6,8 @@ import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/format/money_format.dart';
+import '../../../../core/l10n/l10n_ext.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../customer/presentation/customer_providers.dart';
 import '../domain/sale_order.dart';
 import '../domain/sale_order_enums.dart';
@@ -40,17 +42,18 @@ class SaleOrderDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final order = ref.watch(saleOrderProvider(orderId));
     final service = ref.read(saleOrderServiceProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Order Details')),
+      appBar: AppBar(title: Text(l10n.soDetailTitle)),
       body: AsyncValueView<SaleOrder?>(
         value: order,
         data: (o) {
-          if (o == null) return const Center(child: Text('Order not found'));
+          if (o == null) return Center(child: Text(l10n.soOrderNotFound));
           final items = ref.watch(saleOrderItemsProvider(orderId));
           final payments = ref.watch(saleOrderPaymentsProvider(orderId));
           final shipments = ref.watch(saleOrderShipmentsProvider(orderId));
@@ -114,21 +117,21 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                       ref.watch(customerProvider(o.customerId));
                                   return customerAsync.when(
                                     data: (customer) => Text(
-                                      customer?.name ?? 'Unknown Customer',
+                                      customer?.name ?? l10n.soUnknownCustomer,
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: scheme.onSurfaceVariant,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                     loading: () => Text(
-                                      'Loading customer...',
+                                      l10n.soLoadingCustomer,
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: scheme.onSurfaceVariant
                                             .withOpacity(0.6),
                                       ),
                                     ),
                                     error: (_, __) => Text(
-                                      'Unknown Customer',
+                                      l10n.soUnknownCustomer,
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: scheme.onSurfaceVariant
                                             .withOpacity(0.6),
@@ -144,9 +147,9 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                             spacing: 8,
                             runSpacing: 8,
                             children: [
-                              _buildStatusBadge(context, o.status),
-                              _buildPaymentStatusBadge(context, o.paymentStatus),
-                              _buildShippingStatusBadge(context, o.shippingStatus),
+                              _buildStatusBadge(context, o.status, l10n),
+                              _buildPaymentStatusBadge(context, o.paymentStatus, l10n),
+                              _buildShippingStatusBadge(context, o.shippingStatus, l10n),
                             ],
                           ),
                         ],
@@ -156,7 +159,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
 
                     // Line Items Section
                     Text(
-                      'Line Items',
+                      l10n.soLineItemsHeading,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: scheme.onSurfaceVariant,
@@ -177,7 +180,8 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                   style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                                 ),
                                 subtitle: Text(
-                                  'Qty ordered: ${list[i].quantity} · shipped: ${list[i].shippedQuantity}',
+                                  l10n.soLineQtyOrderedShipped(
+                                      '${list[i].quantity}', '${list[i].shippedQuantity}'),
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                                 trailing: Text(
@@ -196,7 +200,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
 
                     // Payments Section
                     Text(
-                      'Payments',
+                      l10n.poPaymentsHeading,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: scheme.onSurfaceVariant,
@@ -206,11 +210,11 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                     AsyncValueView<List<SaleOrderPayment>>(
                       value: payments,
                       data: (list) => list.isEmpty
-                          ? const AppCard(
+                          ? AppCard(
                               child: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text('No payments recorded yet.'),
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  child: Text(l10n.poNoPaymentsYet),
                                 ),
                               ),
                             )
@@ -256,7 +260,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
 
                     // Shipments Section
                     Text(
-                      'Shipments',
+                      l10n.soShipmentsHeading,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: scheme.onSurfaceVariant,
@@ -266,11 +270,11 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                     AsyncValueView<List<SaleOrderShipping>>(
                       value: shipments,
                       data: (list) => list.isEmpty
-                          ? const AppCard(
+                          ? AppCard(
                               child: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text('No shipments recorded yet.'),
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  child: Text(l10n.soNoShipmentsYet),
                                 ),
                               ),
                             )
@@ -351,9 +355,10 @@ class SaleOrderDetailScreen extends ConsumerWidget {
 
   List<Widget> _actions(BuildContext context, WidgetRef ref,
       dynamic service, SaleOrder o) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    
+
     final canCancel = o.status == OrderStatus.draft ||
         o.status == OrderStatus.confirmed ||
         o.status == OrderStatus.processing;
@@ -371,13 +376,13 @@ class SaleOrderDetailScreen extends ConsumerWidget {
       widgets.add(
         FilledButton(
           onPressed: () => _run(context, ref, () => service.confirm(o)),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.check_circle_outline, size: 20),
-              SizedBox(width: 8),
-              Text('Confirm Order'),
+              const Icon(Icons.check_circle_outline, size: 20),
+              const SizedBox(width: 8),
+              Text(l10n.soConfirmOrderButton),
             ],
           ),
         ),
@@ -386,13 +391,13 @@ class SaleOrderDetailScreen extends ConsumerWidget {
       widgets.add(
         FilledButton(
           onPressed: () => _run(context, ref, () => service.process(o)),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.play_circle_outline, size: 20),
-              SizedBox(width: 8),
-              Text('Start Processing'),
+              const Icon(Icons.play_circle_outline, size: 20),
+              const SizedBox(width: 8),
+              Text(l10n.soStartProcessingButton),
             ],
           ),
         ),
@@ -416,13 +421,13 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                       builder: (_) => RecordPaymentScreen(order: o)));
                   _refresh(ref);
                 },
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.payment, size: 18),
-                    SizedBox(width: 8),
-                    Text('Add Payment'),
+                    const Icon(Icons.payment, size: 18),
+                    const SizedBox(width: 8),
+                    Text(l10n.soAddPaymentButton),
                   ],
                 ),
               ),
@@ -435,13 +440,13 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                       builder: (_) => CreateShipmentScreen(order: o)));
                   _refresh(ref);
                 },
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.local_shipping_outlined, size: 18),
-                    SizedBox(width: 8),
-                    Text('Ship Items'),
+                    const Icon(Icons.local_shipping_outlined, size: 18),
+                    const SizedBox(width: 8),
+                    Text(l10n.soShipItemsButton),
                   ],
                 ),
               ),
@@ -457,13 +462,13 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                 builder: (_) => CreateShipmentScreen(order: o)));
             _refresh(ref);
           },
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.local_shipping_outlined, size: 18),
-              SizedBox(width: 8),
-              Text('Create Shipment'),
+              const Icon(Icons.local_shipping_outlined, size: 18),
+              const SizedBox(width: 8),
+              Text(l10n.soCreateShipmentTitle),
             ],
           ),
         ),
@@ -482,13 +487,13 @@ class SaleOrderDetailScreen extends ConsumerWidget {
               backgroundColor: Colors.green.shade700,
               foregroundColor: Colors.white,
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.payment, size: 20),
-                SizedBox(width: 8),
-                Text('Record Payment'),
+                const Icon(Icons.payment, size: 20),
+                const SizedBox(width: 8),
+                Text(l10n.soRecordPaymentTitle),
               ],
             ),
           ),
@@ -501,13 +506,13 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                   builder: (_) => RecordPaymentScreen(order: o)));
               _refresh(ref);
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.payment, size: 18),
-                SizedBox(width: 8),
-                Text('Add Payment'),
+                const Icon(Icons.payment, size: 18),
+                const SizedBox(width: 8),
+                Text(l10n.soAddPaymentButton),
               ],
             ),
           ),
@@ -526,9 +531,9 @@ class SaleOrderDetailScreen extends ConsumerWidget {
         TextButton(
           onPressed: () async {
             final ok = await confirmDialog(context,
-                title: 'Cancel order',
-                message: 'Cancel ${o.soNumber}?',
-                confirmLabel: 'Cancel order');
+                title: l10n.poCancelOrderButton,
+                message: l10n.poCancelOrderConfirm(o.soNumber),
+                confirmLabel: l10n.poCancelOrderButton);
             if (ok && context.mounted) {
               await _run(context, ref, () => service.cancel(o));
             }
@@ -540,7 +545,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
               Icon(Icons.close_rounded, color: scheme.error, size: 18),
               const SizedBox(width: 8),
               Text(
-                'Cancel Order',
+                l10n.soCancelOrderLabel,
                 style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600),
               ),
             ],
@@ -582,15 +587,17 @@ class SaleOrderDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusBadge(BuildContext context, OrderStatus status) {
+  Widget _buildStatusBadge(
+      BuildContext context, OrderStatus status, AppLocalizations l10n) {
     return _statusBadge(
       color: _orderStatusColor(status),
       icon: _orderStatusIcon(status),
-      label: orderStatusLabel(status),
+      label: orderStatusLabel(l10n, status),
     );
   }
 
-  Widget _buildPaymentStatusBadge(BuildContext context, PaymentStatus status) {
+  Widget _buildPaymentStatusBadge(
+      BuildContext context, PaymentStatus status, AppLocalizations l10n) {
     final color = switch (status) {
       PaymentStatus.notPaid => Colors.red,
       PaymentStatus.partial => Colors.amber,
@@ -601,10 +608,11 @@ class SaleOrderDetailScreen extends ConsumerWidget {
       PaymentStatus.partial => Icons.pie_chart_outline_rounded,
       PaymentStatus.paid => Icons.check_circle_outline_rounded,
     };
-    return _statusBadge(color: color, icon: icon, label: paymentStatusLabel(status));
+    return _statusBadge(color: color, icon: icon, label: paymentStatusLabel(l10n, status));
   }
 
-  Widget _buildShippingStatusBadge(BuildContext context, ShippingStatus status) {
+  Widget _buildShippingStatusBadge(
+      BuildContext context, ShippingStatus status, AppLocalizations l10n) {
     final color = switch (status) {
       ShippingStatus.notShipped => Colors.red,
       ShippingStatus.partiallyShipped => Colors.amber,
@@ -615,7 +623,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
       ShippingStatus.partiallyShipped => Icons.local_shipping_outlined,
       ShippingStatus.fullyShipped => Icons.local_shipping_rounded,
     };
-    return _statusBadge(color: color, icon: icon, label: shippingStatusLabel(status));
+    return _statusBadge(color: color, icon: icon, label: shippingStatusLabel(l10n, status));
   }
 
   Widget _statusBadge({required Color color, required IconData icon, required String label}) {
