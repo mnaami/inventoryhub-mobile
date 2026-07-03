@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/paging/paged_list_notifier.dart';
 import '../../../../core/paging/paged_state.dart';
 import '../../../../core/providers.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../sales/sale_order/data/document_counter_dao.dart';
 import '../data/purchase_order_dao.dart';
 import '../data/purchase_order_payment_dao.dart';
@@ -58,24 +59,27 @@ final purchaseOrderReceiptsProvider =
 final purchaseDashboardProvider = FutureProvider((ref) =>
     ref.watch(purchaseOrderServiceProvider).dashboard());
 
-String poStatusLabel(PurchaseOrderStatus s) => switch (s) {
-      PurchaseOrderStatus.draft => 'Draft',
-      PurchaseOrderStatus.sent => 'Sent',
-      PurchaseOrderStatus.confirmed => 'Confirmed',
-      PurchaseOrderStatus.received => 'Received',
-      PurchaseOrderStatus.cancelled => 'Cancelled',
+String poStatusLabel(AppLocalizations l10n, PurchaseOrderStatus s) =>
+    switch (s) {
+      PurchaseOrderStatus.draft => l10n.poStatusDraft,
+      PurchaseOrderStatus.sent => l10n.poStatusSent,
+      PurchaseOrderStatus.confirmed => l10n.poStatusConfirmed,
+      PurchaseOrderStatus.received => l10n.poStatusReceived,
+      PurchaseOrderStatus.cancelled => l10n.poStatusCancelled,
     };
 
-String receiptStatusLabel(ReceiptStatus s) => switch (s) {
-      ReceiptStatus.notReceived => 'Not received',
-      ReceiptStatus.partial => 'Partially received',
-      ReceiptStatus.fullyReceived => 'Fully received',
+String receiptStatusLabel(AppLocalizations l10n, ReceiptStatus s) =>
+    switch (s) {
+      ReceiptStatus.notReceived => l10n.poReceiptStatusNotReceived,
+      ReceiptStatus.partial => l10n.poReceiptStatusPartial,
+      ReceiptStatus.fullyReceived => l10n.poReceiptStatusFullyReceived,
     };
 
-String paymentStatusLabel(PaymentStatus s) => switch (s) {
-      PaymentStatus.notPaid => 'Not paid',
-      PaymentStatus.partial => 'Partial',
-      PaymentStatus.paid => 'Paid',
+String paymentStatusLabel(AppLocalizations l10n, PaymentStatus s) =>
+    switch (s) {
+      PaymentStatus.notPaid => l10n.poPaymentStatusNotPaid,
+      PaymentStatus.partial => l10n.poPaymentStatusPartial,
+      PaymentStatus.paid => l10n.poPaymentStatusPaid,
     };
 
 enum DatePreset { all, today, week, month }

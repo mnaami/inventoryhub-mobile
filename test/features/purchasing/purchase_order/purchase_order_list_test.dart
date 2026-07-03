@@ -5,6 +5,7 @@ import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/purchasing/purchase_order/presentation/purchase_order_list_screen.dart';
+import '../../../helpers/l10n.dart';
 import '../../../helpers/test_db.dart';
 
 void main() {
@@ -19,7 +20,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: PurchaseOrderListScreen()),
+      child: localizedApp(home: const PurchaseOrderListScreen()),
     ));
     await tester.pumpAndSettle();
 

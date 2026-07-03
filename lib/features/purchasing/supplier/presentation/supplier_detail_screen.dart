@@ -6,6 +6,7 @@ import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/format/money_format.dart';
 import '../../purchase_order/domain/purchase_order_enums.dart';
 import '../../purchase_order/presentation/purchase_order_providers.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../domain/supplier.dart';
 import 'add_edit_supplier_screen.dart';
 import 'supplier_providers.dart';
@@ -29,7 +30,7 @@ class SupplierDetailScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        poStatusLabel(status),
+        poStatusLabel(AppLocalizations.of(context), status),
         style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
       ),
     );

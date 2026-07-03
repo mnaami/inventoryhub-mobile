@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/format/money_format.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../domain/purchase_order.dart';
 import '../domain/purchase_order_enums.dart';
 import 'purchase_order_detail_screen.dart';
@@ -17,6 +19,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final allOrdersAsync = ref.watch(allPurchaseOrdersProvider);
@@ -24,10 +27,10 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Purchasing Dashboard'),
+        title: Text(l10n.poDashboardTitle),
         actions: [
           IconButton(
-            tooltip: 'View All Orders',
+            tooltip: l10n.poViewAllOrdersTooltip,
             icon: const Icon(Icons.list_alt_rounded),
             onPressed: () {
               ref.read(purchaseOrderCriteriaProvider.notifier).reset();
@@ -59,7 +62,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
 
           // Payment Status distribution
           allOrdersAsync.when(
-            data: (orders) => _buildPaymentStatusDistribution(context, ref, orders),
+            data: (orders) => _buildPaymentStatusDistribution(context, ref, orders, l10n),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, st) => Text('Error loading payment status distribution: $e'),
           ),
@@ -67,7 +70,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
 
           // Receipt Status distribution
           allOrdersAsync.when(
-            data: (orders) => _buildReceiptStatusDistribution(context, ref, orders),
+            data: (orders) => _buildReceiptStatusDistribution(context, ref, orders, l10n),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, st) => Text('Error loading receipt status distribution: $e'),
           ),
@@ -110,7 +113,9 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hasOutstanding ? 'Outstanding Payables' : 'All Payments Cleared',
+                  hasOutstanding
+                      ? context.l10n.poOutstandingPayables
+                      : context.l10n.poAllPaymentsCleared,
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: scheme.onSurfaceVariant,
@@ -133,7 +138,8 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPaymentStatusDistribution(BuildContext context, WidgetRef ref, List<PurchaseOrder> orders) {
+  Widget _buildPaymentStatusDistribution(BuildContext context, WidgetRef ref,
+      List<PurchaseOrder> orders, AppLocalizations l10n) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -159,7 +165,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Payment Status Breakdown',
+          l10n.poPaymentStatusBreakdown,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w700,
             color: scheme.onSurfaceVariant,
@@ -172,7 +178,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
             children: [
               _buildDistributionRow(
                 context: context,
-                label: 'Paid',
+                label: paymentStatusLabel(l10n, PaymentStatus.paid),
                 count: paid,
                 total: total,
                 color: Colors.green.shade600,
@@ -186,7 +192,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
               const Divider(),
               _buildDistributionRow(
                 context: context,
-                label: 'Partial',
+                label: paymentStatusLabel(l10n, PaymentStatus.partial),
                 count: partial,
                 total: total,
                 color: Colors.amber.shade700,
@@ -200,7 +206,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
               const Divider(),
               _buildDistributionRow(
                 context: context,
-                label: 'Not paid',
+                label: paymentStatusLabel(l10n, PaymentStatus.notPaid),
                 count: notPaid,
                 total: total,
                 color: Colors.red.shade700,
@@ -218,7 +224,8 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildReceiptStatusDistribution(BuildContext context, WidgetRef ref, List<PurchaseOrder> orders) {
+  Widget _buildReceiptStatusDistribution(BuildContext context, WidgetRef ref,
+      List<PurchaseOrder> orders, AppLocalizations l10n) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -244,7 +251,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Receipt Status Breakdown',
+          l10n.poReceiptStatusBreakdown,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w700,
             color: scheme.onSurfaceVariant,
@@ -257,7 +264,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
             children: [
               _buildDistributionRow(
                 context: context,
-                label: 'Fully received',
+                label: receiptStatusLabel(l10n, ReceiptStatus.fullyReceived),
                 count: fullyReceived,
                 total: total,
                 color: Colors.green.shade600,
@@ -271,7 +278,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
               const Divider(),
               _buildDistributionRow(
                 context: context,
-                label: 'Partially received',
+                label: receiptStatusLabel(l10n, ReceiptStatus.partial),
                 count: partial,
                 total: total,
                 color: Colors.amber.shade700,
@@ -285,7 +292,7 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
               const Divider(),
               _buildDistributionRow(
                 context: context,
-                label: 'Not received',
+                label: receiptStatusLabel(l10n, ReceiptStatus.notReceived),
                 count: notReceived,
                 total: total,
                 color: Colors.red.shade700,

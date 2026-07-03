@@ -4,8 +4,10 @@ import 'package:intl/intl.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/format/money_format.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/paginated_list_view.dart';
 import '../../../../core/widgets/search_field.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../domain/purchase_order.dart';
 import '../domain/purchase_order_enums.dart';
 import 'purchase_order_detail_screen.dart';
@@ -28,6 +30,7 @@ class _PurchaseOrderListScreenState extends ConsumerState<PurchaseOrderListScree
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final state = ref.watch(purchaseOrderListProvider);
     final criteria = ref.watch(purchaseOrderCriteriaProvider);
     final theme = Theme.of(context);
@@ -38,15 +41,15 @@ class _PurchaseOrderListScreenState extends ConsumerState<PurchaseOrderListScree
         title: _searching
             ? SearchField(
                 initial: criteria.search,
-                hint: 'Search PO number',
+                hint: l10n.poSearchHint,
                 onChanged: (v) =>
                     ref.read(purchaseOrderCriteriaProvider.notifier).setSearch(v),
               )
-            : const Text('Purchase Orders'),
+            : Text(l10n.poListTitle),
         actions: [
           if (criteria.hasActiveFilters)
             IconButton(
-              tooltip: 'Clear all filters',
+              tooltip: l10n.poClearAllFiltersTooltip,
               icon: const Icon(Icons.filter_alt_off),
               onPressed: () {
                 ref.read(purchaseOrderCriteriaProvider.notifier).reset();
@@ -92,9 +95,9 @@ class _PurchaseOrderListScreenState extends ConsumerState<PurchaseOrderListScree
               onLoadMore: _notifier.loadMore,
               onRefresh: _notifier.refresh,
               onRetryInitial: _notifier.loadInitial,
-              empty: const EmptyState(
+              empty: EmptyState(
                 icon: Icons.shopping_bag_outlined,
-                title: 'No purchase orders yet. Tap + to create one.',
+                title: l10n.poListEmpty,
               ),
               itemBuilder: (context, o) => AppCard(
                 padding:
@@ -147,20 +150,20 @@ class _PurchaseOrderListScreenState extends ConsumerState<PurchaseOrderListScree
                               final supplierAsync = ref.watch(supplierProvider(o.supplierId));
                               return supplierAsync.when(
                                 data: (supplier) => Text(
-                                  supplier?.name ?? 'Unknown Supplier',
+                                  supplier?.name ?? l10n.poUnknownSupplier,
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: scheme.onSurfaceVariant,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 loading: () => Text(
-                                  'Loading supplier...',
+                                  l10n.poLoadingSupplier,
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: scheme.onSurfaceVariant.withOpacity(0.6),
                                   ),
                                 ),
                                 error: (_, __) => Text(
-                                  'Unknown Supplier',
+                                  l10n.poUnknownSupplier,
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: scheme.onSurfaceVariant.withOpacity(0.6),
                                   ),
@@ -181,13 +184,13 @@ class _PurchaseOrderListScreenState extends ConsumerState<PurchaseOrderListScree
                               ),
                               Row(
                                 children: [
-                                  _badge(context, poStatusLabel(o.status),
+                                  _badge(context, poStatusLabel(l10n, o.status),
                                       _statusColor(o.status)),
                                   const SizedBox(width: 6),
-                                  _badge(context, paymentStatusLabel(o.paymentStatus),
+                                  _badge(context, paymentStatusLabel(l10n, o.paymentStatus),
                                       _paymentColor(o.paymentStatus)),
                                   const SizedBox(width: 6),
-                                  _badge(context, receiptStatusLabel(o.receiptStatus),
+                                  _badge(context, receiptStatusLabel(l10n, o.receiptStatus),
                                       _receiptColor(o.receiptStatus)),
                                 ],
                               ),
@@ -243,6 +246,7 @@ class _Filters extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final n = ref.read(purchaseOrderCriteriaProvider.notifier);
     final scheme = Theme.of(context).colorScheme;
 
@@ -254,11 +258,11 @@ class _Filters extends ConsumerWidget {
         children: [
           if (criteria.hasActiveFilters)
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsetsDirectional.only(end: 8),
               child: ActionChip(
                 avatar: Icon(Icons.filter_alt_off_rounded, size: 14, color: scheme.error),
                 label: Text(
-                  'Clear All',
+                  l10n.poClearAll,
                   style: TextStyle(
                     color: scheme.error,
                     fontWeight: FontWeight.w700,
@@ -274,61 +278,61 @@ class _Filters extends ConsumerWidget {
               ),
             ),
           _FilterPill<PurchaseOrderStatus?>(
-            label: 'Status',
+            label: l10n.poFilterStatusLabel,
             isActive: criteria.status != null,
             displayValue: criteria.status != null
-                ? poStatusLabel(criteria.status!)
+                ? poStatusLabel(l10n, criteria.status!)
                 : '',
             onChanged: n.setStatus,
             onClear: () => n.setStatus(null),
             items: [
-              const PopupMenuItem(value: null, child: Text('Any status')),
+              PopupMenuItem(value: null, child: Text(l10n.poFilterAnyStatus)),
               for (final s in PurchaseOrderStatus.values)
-                PopupMenuItem(value: s, child: Text(poStatusLabel(s))),
+                PopupMenuItem(value: s, child: Text(poStatusLabel(l10n, s))),
             ],
           ),
           const SizedBox(width: 8),
           _FilterPill<DatePreset>(
-            label: 'Date',
+            label: l10n.poFilterDateLabel,
             isActive: criteria.datePreset != DatePreset.all,
-            displayValue: _datePresetLabel(criteria.datePreset),
+            displayValue: _datePresetLabel(l10n, criteria.datePreset),
             onChanged: n.setDatePreset,
             onClear: () => n.setDatePreset(DatePreset.all),
-            items: const [
-              PopupMenuItem(value: DatePreset.all, child: Text('All dates')),
-              PopupMenuItem(value: DatePreset.today, child: Text('Today')),
-              PopupMenuItem(value: DatePreset.week, child: Text('This week')),
-              PopupMenuItem(value: DatePreset.month, child: Text('This month')),
+            items: [
+              PopupMenuItem(value: DatePreset.all, child: Text(l10n.poDateAllDates)),
+              PopupMenuItem(value: DatePreset.today, child: Text(l10n.poDateToday)),
+              PopupMenuItem(value: DatePreset.week, child: Text(l10n.poDateWeek)),
+              PopupMenuItem(value: DatePreset.month, child: Text(l10n.poDateMonth)),
             ],
           ),
           const SizedBox(width: 8),
           _FilterPill<PaymentStatus?>(
-            label: 'Payment',
+            label: l10n.poFilterPaymentLabel,
             isActive: criteria.paymentStatus != null,
             displayValue: criteria.paymentStatus != null
-                ? paymentStatusLabel(criteria.paymentStatus!)
+                ? paymentStatusLabel(l10n, criteria.paymentStatus!)
                 : '',
             onChanged: n.setPaymentStatus,
             onClear: () => n.setPaymentStatus(null),
             items: [
-              const PopupMenuItem(value: null, child: Text('Any payment')),
+              PopupMenuItem(value: null, child: Text(l10n.poFilterAnyPayment)),
               for (final p in PaymentStatus.values)
-                PopupMenuItem(value: p, child: Text(paymentStatusLabel(p))),
+                PopupMenuItem(value: p, child: Text(paymentStatusLabel(l10n, p))),
             ],
           ),
           const SizedBox(width: 8),
           _FilterPill<ReceiptStatus?>(
-            label: 'Receipt',
+            label: l10n.poFilterReceiptLabel,
             isActive: criteria.receiptStatus != null,
             displayValue: criteria.receiptStatus != null
-                ? receiptStatusLabel(criteria.receiptStatus!)
+                ? receiptStatusLabel(l10n, criteria.receiptStatus!)
                 : '',
             onChanged: n.setReceiptStatus,
             onClear: () => n.setReceiptStatus(null),
             items: [
-              const PopupMenuItem(value: null, child: Text('Any receipt')),
+              PopupMenuItem(value: null, child: Text(l10n.poFilterAnyReceipt)),
               for (final s in ReceiptStatus.values)
-                PopupMenuItem(value: s, child: Text(receiptStatusLabel(s))),
+                PopupMenuItem(value: s, child: Text(receiptStatusLabel(l10n, s))),
             ],
           ),
         ],
@@ -336,11 +340,11 @@ class _Filters extends ConsumerWidget {
     );
   }
 
-  String _datePresetLabel(DatePreset p) => switch (p) {
-        DatePreset.all => 'All',
-        DatePreset.today => 'Today',
-        DatePreset.week => 'This week',
-        DatePreset.month => 'This month',
+  String _datePresetLabel(AppLocalizations l10n, DatePreset p) => switch (p) {
+        DatePreset.all => l10n.poDateAll,
+        DatePreset.today => l10n.poDateToday,
+        DatePreset.week => l10n.poDateWeek,
+        DatePreset.month => l10n.poDateMonth,
       };
 }
 
@@ -386,9 +390,9 @@ class _FilterPill<T> extends StatelessWidget {
             onSelected: onChanged,
             itemBuilder: (_) => items,
             child: Padding(
-              padding: EdgeInsets.only(
-                left: 12,
-                right: isActive ? 6 : 12,
+              padding: EdgeInsetsDirectional.only(
+                start: 12,
+                end: isActive ? 6 : 12,
                 top: 6,
                 bottom: 6,
               ),
@@ -424,7 +428,7 @@ class _FilterPill<T> extends StatelessWidget {
           ),
           if (isActive)
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsetsDirectional.only(end: 8),
               child: InkWell(
                 onTap: onClear,
                 borderRadius: BorderRadius.circular(100),

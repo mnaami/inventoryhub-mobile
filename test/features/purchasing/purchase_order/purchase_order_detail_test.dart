@@ -7,6 +7,7 @@ import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/purchasing/purchase_order/presentation/purchase_order_detail_screen.dart';
 import 'package:inventoryhub_mobile/features/purchasing/purchase_order/presentation/purchase_order_providers.dart';
 import 'package:inventoryhub_mobile/features/purchasing/purchase_order/domain/purchase_order_usecases.dart';
+import '../../../helpers/l10n.dart';
 import '../../../helpers/test_db.dart';
 
 void main() {
@@ -27,7 +28,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(home: PurchaseOrderDetailScreen(orderId: order.id)),
+      child: localizedApp(home: PurchaseOrderDetailScreen(orderId: order.id)),
     ));
     await tester.pumpAndSettle();
 

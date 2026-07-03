@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -40,12 +41,13 @@ class _CreateReceiptState extends ConsumerState<CreateReceiptScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final items = ref.watch(purchaseOrderItemsProvider(widget.order.id));
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Receive Goods (draft)')),
+      appBar: AppBar(title: Text(l10n.poReceiveGoodsTitle)),
       body: AsyncValueView(
         value: items,
         data: (list) => ListView(
@@ -63,7 +65,7 @@ class _CreateReceiptState extends ConsumerState<CreateReceiptScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Receiving for order:',
+                          l10n.poReceivingForOrder,
                           style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                         ),
                         const SizedBox(height: 2),
@@ -81,7 +83,7 @@ class _CreateReceiptState extends ConsumerState<CreateReceiptScreen> {
 
             // Section Header
             Text(
-              'Select quantities to receive',
+              l10n.poSelectQuantitiesHeading,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: scheme.onSurfaceVariant,
@@ -109,7 +111,7 @@ class _CreateReceiptState extends ConsumerState<CreateReceiptScreen> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  'Remaining: ${list[i].remainingQuantity}',
+                                  l10n.poRemainingQty('${list[i].remainingQuantity}'),
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                               ],
@@ -122,7 +124,7 @@ class _CreateReceiptState extends ConsumerState<CreateReceiptScreen> {
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
-                                labelText: 'Receive',
+                                labelText: l10n.poReceiveLabel,
                                 filled: true,
                                 fillColor: scheme.surfaceContainerLow,
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -155,7 +157,7 @@ class _CreateReceiptState extends ConsumerState<CreateReceiptScreen> {
             // Action Button
             FilledButton(
               onPressed: _save,
-              child: const Text('Save draft receipt'),
+              child: Text(l10n.poSaveDraftReceiptButton),
             ),
           ],
         ),

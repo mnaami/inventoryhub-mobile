@@ -1345,6 +1345,516 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Make this the active recipe'**
   String get recipeMakeActiveSwitchLabel;
+
+  /// No description provided for @poStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get poStatusDraft;
+
+  /// No description provided for @poStatusSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get poStatusSent;
+
+  /// No description provided for @poStatusConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get poStatusConfirmed;
+
+  /// No description provided for @poStatusReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get poStatusReceived;
+
+  /// No description provided for @poStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get poStatusCancelled;
+
+  /// No description provided for @poReceiptStatusNotReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Not received'**
+  String get poReceiptStatusNotReceived;
+
+  /// No description provided for @poReceiptStatusPartial.
+  ///
+  /// In en, this message translates to:
+  /// **'Partially received'**
+  String get poReceiptStatusPartial;
+
+  /// No description provided for @poReceiptStatusFullyReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully received'**
+  String get poReceiptStatusFullyReceived;
+
+  /// No description provided for @poPaymentStatusNotPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Not paid'**
+  String get poPaymentStatusNotPaid;
+
+  /// No description provided for @poPaymentStatusPartial.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial'**
+  String get poPaymentStatusPartial;
+
+  /// No description provided for @poPaymentStatusPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get poPaymentStatusPaid;
+
+  /// No description provided for @poDashboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchasing Dashboard'**
+  String get poDashboardTitle;
+
+  /// No description provided for @poViewAllOrdersTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Orders'**
+  String get poViewAllOrdersTooltip;
+
+  /// No description provided for @poOutstandingPayables.
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding Payables'**
+  String get poOutstandingPayables;
+
+  /// No description provided for @poAllPaymentsCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'All Payments Cleared'**
+  String get poAllPaymentsCleared;
+
+  /// No description provided for @poPaymentStatusBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Status Breakdown'**
+  String get poPaymentStatusBreakdown;
+
+  /// No description provided for @poReceiptStatusBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt Status Breakdown'**
+  String get poReceiptStatusBreakdown;
+
+  /// No description provided for @poSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search PO number'**
+  String get poSearchHint;
+
+  /// No description provided for @poClearAllFiltersTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all filters'**
+  String get poClearAllFiltersTooltip;
+
+  /// No description provided for @poListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase Orders'**
+  String get poListTitle;
+
+  /// No description provided for @poListEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No purchase orders yet. Tap + to create one.'**
+  String get poListEmpty;
+
+  /// No description provided for @poUnknownSupplier.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Supplier'**
+  String get poUnknownSupplier;
+
+  /// No description provided for @poLoadingSupplier.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading supplier...'**
+  String get poLoadingSupplier;
+
+  /// No description provided for @poClearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get poClearAll;
+
+  /// No description provided for @poFilterStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get poFilterStatusLabel;
+
+  /// No description provided for @poFilterAnyStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Any status'**
+  String get poFilterAnyStatus;
+
+  /// No description provided for @poFilterDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get poFilterDateLabel;
+
+  /// No description provided for @poFilterPaymentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get poFilterPaymentLabel;
+
+  /// No description provided for @poFilterAnyPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Any payment'**
+  String get poFilterAnyPayment;
+
+  /// No description provided for @poFilterReceiptLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt'**
+  String get poFilterReceiptLabel;
+
+  /// No description provided for @poFilterAnyReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Any receipt'**
+  String get poFilterAnyReceipt;
+
+  /// No description provided for @poDateToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get poDateToday;
+
+  /// No description provided for @poDateWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get poDateWeek;
+
+  /// No description provided for @poDateMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get poDateMonth;
+
+  /// No description provided for @poDateAllDates.
+  ///
+  /// In en, this message translates to:
+  /// **'All dates'**
+  String get poDateAllDates;
+
+  /// No description provided for @poDateAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get poDateAll;
+
+  /// No description provided for @poSelectSupplierTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Supplier'**
+  String get poSelectSupplierTitle;
+
+  /// No description provided for @poSelectProductTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Product'**
+  String get poSelectProductTitle;
+
+  /// No description provided for @poPriceEach.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} each'**
+  String poPriceEach(String price);
+
+  /// No description provided for @poPickSupplierError.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a supplier.'**
+  String get poPickSupplierError;
+
+  /// No description provided for @poCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Purchase Order'**
+  String get poCreateTitle;
+
+  /// No description provided for @poSupplierLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplier'**
+  String get poSupplierLabel;
+
+  /// No description provided for @poSelectSupplierPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select supplier...'**
+  String get poSelectSupplierPlaceholder;
+
+  /// No description provided for @poOrderItemsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Items'**
+  String get poOrderItemsHeading;
+
+  /// No description provided for @poNoProductsAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'No products added yet.'**
+  String get poNoProductsAdded;
+
+  /// No description provided for @poQtyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get poQtyLabel;
+
+  /// No description provided for @poAddProductButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Product'**
+  String get poAddProductButton;
+
+  /// No description provided for @poEstimatedTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Total'**
+  String get poEstimatedTotal;
+
+  /// No description provided for @poCreateDraftButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create draft'**
+  String get poCreateDraftButton;
+
+  /// No description provided for @poDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase Order'**
+  String get poDetailTitle;
+
+  /// No description provided for @poNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found'**
+  String get poNotFound;
+
+  /// No description provided for @poLinesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Lines'**
+  String get poLinesHeading;
+
+  /// No description provided for @poLineQtyOrderedReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty ordered: {ordered} · received: {received}'**
+  String poLineQtyOrderedReceived(String ordered, String received);
+
+  /// No description provided for @poReceiptsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipts'**
+  String get poReceiptsHeading;
+
+  /// No description provided for @poNoReceiptsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No receipts recorded yet.'**
+  String get poNoReceiptsYet;
+
+  /// No description provided for @poPostButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get poPostButton;
+
+  /// No description provided for @poPaymentsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get poPaymentsHeading;
+
+  /// No description provided for @poNoPaymentsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments recorded yet.'**
+  String get poNoPaymentsYet;
+
+  /// No description provided for @poSendButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get poSendButton;
+
+  /// No description provided for @poConfirmButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get poConfirmButton;
+
+  /// No description provided for @poReceiveGoodsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive goods'**
+  String get poReceiveGoodsButton;
+
+  /// No description provided for @poAddPaymentButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add payment'**
+  String get poAddPaymentButton;
+
+  /// No description provided for @poCancelOrderButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel order'**
+  String get poCancelOrderButton;
+
+  /// No description provided for @poCancelOrderConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel {orderNumber}?'**
+  String poCancelOrderConfirm(String orderNumber);
+
+  /// No description provided for @poReceiveGoodsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive Goods (draft)'**
+  String get poReceiveGoodsTitle;
+
+  /// No description provided for @poReceivingForOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiving for order:'**
+  String get poReceivingForOrder;
+
+  /// No description provided for @poSelectQuantitiesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Select quantities to receive'**
+  String get poSelectQuantitiesHeading;
+
+  /// No description provided for @poRemainingQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining: {qty}'**
+  String poRemainingQty(String qty);
+
+  /// No description provided for @poReceiveLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive'**
+  String get poReceiveLabel;
+
+  /// No description provided for @poSaveDraftReceiptButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save draft receipt'**
+  String get poSaveDraftReceiptButton;
+
+  /// No description provided for @poRecordPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Payment (draft)'**
+  String get poRecordPaymentTitle;
+
+  /// No description provided for @poRecordingPaymentFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording payment for:'**
+  String get poRecordingPaymentFor;
+
+  /// No description provided for @poOrderTotalLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{orderNumber} · Order Total: {total}'**
+  String poOrderTotalLine(String orderNumber, String total);
+
+  /// No description provided for @poPaymentInfoHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Information'**
+  String get poPaymentInfoHeading;
+
+  /// No description provided for @poAmountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get poAmountLabel;
+
+  /// No description provided for @poMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Method'**
+  String get poMethodLabel;
+
+  /// No description provided for @poInvalidAmountError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid amount.'**
+  String get poInvalidAmountError;
+
+  /// No description provided for @poSaveDraftPaymentButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save draft payment'**
+  String get poSaveDraftPaymentButton;
+
+  /// No description provided for @poStatsDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Statistics'**
+  String get poStatsDaily;
+
+  /// No description provided for @poStatsWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Statistics'**
+  String get poStatsWeekly;
+
+  /// No description provided for @poStatsMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Statistics'**
+  String get poStatsMonthly;
+
+  /// No description provided for @poStatsYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly Statistics'**
+  String get poStatsYearly;
+
+  /// No description provided for @poStatsDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get poStatsDefault;
+
+  /// No description provided for @poStatTotalOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Orders'**
+  String get poStatTotalOrders;
+
+  /// No description provided for @poStatTotalPurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Purchases'**
+  String get poStatTotalPurchases;
 }
 
 class _AppLocalizationsDelegate

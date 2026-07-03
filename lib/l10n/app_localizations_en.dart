@@ -667,4 +667,269 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recipeMakeActiveSwitchLabel => 'Make this the active recipe';
+
+  @override
+  String get poStatusDraft => 'Draft';
+
+  @override
+  String get poStatusSent => 'Sent';
+
+  @override
+  String get poStatusConfirmed => 'Confirmed';
+
+  @override
+  String get poStatusReceived => 'Received';
+
+  @override
+  String get poStatusCancelled => 'Cancelled';
+
+  @override
+  String get poReceiptStatusNotReceived => 'Not received';
+
+  @override
+  String get poReceiptStatusPartial => 'Partially received';
+
+  @override
+  String get poReceiptStatusFullyReceived => 'Fully received';
+
+  @override
+  String get poPaymentStatusNotPaid => 'Not paid';
+
+  @override
+  String get poPaymentStatusPartial => 'Partial';
+
+  @override
+  String get poPaymentStatusPaid => 'Paid';
+
+  @override
+  String get poDashboardTitle => 'Purchasing Dashboard';
+
+  @override
+  String get poViewAllOrdersTooltip => 'View All Orders';
+
+  @override
+  String get poOutstandingPayables => 'Outstanding Payables';
+
+  @override
+  String get poAllPaymentsCleared => 'All Payments Cleared';
+
+  @override
+  String get poPaymentStatusBreakdown => 'Payment Status Breakdown';
+
+  @override
+  String get poReceiptStatusBreakdown => 'Receipt Status Breakdown';
+
+  @override
+  String get poSearchHint => 'Search PO number';
+
+  @override
+  String get poClearAllFiltersTooltip => 'Clear all filters';
+
+  @override
+  String get poListTitle => 'Purchase Orders';
+
+  @override
+  String get poListEmpty => 'No purchase orders yet. Tap + to create one.';
+
+  @override
+  String get poUnknownSupplier => 'Unknown Supplier';
+
+  @override
+  String get poLoadingSupplier => 'Loading supplier...';
+
+  @override
+  String get poClearAll => 'Clear All';
+
+  @override
+  String get poFilterStatusLabel => 'Status';
+
+  @override
+  String get poFilterAnyStatus => 'Any status';
+
+  @override
+  String get poFilterDateLabel => 'Date';
+
+  @override
+  String get poFilterPaymentLabel => 'Payment';
+
+  @override
+  String get poFilterAnyPayment => 'Any payment';
+
+  @override
+  String get poFilterReceiptLabel => 'Receipt';
+
+  @override
+  String get poFilterAnyReceipt => 'Any receipt';
+
+  @override
+  String get poDateToday => 'Today';
+
+  @override
+  String get poDateWeek => 'This week';
+
+  @override
+  String get poDateMonth => 'This month';
+
+  @override
+  String get poDateAllDates => 'All dates';
+
+  @override
+  String get poDateAll => 'All';
+
+  @override
+  String get poSelectSupplierTitle => 'Select Supplier';
+
+  @override
+  String get poSelectProductTitle => 'Select Product';
+
+  @override
+  String poPriceEach(String price) {
+    return '$price each';
+  }
+
+  @override
+  String get poPickSupplierError => 'Pick a supplier.';
+
+  @override
+  String get poCreateTitle => 'New Purchase Order';
+
+  @override
+  String get poSupplierLabel => 'Supplier';
+
+  @override
+  String get poSelectSupplierPlaceholder => 'Select supplier...';
+
+  @override
+  String get poOrderItemsHeading => 'Order Items';
+
+  @override
+  String get poNoProductsAdded => 'No products added yet.';
+
+  @override
+  String get poQtyLabel => 'Qty';
+
+  @override
+  String get poAddProductButton => 'Add Product';
+
+  @override
+  String get poEstimatedTotal => 'Estimated Total';
+
+  @override
+  String get poCreateDraftButton => 'Create draft';
+
+  @override
+  String get poDetailTitle => 'Purchase Order';
+
+  @override
+  String get poNotFound => 'Not found';
+
+  @override
+  String get poLinesHeading => 'Lines';
+
+  @override
+  String poLineQtyOrderedReceived(String ordered, String received) {
+    return 'Qty ordered: $ordered · received: $received';
+  }
+
+  @override
+  String get poReceiptsHeading => 'Receipts';
+
+  @override
+  String get poNoReceiptsYet => 'No receipts recorded yet.';
+
+  @override
+  String get poPostButton => 'Post';
+
+  @override
+  String get poPaymentsHeading => 'Payments';
+
+  @override
+  String get poNoPaymentsYet => 'No payments recorded yet.';
+
+  @override
+  String get poSendButton => 'Send';
+
+  @override
+  String get poConfirmButton => 'Confirm';
+
+  @override
+  String get poReceiveGoodsButton => 'Receive goods';
+
+  @override
+  String get poAddPaymentButton => 'Add payment';
+
+  @override
+  String get poCancelOrderButton => 'Cancel order';
+
+  @override
+  String poCancelOrderConfirm(String orderNumber) {
+    return 'Cancel $orderNumber?';
+  }
+
+  @override
+  String get poReceiveGoodsTitle => 'Receive Goods (draft)';
+
+  @override
+  String get poReceivingForOrder => 'Receiving for order:';
+
+  @override
+  String get poSelectQuantitiesHeading => 'Select quantities to receive';
+
+  @override
+  String poRemainingQty(String qty) {
+    return 'Remaining: $qty';
+  }
+
+  @override
+  String get poReceiveLabel => 'Receive';
+
+  @override
+  String get poSaveDraftReceiptButton => 'Save draft receipt';
+
+  @override
+  String get poRecordPaymentTitle => 'Record Payment (draft)';
+
+  @override
+  String get poRecordingPaymentFor => 'Recording payment for:';
+
+  @override
+  String poOrderTotalLine(String orderNumber, String total) {
+    return '$orderNumber · Order Total: $total';
+  }
+
+  @override
+  String get poPaymentInfoHeading => 'Payment Information';
+
+  @override
+  String get poAmountLabel => 'Amount';
+
+  @override
+  String get poMethodLabel => 'Method';
+
+  @override
+  String get poInvalidAmountError => 'Enter a valid amount.';
+
+  @override
+  String get poSaveDraftPaymentButton => 'Save draft payment';
+
+  @override
+  String get poStatsDaily => 'Daily Statistics';
+
+  @override
+  String get poStatsWeekly => 'Weekly Statistics';
+
+  @override
+  String get poStatsMonthly => 'Monthly Statistics';
+
+  @override
+  String get poStatsYearly => 'Yearly Statistics';
+
+  @override
+  String get poStatsDefault => 'Statistics';
+
+  @override
+  String get poStatTotalOrders => 'Total Orders';
+
+  @override
+  String get poStatTotalPurchases => 'Total Purchases';
 }

@@ -667,4 +667,269 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get recipeMakeActiveSwitchLabel => 'اجعل هذه الوصفة نشطة';
+
+  @override
+  String get poStatusDraft => 'مسودة';
+
+  @override
+  String get poStatusSent => 'مُرسل';
+
+  @override
+  String get poStatusConfirmed => 'مؤكد';
+
+  @override
+  String get poStatusReceived => 'مستلم';
+
+  @override
+  String get poStatusCancelled => 'ملغى';
+
+  @override
+  String get poReceiptStatusNotReceived => 'لم يُستلم';
+
+  @override
+  String get poReceiptStatusPartial => 'استلام جزئي';
+
+  @override
+  String get poReceiptStatusFullyReceived => 'استلام كامل';
+
+  @override
+  String get poPaymentStatusNotPaid => 'غير مدفوع';
+
+  @override
+  String get poPaymentStatusPartial => 'جزئي';
+
+  @override
+  String get poPaymentStatusPaid => 'مدفوع';
+
+  @override
+  String get poDashboardTitle => 'لوحة المشتريات';
+
+  @override
+  String get poViewAllOrdersTooltip => 'عرض جميع الطلبات';
+
+  @override
+  String get poOutstandingPayables => 'مستحقات معلقة';
+
+  @override
+  String get poAllPaymentsCleared => 'جميع المدفوعات مسددة';
+
+  @override
+  String get poPaymentStatusBreakdown => 'توزيع حالة الدفع';
+
+  @override
+  String get poReceiptStatusBreakdown => 'توزيع حالة الاستلام';
+
+  @override
+  String get poSearchHint => 'ابحث برقم أمر الشراء';
+
+  @override
+  String get poClearAllFiltersTooltip => 'مسح جميع الفلاتر';
+
+  @override
+  String get poListTitle => 'أوامر الشراء';
+
+  @override
+  String get poListEmpty => 'لا توجد أوامر شراء بعد. اضغط + لإنشاء واحد.';
+
+  @override
+  String get poUnknownSupplier => 'مورد غير معروف';
+
+  @override
+  String get poLoadingSupplier => 'جارٍ تحميل المورد...';
+
+  @override
+  String get poClearAll => 'مسح الكل';
+
+  @override
+  String get poFilterStatusLabel => 'الحالة';
+
+  @override
+  String get poFilterAnyStatus => 'أي حالة';
+
+  @override
+  String get poFilterDateLabel => 'التاريخ';
+
+  @override
+  String get poFilterPaymentLabel => 'الدفع';
+
+  @override
+  String get poFilterAnyPayment => 'أي دفعة';
+
+  @override
+  String get poFilterReceiptLabel => 'الاستلام';
+
+  @override
+  String get poFilterAnyReceipt => 'أي استلام';
+
+  @override
+  String get poDateToday => 'اليوم';
+
+  @override
+  String get poDateWeek => 'هذا الأسبوع';
+
+  @override
+  String get poDateMonth => 'هذا الشهر';
+
+  @override
+  String get poDateAllDates => 'كل التواريخ';
+
+  @override
+  String get poDateAll => 'الكل';
+
+  @override
+  String get poSelectSupplierTitle => 'اختر المورد';
+
+  @override
+  String get poSelectProductTitle => 'اختر المنتج';
+
+  @override
+  String poPriceEach(String price) {
+    return '$price للقطعة';
+  }
+
+  @override
+  String get poPickSupplierError => 'اختر موردًا.';
+
+  @override
+  String get poCreateTitle => 'أمر شراء جديد';
+
+  @override
+  String get poSupplierLabel => 'المورد';
+
+  @override
+  String get poSelectSupplierPlaceholder => 'اختر موردًا...';
+
+  @override
+  String get poOrderItemsHeading => 'عناصر الطلب';
+
+  @override
+  String get poNoProductsAdded => 'لم تتم إضافة منتجات بعد.';
+
+  @override
+  String get poQtyLabel => 'الكمية';
+
+  @override
+  String get poAddProductButton => 'إضافة منتج';
+
+  @override
+  String get poEstimatedTotal => 'الإجمالي التقديري';
+
+  @override
+  String get poCreateDraftButton => 'إنشاء مسودة';
+
+  @override
+  String get poDetailTitle => 'أمر الشراء';
+
+  @override
+  String get poNotFound => 'غير موجود';
+
+  @override
+  String get poLinesHeading => 'البنود';
+
+  @override
+  String poLineQtyOrderedReceived(String ordered, String received) {
+    return 'الكمية المطلوبة: $ordered · المستلمة: $received';
+  }
+
+  @override
+  String get poReceiptsHeading => 'الإيصالات';
+
+  @override
+  String get poNoReceiptsYet => 'لا توجد إيصالات مسجلة بعد.';
+
+  @override
+  String get poPostButton => 'ترحيل';
+
+  @override
+  String get poPaymentsHeading => 'المدفوعات';
+
+  @override
+  String get poNoPaymentsYet => 'لا توجد مدفوعات مسجلة بعد.';
+
+  @override
+  String get poSendButton => 'إرسال';
+
+  @override
+  String get poConfirmButton => 'تأكيد';
+
+  @override
+  String get poReceiveGoodsButton => 'استلام البضائع';
+
+  @override
+  String get poAddPaymentButton => 'إضافة دفعة';
+
+  @override
+  String get poCancelOrderButton => 'إلغاء الأمر';
+
+  @override
+  String poCancelOrderConfirm(String orderNumber) {
+    return 'إلغاء $orderNumber؟';
+  }
+
+  @override
+  String get poReceiveGoodsTitle => 'استلام البضائع (مسودة)';
+
+  @override
+  String get poReceivingForOrder => 'الاستلام لأمر:';
+
+  @override
+  String get poSelectQuantitiesHeading => 'اختر الكميات المراد استلامها';
+
+  @override
+  String poRemainingQty(String qty) {
+    return 'المتبقي: $qty';
+  }
+
+  @override
+  String get poReceiveLabel => 'استلام';
+
+  @override
+  String get poSaveDraftReceiptButton => 'حفظ مسودة الإيصال';
+
+  @override
+  String get poRecordPaymentTitle => 'تسجيل دفعة (مسودة)';
+
+  @override
+  String get poRecordingPaymentFor => 'تسجيل دفعة لـ:';
+
+  @override
+  String poOrderTotalLine(String orderNumber, String total) {
+    return '$orderNumber · إجمالي الطلب: $total';
+  }
+
+  @override
+  String get poPaymentInfoHeading => 'معلومات الدفع';
+
+  @override
+  String get poAmountLabel => 'المبلغ';
+
+  @override
+  String get poMethodLabel => 'طريقة الدفع';
+
+  @override
+  String get poInvalidAmountError => 'أدخل مبلغًا صحيحًا.';
+
+  @override
+  String get poSaveDraftPaymentButton => 'حفظ مسودة الدفعة';
+
+  @override
+  String get poStatsDaily => 'إحصاءات يومية';
+
+  @override
+  String get poStatsWeekly => 'إحصاءات أسبوعية';
+
+  @override
+  String get poStatsMonthly => 'إحصاءات شهرية';
+
+  @override
+  String get poStatsYearly => 'إحصاءات سنوية';
+
+  @override
+  String get poStatsDefault => 'إحصاءات';
+
+  @override
+  String get poStatTotalOrders => 'إجمالي الطلبات';
+
+  @override
+  String get poStatTotalPurchases => 'إجمالي المشتريات';
 }
