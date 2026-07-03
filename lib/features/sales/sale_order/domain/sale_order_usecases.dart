@@ -56,6 +56,54 @@ class SaleOrderService {
   Future<double> totalAmountByDateRange(DateTime from, DateTime to) =>
       _repo.totalAmountByDateRange(_orgId, from, to);
 
+  /// Dense per-day totals for the last [days] local calendar days ending on
+  /// the day of [now] (defaults to the current instant), oldest first.
+  /// Same inclusion rules as [totalAmountByDateRange]. Buckets are keyed by
+  /// LOCAL day; `DateTime(y, m, d + i)` constructor arithmetic keeps keys
+  /// aligned across DST transitions.
+  Future<List<SalesTrendPoint>> dailySalesTotals({
+    required int days,
+    DateTime? now,
+  }) async {
+    final n = now ?? DateTime.now();
+    final from = DateTime(n.year, n.month, n.day - (days - 1));
+    final to = DateTime(n.year, n.month, n.day + 1);
+    final rows = await _repo.salesInRange(_orgId, from, to);
+    final keys = [
+      for (var i = 0; i < days; i++)
+        DateTime(from.year, from.month, from.day + i)
+    ];
+    final buckets = {for (final k in keys) k: 0.0};
+    for (final r in rows) {
+      final d = r.orderDate.toLocal();
+      final key = DateTime(d.year, d.month, d.day);
+      if (buckets.containsKey(key)) buckets[key] = buckets[key]! + r.totalAmount;
+    }
+    return [
+      for (final k in keys) SalesTrendPoint(bucketStart: k, total: buckets[k]!)
+    ];
+  }
+
+  /// Dense per-hour totals (24 buckets) for the local day of [now].
+  Future<List<SalesTrendPoint>> hourlySalesTotals({DateTime? now}) async {
+    final n = now ?? DateTime.now();
+    final from = DateTime(n.year, n.month, n.day);
+    final to = DateTime(n.year, n.month, n.day + 1);
+    final rows = await _repo.salesInRange(_orgId, from, to);
+    final keys = [
+      for (var h = 0; h < 24; h++) DateTime(n.year, n.month, n.day, h)
+    ];
+    final buckets = {for (final k in keys) k: 0.0};
+    for (final r in rows) {
+      final d = r.orderDate.toLocal();
+      final key = DateTime(d.year, d.month, d.day, d.hour);
+      if (buckets.containsKey(key)) buckets[key] = buckets[key]! + r.totalAmount;
+    }
+    return [
+      for (final k in keys) SalesTrendPoint(bucketStart: k, total: buckets[k]!)
+    ];
+  }
+
   Future<List<SaleOrder>> allActive() => _repo.allActive(_orgId);
 
   Future<List<SaleOrder>> list({
@@ -344,4 +392,12 @@ class SaleKpis {
   final int openOrders;
   final int unshipped;
   final double outstanding;
+}
+
+class SalesTrendPoint {
+  const SalesTrendPoint({required this.bucketStart, required this.total});
+
+  /// Start of the local day (daily series) or local hour (hourly series).
+  final DateTime bucketStart;
+  final double total;
 }

@@ -18,18 +18,26 @@ class AsyncValueView<T> extends StatelessWidget {
         final scheme = Theme.of(context).colorScheme;
         final message =
             e is AppException ? e.message : context.l10n.coreSomethingWrong;
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppTokens.space24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.error_outline, size: 32, color: scheme.error),
-                const SizedBox(height: AppTokens.space12),
-                Text(message, textAlign: TextAlign.center),
-              ],
+        return ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppTokens.space24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.error_outline, size: 32, color: scheme.error),
+                      const SizedBox(height: AppTokens.space12),
+                      Text(message, textAlign: TextAlign.center),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         );
       },
     );

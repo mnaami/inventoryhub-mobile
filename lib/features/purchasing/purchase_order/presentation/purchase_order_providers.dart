@@ -124,17 +124,41 @@ class PurchaseOrderListCriteria {
         supplierId: clearSupplierId ? null : (supplierId ?? this.supplierId),
       );
 
+  /// Local calendar-based lower bound for the selected preset, or null for
+  /// "all". Matches the convention used by `home_providers.dart` and
+  /// `SwipeableStatisticsSection._getDateRangeForPage` (Weekly/Monthly
+  /// cases) so a tap-through from a dashboard stat card always lands on the
+  /// same set of orders it just summarized.
   DateTime? get from {
-    final now = DateTime.now().toUtc();
+    final now = DateTime.now();
     switch (datePreset) {
       case DatePreset.all:
         return null;
       case DatePreset.today:
-        return DateTime.utc(now.year, now.month, now.day);
+        return DateTime(now.year, now.month, now.day);
       case DatePreset.week:
-        return now.subtract(const Duration(days: 7));
+        // Monday of the current week (week-to-date, not full Mon-Sun).
+        return DateTime(now.year, now.month, now.day - (now.weekday - 1));
       case DatePreset.month:
-        return now.subtract(const Duration(days: 30));
+        return DateTime(now.year, now.month, 1);
+    }
+  }
+
+  /// Local calendar-based EXCLUSIVE upper bound for the selected preset, or
+  /// null for "all". Unlike `from`, this is already an exclusive instant
+  /// (the start of the day after the window ends) — callers must not treat
+  /// it as an inclusive calendar day.
+  DateTime? get to {
+    final now = DateTime.now();
+    final tomorrowStart = DateTime(now.year, now.month, now.day + 1);
+    switch (datePreset) {
+      case DatePreset.all:
+        return null;
+      case DatePreset.today:
+      case DatePreset.week:
+        return tomorrowStart;
+      case DatePreset.month:
+        return DateTime(now.year, now.month + 1, 1);
     }
   }
 
@@ -188,6 +212,7 @@ class PurchaseOrderListNotifier extends PagedListNotifier<PurchaseOrder> {
           paymentStatus: c.paymentStatus,
           receiptStatus: c.receiptStatus,
           from: c.from,
+          to: c.to,
           supplierId: c.supplierId,
         );
   }

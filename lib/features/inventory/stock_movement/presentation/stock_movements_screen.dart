@@ -18,76 +18,91 @@ class StockMovementsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.stockMovementsTitle)),
-      body: AsyncValueView<List<StockMovement>>(
-        value: ledger,
-        data: (list) => list.isEmpty
-            ? EmptyState(
-                icon: Icons.swap_vert,
-                title: l10n.stockMovementEmptyTitle,
-                subtitle: l10n.stockMovementEmptySubtitle,
-              )
-            : ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppTokens.space16,
-                  vertical: AppTokens.space12,
-                ),
-                itemCount: list.length,
-                itemBuilder: (_, i) {
-                  final m = list[i];
-                  final positive = m.quantity >= 0;
-                  final color = positive ? AppTokens.inFg : AppTokens.outFg;
-                  final icon =
-                      positive ? Icons.arrow_downward : Icons.arrow_upward;
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: AppTokens.space8),
-                    child: AppCard(
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: positive ? AppTokens.inBg : AppTokens.outBg,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(icon, color: color, size: 18),
-                          ),
-                          const SizedBox(width: AppTokens.space12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${m.type.name} · ${m.quantity}',
-                                  style: theme.textTheme.bodyMedium
-                                      ?.copyWith(fontWeight: FontWeight.w600),
-                                ),
-                                if (m.notes != null) ...[
-                                  const SizedBox(height: AppTokens.space2),
-                                  Text(
-                                    m.notes!,
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: AppTokens.space8),
-                          Text(
-                            '${m.createdAt.toLocal()}'.split('.').first,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(stockLedgerProvider);
+          await ref.read(stockLedgerProvider.future);
+        },
+        child: AsyncValueView<List<StockMovement>>(
+          value: ledger,
+          data: (list) => list.isEmpty
+              ? ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: EmptyState(
+                        icon: Icons.swap_vert,
+                        title: l10n.stockMovementEmptyTitle,
+                        subtitle: l10n.stockMovementEmptySubtitle,
                       ),
                     ),
-                  );
-                },
-              ),
+                  ],
+                )
+              : ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppTokens.space16,
+                    vertical: AppTokens.space12,
+                  ),
+                  itemCount: list.length,
+                  itemBuilder: (_, i) {
+                    final m = list[i];
+                    final positive = m.quantity >= 0;
+                    final color = positive ? AppTokens.inFg : AppTokens.outFg;
+                    final icon =
+                        positive ? Icons.arrow_downward : Icons.arrow_upward;
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: AppTokens.space8),
+                      child: AppCard(
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                color: positive ? AppTokens.inBg : AppTokens.outBg,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(icon, color: color, size: 18),
+                            ),
+                            const SizedBox(width: AppTokens.space12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${m.type.name} · ${m.quantity}',
+                                    style: theme.textTheme.bodyMedium
+                                        ?.copyWith(fontWeight: FontWeight.w600),
+                                  ),
+                                  if (m.notes != null) ...[
+                                    const SizedBox(height: AppTokens.space2),
+                                    Text(
+                                      m.notes!,
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: AppTokens.space8),
+                            Text(
+                              '${m.createdAt.toLocal()}'.split('.').first,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
       ),
     );
   }

@@ -188,6 +188,86 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navSettings => 'الإعدادات';
 
   @override
+  String get navDashboard => 'الرئيسية';
+
+  @override
+  String get homeDashboardTitle => 'لوحة المعلومات';
+
+  @override
+  String get homeSalesToday => 'مبيعات اليوم';
+
+  @override
+  String get homeSalesThisWeek => 'مبيعات هذا الأسبوع';
+
+  @override
+  String get homeSalesThisMonth => 'مبيعات هذا الشهر';
+
+  @override
+  String get homeStatOrders => 'الطلبات';
+
+  @override
+  String get homeStatRevenue => 'الإيرادات';
+
+  @override
+  String get homeSalesTrendToday => 'اتجاه المبيعات — اليوم';
+
+  @override
+  String get homeSalesTrend7d => 'اتجاه المبيعات — 7 أيام';
+
+  @override
+  String get homeSalesTrend30d => 'اتجاه المبيعات — 30 يومًا';
+
+  @override
+  String get homeSalesTrendEmpty => 'لا توجد مبيعات في هذه الفترة بعد';
+
+  @override
+  String get homeMoneyHeading => 'الأموال الواردة والصادرة';
+
+  @override
+  String get homeReceivables => 'مستحقات لك من العملاء';
+
+  @override
+  String get homePayables => 'مستحقات عليك للموردين';
+
+  @override
+  String get homeStockHeading => 'لمحة عن المخزون';
+
+  @override
+  String get homeStockValue => 'إجمالي قيمة المخزون';
+
+  @override
+  String get homeLowStock => 'منتجات منخفضة المخزون';
+
+  @override
+  String get homeOutOfStock => 'منتجات نفدت من المخزون';
+
+  @override
+  String get homeOpenWorkHeading => 'الأعمال المفتوحة';
+
+  @override
+  String get homeOpenSaleOrders => 'طلبات بيع مفتوحة';
+
+  @override
+  String get homeUnshipped => 'بانتظار الشحن';
+
+  @override
+  String get homeOpenPurchaseOrders => 'طلبات شراء مفتوحة';
+
+  @override
+  String get homeUnreceived => 'بانتظار الاستلام';
+
+  @override
+  String get homeInProduction => 'قيد الإنتاج';
+
+  @override
+  String homeErrorLoading(String error) {
+    return 'خطأ في تحميل لوحة المعلومات: $error';
+  }
+
+  @override
+  String get homeRetry => 'إعادة المحاولة';
+
+  @override
   String get categoryEditTitle => 'تعديل الفئة';
 
   @override

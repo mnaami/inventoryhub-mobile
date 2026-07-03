@@ -10,6 +10,7 @@ import '../../inventory/category/presentation/category_providers.dart';
 import '../../inventory/product/presentation/product_providers.dart';
 import '../../inventory/stock_movement/presentation/stock_providers.dart';
 import '../../inventory/unit/presentation/unit_providers.dart';
+import '../../home/presentation/home_providers.dart';
 import '../../purchasing/purchase_order/presentation/purchase_order_providers.dart';
 import '../../purchasing/supplier/presentation/supplier_providers.dart';
 import '../../sales/customer/presentation/customer_providers.dart';
@@ -63,6 +64,7 @@ class _SampleDataSectionState extends ConsumerState<SampleDataSection> {
   }
 
   void _refreshDataViews() {
+    ref.invalidate(homeDashboardProvider);
     ref.invalidate(productListProvider);
     ref.invalidate(productProvider);
     ref.invalidate(lowStockProductsProvider);

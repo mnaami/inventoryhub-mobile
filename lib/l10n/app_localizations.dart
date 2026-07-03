@@ -446,6 +446,162 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get navSettings;
 
+  /// No description provided for @navDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get navDashboard;
+
+  /// No description provided for @homeDashboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get homeDashboardTitle;
+
+  /// No description provided for @homeSalesToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Sales'**
+  String get homeSalesToday;
+
+  /// No description provided for @homeSalesThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week\'s Sales'**
+  String get homeSalesThisWeek;
+
+  /// No description provided for @homeSalesThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month\'s Sales'**
+  String get homeSalesThisMonth;
+
+  /// No description provided for @homeStatOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get homeStatOrders;
+
+  /// No description provided for @homeStatRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue'**
+  String get homeStatRevenue;
+
+  /// No description provided for @homeSalesTrendToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales Trend — Today'**
+  String get homeSalesTrendToday;
+
+  /// No description provided for @homeSalesTrend7d.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales Trend — 7 Days'**
+  String get homeSalesTrend7d;
+
+  /// No description provided for @homeSalesTrend30d.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales Trend — 30 Days'**
+  String get homeSalesTrend30d;
+
+  /// No description provided for @homeSalesTrendEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No sales in this period yet'**
+  String get homeSalesTrendEmpty;
+
+  /// No description provided for @homeMoneyHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Money In & Out'**
+  String get homeMoneyHeading;
+
+  /// No description provided for @homeReceivables.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers Owe You'**
+  String get homeReceivables;
+
+  /// No description provided for @homePayables.
+  ///
+  /// In en, this message translates to:
+  /// **'You Owe Suppliers'**
+  String get homePayables;
+
+  /// No description provided for @homeStockHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Snapshot'**
+  String get homeStockHeading;
+
+  /// No description provided for @homeStockValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Stock Value'**
+  String get homeStockValue;
+
+  /// No description provided for @homeLowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock Items'**
+  String get homeLowStock;
+
+  /// No description provided for @homeOutOfStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock Items'**
+  String get homeOutOfStock;
+
+  /// No description provided for @homeOpenWorkHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Work'**
+  String get homeOpenWorkHeading;
+
+  /// No description provided for @homeOpenSaleOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Sale Orders'**
+  String get homeOpenSaleOrders;
+
+  /// No description provided for @homeUnshipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting Shipment'**
+  String get homeUnshipped;
+
+  /// No description provided for @homeOpenPurchaseOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Purchase Orders'**
+  String get homeOpenPurchaseOrders;
+
+  /// No description provided for @homeUnreceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting Receipt'**
+  String get homeUnreceived;
+
+  /// No description provided for @homeInProduction.
+  ///
+  /// In en, this message translates to:
+  /// **'In Production'**
+  String get homeInProduction;
+
+  /// No description provided for @homeErrorLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading dashboard: {error}'**
+  String homeErrorLoading(String error);
+
+  /// No description provided for @homeRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get homeRetry;
+
   /// No description provided for @categoryEditTitle.
   ///
   /// In en, this message translates to:

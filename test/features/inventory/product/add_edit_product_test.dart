@@ -19,7 +19,7 @@ void main() {
     ]);
     addTearDown(container.dispose);
 
-    // Use a tall viewport so the FilledButton is visible in the scrollable form.
+    // The save button is now in the AppBar actions.
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -34,7 +34,7 @@ void main() {
     expect(find.text('Piece'), findsOneWidget);
 
     // Save with empty name → validation error.
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
     expect(find.text('Name is required'), findsOneWidget);
     await db.close();

@@ -73,6 +73,39 @@
   "navSuppliers": "Suppliers",
   "navCustomers": "Customers",
   "navSettings": "Settings",
+  "navDashboard": "Dashboard",
+  "homeDashboardTitle": "Dashboard",
+  "homeSalesToday": "Today's Sales",
+  "homeSalesThisWeek": "This Week's Sales",
+  "homeSalesThisMonth": "This Month's Sales",
+  "homeStatOrders": "Orders",
+  "homeStatRevenue": "Revenue",
+  "homeSalesTrendToday": "Sales Trend — Today",
+  "homeSalesTrend7d": "Sales Trend — 7 Days",
+  "homeSalesTrend30d": "Sales Trend — 30 Days",
+  "homeSalesTrendEmpty": "No sales in this period yet",
+  "homeMoneyHeading": "Money In & Out",
+  "homeReceivables": "Customers Owe You",
+  "homePayables": "You Owe Suppliers",
+  "homeStockHeading": "Stock Snapshot",
+  "homeStockValue": "Total Stock Value",
+  "homeLowStock": "Low Stock Items",
+  "homeOutOfStock": "Out of Stock Items",
+  "homeOpenWorkHeading": "Open Work",
+  "homeOpenSaleOrders": "Open Sale Orders",
+  "homeUnshipped": "Awaiting Shipment",
+  "homeOpenPurchaseOrders": "Open Purchase Orders",
+  "homeUnreceived": "Awaiting Receipt",
+  "homeInProduction": "In Production",
+  "homeErrorLoading": "Error loading dashboard: {error}",
+  "@homeErrorLoading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "homeRetry": "Retry",
 
   "categoryEditTitle": "Edit category",
   "categoryNewTitle": "New category",

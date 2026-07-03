@@ -33,41 +33,54 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
         onPressed: () => _createOrder(context, ref),
         child: const Icon(Icons.add, size: 28),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        children: [
-          // Quick Actions
-          _buildQuickActions(context, ref),
-          const SizedBox(height: AppTokens.space24),
-
-          // Period Stats Section
-          const PurchaseOrderSwipeableStatisticsSection(),
-          const SizedBox(height: AppTokens.space24),
-
-          // Outstanding payables
-          kpisAsync.when(
-            data: (k) => _buildOutstandingCard(context, ref, k.outstanding),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const SizedBox(),
-          ),
-          const SizedBox(height: AppTokens.space24),
-
-          // Payment Status distribution
-          allOrdersAsync.when(
-            data: (orders) => _buildPaymentStatusDistribution(context, ref, orders, l10n),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, st) => Text('Error loading payment status distribution: $e'),
-          ),
-          const SizedBox(height: AppTokens.space24),
-
-          // Receipt Status distribution
-          allOrdersAsync.when(
-            data: (orders) => _buildReceiptStatusDistribution(context, ref, orders, l10n),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, st) => Text('Error loading receipt status distribution: $e'),
-          ),
-          const SizedBox(height: AppTokens.space16),
-        ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(purchaseDashboardProvider);
+          ref.invalidate(allPurchaseOrdersProvider);
+          ref.invalidate(purchaseOrderCountProvider);
+          ref.invalidate(purchaseOrderAmountProvider);
+          await Future.wait([
+            ref.read(purchaseDashboardProvider.future),
+            ref.read(allPurchaseOrdersProvider.future),
+          ]);
+        },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          children: [
+            // Quick Actions
+            _buildQuickActions(context, ref),
+            const SizedBox(height: AppTokens.space24),
+  
+            // Period Stats Section
+            const PurchaseOrderSwipeableStatisticsSection(),
+            const SizedBox(height: AppTokens.space24),
+  
+            // Outstanding payables
+            kpisAsync.when(
+              data: (k) => _buildOutstandingCard(context, ref, k.outstanding),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (_, __) => const SizedBox(),
+            ),
+            const SizedBox(height: AppTokens.space24),
+  
+            // Payment Status distribution
+            allOrdersAsync.when(
+              data: (orders) => _buildPaymentStatusDistribution(context, ref, orders, l10n),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, st) => Text('Error loading payment status distribution: $e'),
+            ),
+            const SizedBox(height: AppTokens.space24),
+  
+            // Receipt Status distribution
+            allOrdersAsync.when(
+              data: (orders) => _buildReceiptStatusDistribution(context, ref, orders, l10n),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, st) => Text('Error loading receipt status distribution: $e'),
+            ),
+            const SizedBox(height: AppTokens.space16),
+          ],
+        ),
       ),
     );
   }

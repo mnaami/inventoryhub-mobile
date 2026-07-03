@@ -14,6 +14,8 @@ import '../features/auth/presentation/login_screen.dart';
 import '../features/onboarding/presentation/onboarding_controller.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/onboarding/presentation/currency_select_screen.dart';
+import '../features/home/presentation/home_dashboard_screen.dart';
+import '../features/home/presentation/home_providers.dart';
 import 'currency/currency_controller.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -55,19 +57,19 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-class MainScaffold extends StatefulWidget {
+class MainScaffold extends ConsumerStatefulWidget {
   const MainScaffold({super.key});
   @override
-  State<MainScaffold> createState() => _MainScaffoldState();
+  ConsumerState<MainScaffold> createState() => _MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class _MainScaffoldState extends ConsumerState<MainScaffold> {
   int _index = 0;
 
   static const _tabs = [
+    HomeDashboardScreen(),
     ProductDashboardScreen(),
     SaleOrderDashboardScreen(),
-    PurchaseOrderDashboardScreen(),
   ];
 
   void _push(Widget screen) {
@@ -157,6 +159,15 @@ class _MainScaffoldState extends State<MainScaffold> {
               ),
               const SizedBox(height: 8),
               _sheetTile(
+                icon: Icons.shopping_cart_outlined,
+                title: l10n.navPurchasing,
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _push(const PurchaseOrderDashboardScreen());
+                },
+              ),
+              const Divider(height: 1, indent: 20, endIndent: 20),
+              _sheetTile(
                 icon: Icons.swap_vert_rounded,
                 title: l10n.navStock,
                 onTap: () {
@@ -201,19 +212,22 @@ class _MainScaffoldState extends State<MainScaffold> {
           if (i == 3) {
             _openMore();
           } else {
+            if (i == 0 && _index != 0) {
+              ref.invalidate(homeDashboardProvider);
+            }
             setState(() => _index = i);
           }
         },
         destinations: [
+          NavigationDestination(
+              icon: const Icon(Icons.space_dashboard_outlined),
+              label: l10n.navDashboard),
           NavigationDestination(
               icon: const Icon(Icons.inventory_2_outlined),
               label: l10n.navProducts),
           NavigationDestination(
               icon: const Icon(Icons.point_of_sale_outlined),
               label: l10n.navSales),
-          NavigationDestination(
-              icon: const Icon(Icons.shopping_cart_outlined),
-              label: l10n.navPurchasing),
           NavigationDestination(
               icon: const Icon(Icons.more_horiz), label: l10n.navMore),
         ],

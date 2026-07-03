@@ -22,44 +22,53 @@ class ProductDashboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.productDashboardTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            onPressed: () => _refresh(ref),
-          ),
-        ],
       ),
-      body: statsAsync.when(
-        data: (stats) => ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          children: [
-            // Swipeable statistics
-            const ProductSwipeableStatisticsSection(),
-            const SizedBox(height: AppTokens.space24),
-
-            // Alert banner card
-            _buildStockAlertBanner(context, ref, stats),
-            const SizedBox(height: AppTokens.space24),
-
-            // Stock Status Distribution
-            _buildStockStatusDistribution(context, ref, stats),
-            const SizedBox(height: AppTokens.space24),
-
-            // Quick Actions to manage inventory
-            _buildQuickActions(context),
-          ],
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(productDashboardProvider);
+          await ref.read(productDashboardProvider.future);
+        },
+        child: statsAsync.when(
+          data: (stats) => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             children: [
-              Text(l10n.productDashboardErrorLoading('$e'),
-                  style: const TextStyle(color: Colors.red)),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => _refresh(ref),
-                child: Text(l10n.productDashboardRetry),
+              // Swipeable statistics
+              const ProductSwipeableStatisticsSection(),
+              const SizedBox(height: AppTokens.space24),
+  
+              // Alert banner card
+              _buildStockAlertBanner(context, ref, stats),
+              const SizedBox(height: AppTokens.space24),
+  
+              // Stock Status Distribution
+              _buildStockStatusDistribution(context, ref, stats),
+              const SizedBox(height: AppTokens.space24),
+  
+              // Quick Actions to manage inventory
+              _buildQuickActions(context),
+            ],
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, st) => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(l10n.productDashboardErrorLoading('$e'),
+                          style: const TextStyle(color: Colors.red)),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => _refresh(ref),
+                        child: Text(l10n.productDashboardRetry),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

@@ -188,6 +188,86 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSettings => 'Settings';
 
   @override
+  String get navDashboard => 'Dashboard';
+
+  @override
+  String get homeDashboardTitle => 'Dashboard';
+
+  @override
+  String get homeSalesToday => 'Today\'s Sales';
+
+  @override
+  String get homeSalesThisWeek => 'This Week\'s Sales';
+
+  @override
+  String get homeSalesThisMonth => 'This Month\'s Sales';
+
+  @override
+  String get homeStatOrders => 'Orders';
+
+  @override
+  String get homeStatRevenue => 'Revenue';
+
+  @override
+  String get homeSalesTrendToday => 'Sales Trend — Today';
+
+  @override
+  String get homeSalesTrend7d => 'Sales Trend — 7 Days';
+
+  @override
+  String get homeSalesTrend30d => 'Sales Trend — 30 Days';
+
+  @override
+  String get homeSalesTrendEmpty => 'No sales in this period yet';
+
+  @override
+  String get homeMoneyHeading => 'Money In & Out';
+
+  @override
+  String get homeReceivables => 'Customers Owe You';
+
+  @override
+  String get homePayables => 'You Owe Suppliers';
+
+  @override
+  String get homeStockHeading => 'Stock Snapshot';
+
+  @override
+  String get homeStockValue => 'Total Stock Value';
+
+  @override
+  String get homeLowStock => 'Low Stock Items';
+
+  @override
+  String get homeOutOfStock => 'Out of Stock Items';
+
+  @override
+  String get homeOpenWorkHeading => 'Open Work';
+
+  @override
+  String get homeOpenSaleOrders => 'Open Sale Orders';
+
+  @override
+  String get homeUnshipped => 'Awaiting Shipment';
+
+  @override
+  String get homeOpenPurchaseOrders => 'Open Purchase Orders';
+
+  @override
+  String get homeUnreceived => 'Awaiting Receipt';
+
+  @override
+  String get homeInProduction => 'In Production';
+
+  @override
+  String homeErrorLoading(String error) {
+    return 'Error loading dashboard: $error';
+  }
+
+  @override
+  String get homeRetry => 'Retry';
+
+  @override
   String get categoryEditTitle => 'Edit category';
 
   @override
