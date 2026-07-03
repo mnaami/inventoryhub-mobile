@@ -6,6 +6,7 @@ import 'package:inventoryhub_mobile/app/theme/theme_controller.dart';
 import 'package:inventoryhub_mobile/features/auth/domain/auth_state.dart';
 import 'package:inventoryhub_mobile/features/auth/presentation/auth_controller.dart';
 import 'package:inventoryhub_mobile/features/settings/presentation/settings_screen.dart';
+import '../../helpers/l10n.dart';
 
 Future<ProviderContainer> _pump(WidgetTester tester) async {
   SharedPreferences.setMockInitialValues({'auth.loggedIn': true});
@@ -19,7 +20,7 @@ Future<ProviderContainer> _pump(WidgetTester tester) async {
   addTearDown(tester.view.reset);
   await tester.pumpWidget(UncontrolledProviderScope(
     container: container,
-    child: const MaterialApp(home: SettingsScreen()),
+    child: localizedApp(home: const SettingsScreen()),
   ));
   return container;
 }

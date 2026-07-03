@@ -1,0 +1,32 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "InventoryHub",
+  "@appTitle": {
+    "description": "Application name, shown as the app title."
+  },
+
+  "settingsTitle": "Settings",
+  "sectionAppearance": "Appearance",
+  "sectionLanguage": "Language",
+  "sectionCatalog": "Catalog",
+  "sectionAbout": "About",
+  "sectionAccount": "Account",
+
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+
+  "languageSystem": "System default",
+  "languageEnglish": "English",
+  "languageArabic": "العربية",
+
+  "catalogCategories": "Categories",
+  "catalogUnits": "Units",
+
+  "logout": "Log out",
+  "logoutConfirmTitle": "Log out?",
+  "logoutConfirmMessage": "You will need to sign in again to continue.",
+
+  "commonCancel": "Cancel"
+}

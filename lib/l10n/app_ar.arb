@@ -1,0 +1,29 @@
+{
+  "@@locale": "ar",
+
+  "appTitle": "InventoryHub",
+
+  "settingsTitle": "الإعدادات",
+  "sectionAppearance": "المظهر",
+  "sectionLanguage": "اللغة",
+  "sectionCatalog": "الكتالوج",
+  "sectionAbout": "حول التطبيق",
+  "sectionAccount": "الحساب",
+
+  "themeSystem": "النظام",
+  "themeLight": "فاتح",
+  "themeDark": "داكن",
+
+  "languageSystem": "لغة النظام",
+  "languageEnglish": "English",
+  "languageArabic": "العربية",
+
+  "catalogCategories": "الفئات",
+  "catalogUnits": "الوحدات",
+
+  "logout": "تسجيل الخروج",
+  "logoutConfirmTitle": "تسجيل الخروج؟",
+  "logoutConfirmMessage": "ستحتاج إلى تسجيل الدخول مرة أخرى للمتابعة.",
+
+  "commonCancel": "إلغاء"
+}

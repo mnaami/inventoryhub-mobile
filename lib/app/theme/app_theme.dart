@@ -3,22 +3,32 @@ import 'package:google_fonts/google_fonts.dart';
 
 const _seed = Color(0xFF0075FF); // Revolut blue
 
-ThemeData _buildTheme(Brightness brightness) {
+/// Builds the app theme. When [arabic] is true the type ramp uses Cairo
+/// (which covers Arabic glyphs); otherwise Inter. Layout direction (RTL) is
+/// handled by Flutter from the active locale, not here.
+ThemeData buildAppTheme({required Brightness brightness, required bool arabic}) {
   final scheme = ColorScheme.fromSeed(seedColor: _seed, brightness: brightness);
   final isLight = brightness == Brightness.light;
-  
+
   final base = ThemeData(useMaterial3: true, colorScheme: scheme, brightness: brightness);
+
+  final textTheme =
+      arabic ? GoogleFonts.cairoTextTheme(base.textTheme) : GoogleFonts.interTextTheme(base.textTheme);
+  TextStyle titleFont({required double fontSize, required FontWeight fontWeight, required Color color}) =>
+      arabic
+          ? GoogleFonts.cairo(fontSize: fontSize, fontWeight: fontWeight, color: color)
+          : GoogleFonts.inter(fontSize: fontSize, fontWeight: fontWeight, color: color);
 
   return base.copyWith(
     scaffoldBackgroundColor: isLight ? const Color(0xFFF5F6F8) : scheme.surface,
-    textTheme: GoogleFonts.interTextTheme(base.textTheme),
+    textTheme: textTheme,
     appBarTheme: AppBarTheme(
       backgroundColor: isLight ? const Color(0xFFF5F6F8) : scheme.surface,
       foregroundColor: scheme.onSurface,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
-      titleTextStyle: GoogleFonts.inter(
+      titleTextStyle: titleFont(
         fontSize: 20, fontWeight: FontWeight.w700, color: scheme.onSurface),
     ),
     cardTheme: CardThemeData(
@@ -56,7 +66,7 @@ ThemeData _buildTheme(Brightness brightness) {
       shadowColor: Colors.black.withOpacity(0.1),
       indicatorColor: scheme.primary.withOpacity(0.1),
       labelTextStyle: WidgetStatePropertyAll(
-        GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: scheme.onSurface)),
+        titleFont(fontSize: 11, fontWeight: FontWeight.w600, color: scheme.onSurface)),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: scheme.primary,
@@ -81,5 +91,3 @@ ThemeData _buildTheme(Brightness brightness) {
   );
 }
 
-final lightTheme = _buildTheme(Brightness.light);
-final darkTheme = _buildTheme(Brightness.dark);
