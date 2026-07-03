@@ -27,7 +27,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.widgetWithText(TextButton, 'Save'));
     await tester.pumpAndSettle();
     expect(find.text('Supplier name is required.'), findsOneWidget);
     await db.close();

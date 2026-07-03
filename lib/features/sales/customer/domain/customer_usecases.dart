@@ -19,7 +19,21 @@ class CustomerService {
   final String _orgId;
   final Future<int> Function(String customerId)? _liveOrders;
 
+  static const int pageSize = 20;
+
   Future<List<Customer>> list() => _repo.listActive(_orgId);
+
+  Future<List<Customer>> listPaged({
+    String? search,
+    int page = 0,
+  }) =>
+      _repo.listActivePaged(
+        _orgId,
+        search: search,
+        limit: pageSize,
+        offset: page * pageSize,
+      );
+
   Future<List<Customer>> search(String query) =>
       query.trim().isEmpty ? list() : _repo.search(_orgId, query.trim());
   Future<Customer?> get(String id) => _repo.getById(id);

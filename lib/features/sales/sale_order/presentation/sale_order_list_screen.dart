@@ -270,6 +270,23 @@ class _Filters extends ConsumerWidget {
                 },
               ),
             ),
+          if (criteria.customerId != null) ...[
+            Consumer(
+              builder: (context, ref, _) {
+                final customerVal = ref.watch(customerProvider(criteria.customerId!));
+                final name = customerVal.asData?.value?.name ?? 'Loading...';
+                return _FilterPill<String?>(
+                  label: 'Customer',
+                  isActive: true,
+                  displayValue: name,
+                  onChanged: (_) {},
+                  onClear: () => n.setCustomerId(null),
+                  items: const [],
+                );
+              },
+            ),
+            const SizedBox(width: 8),
+          ],
           _FilterPill<OrderStatus?>(
             label: l10n.soFilterStatusLabel,
             isActive: criteria.status != null,

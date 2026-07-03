@@ -17,6 +17,26 @@ class CustomerDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  Future<List<CustomerRow>> paged(
+    String orgId, {
+    required int limit,
+    required int offset,
+    String? search,
+  }) {
+    final q = select(customers)
+      ..where((c) {
+        Expression<bool> expr = c.organizationId.equals(orgId) & c.isActive.equals(true);
+        if (search != null && search.trim().isNotEmpty) {
+          final like = '%${search.trim()}%';
+          expr = expr & (c.name.like(like) | c.email.like(like));
+        }
+        return expr;
+      })
+      ..orderBy([(c) => OrderingTerm(expression: c.name)])
+      ..limit(limit, offset: offset);
+    return q.get();
+  }
+
   Future<List<CustomerRow>> search(String orgId, String query) {
     final like = '%$query%';
     return (select(customers)

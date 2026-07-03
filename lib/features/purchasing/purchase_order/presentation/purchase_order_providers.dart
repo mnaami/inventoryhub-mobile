@@ -91,6 +91,7 @@ class PurchaseOrderListCriteria {
     this.paymentStatus,
     this.receiptStatus,
     this.datePreset = DatePreset.all,
+    this.supplierId,
   });
 
   final String search;
@@ -98,6 +99,7 @@ class PurchaseOrderListCriteria {
   final PaymentStatus? paymentStatus;
   final ReceiptStatus? receiptStatus;
   final DatePreset datePreset;
+  final String? supplierId;
 
   PurchaseOrderListCriteria copyWith({
     String? search,
@@ -108,6 +110,8 @@ class PurchaseOrderListCriteria {
     ReceiptStatus? receiptStatus,
     bool clearReceiptStatus = false,
     DatePreset? datePreset,
+    String? supplierId,
+    bool clearSupplierId = false,
   }) =>
       PurchaseOrderListCriteria(
         search: search ?? this.search,
@@ -117,6 +121,7 @@ class PurchaseOrderListCriteria {
         receiptStatus:
             clearReceiptStatus ? null : (receiptStatus ?? this.receiptStatus),
         datePreset: datePreset ?? this.datePreset,
+        supplierId: clearSupplierId ? null : (supplierId ?? this.supplierId),
       );
 
   DateTime? get from {
@@ -138,7 +143,8 @@ class PurchaseOrderListCriteria {
       status != null ||
       paymentStatus != null ||
       receiptStatus != null ||
-      datePreset != DatePreset.all;
+      datePreset != DatePreset.all ||
+      supplierId != null;
 }
 
 class PurchaseOrderCriteria extends Notifier<PurchaseOrderListCriteria> {
@@ -153,6 +159,8 @@ class PurchaseOrderCriteria extends Notifier<PurchaseOrderListCriteria> {
   void setReceiptStatus(ReceiptStatus? v) =>
       state = state.copyWith(receiptStatus: v, clearReceiptStatus: v == null);
   void setDatePreset(DatePreset v) => state = state.copyWith(datePreset: v);
+  void setSupplierId(String? v) =>
+      state = state.copyWith(supplierId: v, clearSupplierId: v == null);
   void reset() => state = const PurchaseOrderListCriteria();
 }
 
@@ -180,6 +188,7 @@ class PurchaseOrderListNotifier extends PagedListNotifier<PurchaseOrder> {
           paymentStatus: c.paymentStatus,
           receiptStatus: c.receiptStatus,
           from: c.from,
+          supplierId: c.supplierId,
         );
   }
 }

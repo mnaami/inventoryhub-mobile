@@ -12,6 +12,22 @@ class SupplierRepositoryImpl implements SupplierRepository {
       (await _dao.listActive(organizationId)).map(toSupplier).toList();
 
   @override
+  Future<List<Supplier>> listSuppliers(
+    String organizationId, {
+    String? search,
+    required int limit,
+    required int offset,
+  }) async =>
+      (await _dao.paged(
+        organizationId,
+        search: search,
+        limit: limit,
+        offset: offset,
+      ))
+          .map(toSupplier)
+          .toList();
+
+  @override
   Future<List<Supplier>> search(String organizationId, String query) async =>
       (await _dao.search(organizationId, query)).map(toSupplier).toList();
 

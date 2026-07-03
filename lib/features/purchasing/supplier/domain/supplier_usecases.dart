@@ -19,9 +19,23 @@ class SupplierService {
   final String _orgId;
   final Future<int> Function(String supplierId)? _livePos;
 
-  Future<List<Supplier>> list() => _repo.listActive(_orgId);
+  static const int pageSize = 20;
+
+  Future<List<Supplier>> listAll() => _repo.listActive(_orgId);
+
+  Future<List<Supplier>> list({
+    String? search,
+    int page = 0,
+  }) =>
+      _repo.listSuppliers(
+        _orgId,
+        search: search,
+        limit: pageSize,
+        offset: page * pageSize,
+      );
+
   Future<List<Supplier>> search(String query) =>
-      query.trim().isEmpty ? list() : _repo.search(_orgId, query.trim());
+      query.trim().isEmpty ? listAll() : _repo.search(_orgId, query.trim());
   Future<Supplier?> get(String id) => _repo.getById(id);
 
   Future<Supplier> create({

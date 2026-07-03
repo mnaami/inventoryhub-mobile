@@ -10,7 +10,9 @@ import '../../../../l10n/app_localizations.dart';
 import '../domain/customer.dart';
 import 'add_edit_customer_screen.dart';
 import 'customer_providers.dart';
-
+import '../../sale_order/presentation/sale_order_list_screen.dart';
+import '../../sale_order/presentation/sale_order_detail_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 class CustomerDetailScreen extends ConsumerWidget {
   const CustomerDetailScreen({super.key, required this.customerId});
   final String customerId;
@@ -44,8 +46,29 @@ class CustomerDetailScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
+    final customerObj = customer.asData?.value;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Customer')),
+      appBar: AppBar(
+        title: const Text('Customer'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: customerObj == null
+                ? null
+                : () async {
+                    final saved = await Navigator.of(context).push<bool>(
+                      MaterialPageRoute(
+                        builder: (_) => AddEditCustomerScreen(existing: customerObj),
+                      ),
+                    );
+                    if (saved == true) {
+                      ref.invalidate(customerProvider(customerId));
+                    }
+                  },
+          ),
+        ],
+      ),
       body: AsyncValueView<Customer?>(
         value: customer,
         data: (c) {
@@ -131,15 +154,38 @@ class CustomerDetailScreen extends ConsumerWidget {
                       const Divider(height: 1),
                     ],
                     if (c.phones.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.phone_outlined, color: scheme.primary),
-                        title: Text(
-                          c.phones.join(', '),
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                      for (final phone in c.phones) ...[
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(Icons.phone_outlined, color: scheme.primary),
+                          title: Text(
+                            phone,
+                            style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                          ),
+                          trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
+                          onTap: () async {
+                            final Uri uri = Uri(scheme: 'tel', path: phone);
+                            try {
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              } else {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Could not launch phone call to $phone')),
+                                  );
+                                }
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error launching call: $e')),
+                                );
+                              }
+                            }
+                          },
                         ),
-                      ),
-                      const Divider(height: 1),
+                        const Divider(height: 1),
+                      ],
                     ],
                     if (c.address != null && c.address!.isNotEmpty) ...[
                       ListTile(
@@ -177,12 +223,36 @@ class CustomerDetailScreen extends ConsumerWidget {
               const SizedBox(height: AppTokens.space24),
 
               // Section Header
-              Text(
-                'Orders',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: scheme.onSurfaceVariant,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Orders',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Consumer(builder: (context, ref, _) {
+                    final orders = ref.watch(customerOrdersProvider(customerId));
+                    return orders.maybeWhen(
+                      data: (list) {
+                        if (list.isEmpty) return const SizedBox.shrink();
+                        return TextButton(
+                          onPressed: () {
+                            ref.read(saleOrderCriteriaProvider.notifier).reset();
+                            ref.read(saleOrderCriteriaProvider.notifier).setCustomerId(customerId);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const SaleOrderListScreen()),
+                            );
+                          },
+                          child: const Text('View all'),
+                        );
+                      },
+                      orElse: () => const SizedBox.shrink(),
+                    );
+                  }),
+                ],
               ),
               const SizedBox(height: AppTokens.space8),
 
@@ -199,14 +269,15 @@ class CustomerDetailScreen extends ConsumerWidget {
                         ),
                       );
                     }
+                    final displayList = list.take(5).toList();
                     return AppCard(
                       padding: EdgeInsets.zero,
                       child: Column(
                         children: [
-                          for (int i = 0; i < list.length; i++) ...[
+                          for (int i = 0; i < displayList.length; i++) ...[
                             ListTile(
                               title: Text(
-                                list[i].soNumber,
+                                displayList[i].soNumber,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: scheme.onSurface,
@@ -216,19 +287,26 @@ class CustomerDetailScreen extends ConsumerWidget {
                                 padding: const EdgeInsets.only(top: 4),
                                 child: Row(
                                   children: [
-                                    _buildStatusBadge(context, list[i].status),
+                                    _buildStatusBadge(context, displayList[i].status),
                                   ],
                                 ),
                               ),
                               trailing: Text(
-                                money(list[i].totalAmount),
+                                money(displayList[i].totalAmount),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: scheme.onSurface,
                                 ),
                               ),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => SaleOrderDetailScreen(orderId: displayList[i].id),
+                                  ),
+                                );
+                              },
                             ),
-                            if (i < list.length - 1) const Divider(height: 1),
+                            if (i < displayList.length - 1) const Divider(height: 1),
                           ],
                         ],
                       ),
@@ -237,18 +315,6 @@ class CustomerDetailScreen extends ConsumerWidget {
                   orElse: () => const SizedBox.shrink(),
                 );
               }),
-              const SizedBox(height: AppTokens.space24),
-
-              // Edit Button
-              OutlinedButton.icon(
-                icon: const Icon(Icons.edit_outlined),
-                label: const Text('Edit'),
-                onPressed: () async {
-                  await Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => AddEditCustomerScreen(existing: c)));
-                  ref.invalidate(customerProvider(customerId));
-                },
-              ),
             ],
           );
         },

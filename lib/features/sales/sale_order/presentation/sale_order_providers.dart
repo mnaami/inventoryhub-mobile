@@ -90,6 +90,7 @@ class SaleOrderListCriteria {
     this.paymentStatus,
     this.shippingStatus,
     this.datePreset = DatePreset.all,
+    this.customerId,
   });
 
   final String search;
@@ -97,6 +98,7 @@ class SaleOrderListCriteria {
   final PaymentStatus? paymentStatus;
   final ShippingStatus? shippingStatus;
   final DatePreset datePreset;
+  final String? customerId;
 
   SaleOrderListCriteria copyWith({
     String? search,
@@ -107,6 +109,8 @@ class SaleOrderListCriteria {
     ShippingStatus? shippingStatus,
     bool clearShippingStatus = false,
     DatePreset? datePreset,
+    String? customerId,
+    bool clearCustomerId = false,
   }) =>
       SaleOrderListCriteria(
         search: search ?? this.search,
@@ -116,6 +120,7 @@ class SaleOrderListCriteria {
         shippingStatus:
             clearShippingStatus ? null : (shippingStatus ?? this.shippingStatus),
         datePreset: datePreset ?? this.datePreset,
+        customerId: clearCustomerId ? null : (customerId ?? this.customerId),
       );
 
   /// Inclusive lower bound (UTC) for the selected preset, or null for "all".
@@ -144,7 +149,8 @@ class SaleOrderListCriteria {
       status != null ||
       paymentStatus != null ||
       shippingStatus != null ||
-      datePreset != DatePreset.all;
+      datePreset != DatePreset.all ||
+      customerId != null;
 }
 
 class SaleOrderCriteria extends Notifier<SaleOrderListCriteria> {
@@ -159,6 +165,8 @@ class SaleOrderCriteria extends Notifier<SaleOrderListCriteria> {
   void setShippingStatus(ShippingStatus? v) =>
       state = state.copyWith(shippingStatus: v, clearShippingStatus: v == null);
   void setDatePreset(DatePreset v) => state = state.copyWith(datePreset: v);
+  void setCustomerId(String? v) =>
+      state = state.copyWith(customerId: v, clearCustomerId: v == null);
   void reset() => state = const SaleOrderListCriteria();
 }
 
@@ -187,6 +195,7 @@ class SaleOrderListNotifier extends PagedListNotifier<SaleOrder> {
           shippingStatus: c.shippingStatus,
           from: c.from,
           to: c.to,
+          customerId: c.customerId,
         );
   }
 }

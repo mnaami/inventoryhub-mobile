@@ -22,8 +22,7 @@ class _AddEditCustomerScreenState extends ConsumerState<AddEditCustomerScreen> {
       TextEditingController(text: widget.existing?.name ?? '');
   late final TextEditingController _email =
       TextEditingController(text: widget.existing?.email ?? '');
-  late final TextEditingController _phone = TextEditingController(
-      text: widget.existing?.phones.join(', ') ?? '');
+  late final List<TextEditingController> _phoneControllers;
   late final TextEditingController _address =
       TextEditingController(text: widget.existing?.address ?? '');
   late final TextEditingController _terms = TextEditingController(
@@ -33,10 +32,28 @@ class _AddEditCustomerScreenState extends ConsumerState<AddEditCustomerScreen> {
   String? _error;
 
   @override
+  void initState() {
+    super.initState();
+    final existingPhones = widget.existing?.phones ?? [];
+    if (existingPhones.isEmpty) {
+      _phoneControllers = [TextEditingController()];
+    } else {
+      _phoneControllers = existingPhones
+          .map((phone) => TextEditingController(text: phone))
+          .toList();
+    }
+  }
+
+  @override
   void dispose() {
-    for (final c in [_name, _email, _phone, _address, _terms, _credit]) {
+    _name.dispose();
+    _email.dispose();
+    for (final c in _phoneControllers) {
       c.dispose();
     }
+    _address.dispose();
+    _terms.dispose();
+    _credit.dispose();
     super.dispose();
   }
 
@@ -55,25 +72,25 @@ class _AddEditCustomerScreenState extends ConsumerState<AddEditCustomerScreen> {
               }
 
               if (phone.isNotEmpty) {
-                final existingPhones = _phone.text
-                    .split(',')
-                    .map((p) => p.trim())
-                    .where((p) => p.isNotEmpty)
-                    .toList();
-
                 final newPhones = phone
                     .split(',')
                     .map((p) => p.trim())
                     .where((p) => p.isNotEmpty)
                     .toList();
 
+                final currentPhones = _phoneControllers.map((c) => c.text.trim()).toList();
+
                 for (final newPhone in newPhones) {
-                  if (!existingPhones.contains(newPhone)) {
-                    existingPhones.add(newPhone);
+                  if (!currentPhones.contains(newPhone)) {
+                    if (_phoneControllers.length == 1 && _phoneControllers[0].text.trim().isEmpty) {
+                      _phoneControllers[0].text = newPhone;
+                      currentPhones[0] = newPhone;
+                    } else {
+                      _phoneControllers.add(TextEditingController(text: newPhone));
+                      currentPhones.add(newPhone);
+                    }
                   }
                 }
-
-                _phone.text = existingPhones.join(', ');
               }
             });
 
@@ -93,9 +110,8 @@ class _AddEditCustomerScreenState extends ConsumerState<AddEditCustomerScreen> {
     );
   }
 
-  List<String> get _phones => _phone.text
-      .split(',')
-      .map((p) => p.trim())
+  List<String> get _phones => _phoneControllers
+      .map((c) => c.text.trim())
       .where((p) => p.isNotEmpty)
       .toList();
 
@@ -146,6 +162,10 @@ class _AddEditCustomerScreenState extends ConsumerState<AddEditCustomerScreen> {
               tooltip: 'Import Contact',
               onPressed: _showContactImportDialog,
             ),
+          TextButton(
+            onPressed: _save,
+            child: const Text('Save'),
+          ),
         ],
       ),
       body: ListView(
@@ -190,11 +210,58 @@ class _AddEditCustomerScreenState extends ConsumerState<AddEditCustomerScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                TextField(
-                  controller: _phone,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    labelText: 'Phones (comma-separated)',
+                Text(
+                  'Phone Numbers',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ...List.generate(_phoneControllers.length, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _phoneControllers[index],
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                              labelText: 'Phone #${index + 1}',
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: Icon(Icons.delete_outline, color: scheme.error),
+                          onPressed: () {
+                            setState(() {
+                              final controller = _phoneControllers.removeAt(index);
+                              controller.dispose();
+                              if (_phoneControllers.isEmpty) {
+                                _phoneControllers.add(TextEditingController());
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                TextButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _phoneControllers.add(TextEditingController());
+                    });
+                  },
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text('Add Phone Number'),
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(0, 36),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -223,13 +290,6 @@ class _AddEditCustomerScreenState extends ConsumerState<AddEditCustomerScreen> {
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: AppTokens.space24),
-
-          // Action Button
-          FilledButton(
-            onPressed: _save,
-            child: const Text('Save'),
           ),
         ],
       ),
