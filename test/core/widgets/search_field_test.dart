@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inventoryhub_mobile/core/widgets/search_field.dart';
+import '../../helpers/l10n.dart';
 
-Widget _wrap(Widget c) => MaterialApp(home: Scaffold(body: c));
+Widget _wrap(Widget c) => localizedApp(home: Scaffold(body: c));
 
 void main() {
   testWidgets('debounces onChanged until typing pauses', (tester) async {

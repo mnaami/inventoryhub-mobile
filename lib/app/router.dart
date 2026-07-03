@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../core/l10n/l10n_ext.dart';
 import '../features/inventory/product/presentation/product_list_screen.dart';
 import '../features/inventory/product/presentation/product_dashboard_screen.dart';
 import '../features/inventory/stock_movement/presentation/stock_movements_screen.dart';
@@ -109,6 +110,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   void _openMore() {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -134,7 +136,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'More Features',
+                    l10n.navMoreFeaturesTitle,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -145,7 +147,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               const SizedBox(height: 8),
               _sheetTile(
                 icon: Icons.swap_vert_rounded,
-                title: 'Stock',
+                title: l10n.navStock,
                 onTap: () {
                   Navigator.pop(ctx);
                   _push(const StockMovementsScreen());
@@ -154,7 +156,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               const Divider(height: 1, indent: 20, endIndent: 20),
               _sheetTile(
                 icon: Icons.precision_manufacturing_outlined,
-                title: 'Production',
+                title: l10n.navProduction,
                 onTap: () {
                   Navigator.pop(ctx);
                   _push(const ProductionHomeScreen());
@@ -163,7 +165,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               const Divider(height: 1, indent: 20, endIndent: 20),
               _sheetTile(
                 icon: Icons.local_shipping_outlined,
-                title: 'Suppliers',
+                title: l10n.navSuppliers,
                 onTap: () {
                   Navigator.pop(ctx);
                   _push(const SupplierListScreen());
@@ -172,7 +174,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               const Divider(height: 1, indent: 20, endIndent: 20),
               _sheetTile(
                 icon: Icons.people_outline_rounded,
-                title: 'Customers',
+                title: l10n.navCustomers,
                 onTap: () {
                   Navigator.pop(ctx);
                   _push(const CustomerListScreen());
@@ -181,7 +183,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               const Divider(height: 1, indent: 20, endIndent: 20),
               _sheetTile(
                 icon: Icons.settings_outlined,
-                title: 'Settings',
+                title: l10n.navSettings,
                 onTap: () {
                   Navigator.pop(ctx);
                   _push(const SettingsScreen());
@@ -197,6 +199,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: IndexedStack(index: _index, children: _tabs),
       bottomNavigationBar: NavigationBar(
@@ -208,14 +211,18 @@ class _MainScaffoldState extends State<MainScaffold> {
             setState(() => _index = i);
           }
         },
-        destinations: const [
+        destinations: [
           NavigationDestination(
-              icon: Icon(Icons.inventory_2_outlined), label: 'Products'),
+              icon: const Icon(Icons.inventory_2_outlined),
+              label: l10n.navProducts),
           NavigationDestination(
-              icon: Icon(Icons.point_of_sale_outlined), label: 'Sales'),
+              icon: const Icon(Icons.point_of_sale_outlined),
+              label: l10n.navSales),
           NavigationDestination(
-              icon: Icon(Icons.shopping_cart_outlined), label: 'Purchasing'),
-          NavigationDestination(icon: Icon(Icons.more_horiz), label: 'More'),
+              icon: const Icon(Icons.shopping_cart_outlined),
+              label: l10n.navPurchasing),
+          NavigationDestination(
+              icon: const Icon(Icons.more_horiz), label: l10n.navMore),
         ],
       ),
     );

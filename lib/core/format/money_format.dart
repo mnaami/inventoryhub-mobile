@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-final _moneyFormat = NumberFormat('#,##0.##');
+final _moneyFormat = NumberFormat('#,##0.##', 'en');
 
 /// Formats a money amount with thousands separators, dropping trailing
 /// zero decimals. Examples: 519156 → '$519,156', 519156.20 → '$519,156.2'.

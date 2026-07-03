@@ -301,6 +301,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get started'**
   String get onboardingGetStarted;
+
+  /// No description provided for @coreStatusLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get coreStatusLow;
+
+  /// No description provided for @coreStatusOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Out'**
+  String get coreStatusOut;
+
+  /// No description provided for @coreSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get coreSearchHint;
+
+  /// No description provided for @coreCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get coreCancel;
+
+  /// No description provided for @coreDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get coreDelete;
+
+  /// No description provided for @coreRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get coreRetry;
+
+  /// No description provided for @coreNothingHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet.'**
+  String get coreNothingHere;
+
+  /// No description provided for @coreSomethingWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong.'**
+  String get coreSomethingWrong;
+
+  /// No description provided for @coreCouldntLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load more. Retry'**
+  String get coreCouldntLoadMore;
+
+  /// No description provided for @navProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get navProducts;
+
+  /// No description provided for @navSales.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales'**
+  String get navSales;
+
+  /// No description provided for @navPurchasing.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchasing'**
+  String get navPurchasing;
+
+  /// No description provided for @navMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get navMore;
+
+  /// No description provided for @navMoreFeaturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'More Features'**
+  String get navMoreFeaturesTitle;
+
+  /// No description provided for @navStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get navStock;
+
+  /// No description provided for @navProduction.
+  ///
+  /// In en, this message translates to:
+  /// **'Production'**
+  String get navProduction;
+
+  /// No description provided for @navSuppliers.
+  ///
+  /// In en, this message translates to:
+  /// **'Suppliers'**
+  String get navSuppliers;
+
+  /// No description provided for @navCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers'**
+  String get navCustomers;
+
+  /// No description provided for @navSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
 }
 
 class _AppLocalizationsDelegate

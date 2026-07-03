@@ -113,4 +113,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingGetStarted => 'Get started';
+
+  @override
+  String get coreStatusLow => 'Low';
+
+  @override
+  String get coreStatusOut => 'Out';
+
+  @override
+  String get coreSearchHint => 'Search';
+
+  @override
+  String get coreCancel => 'Cancel';
+
+  @override
+  String get coreDelete => 'Delete';
+
+  @override
+  String get coreRetry => 'Retry';
+
+  @override
+  String get coreNothingHere => 'Nothing here yet.';
+
+  @override
+  String get coreSomethingWrong => 'Something went wrong.';
+
+  @override
+  String get coreCouldntLoadMore => 'Couldn\'t load more. Retry';
+
+  @override
+  String get navProducts => 'Products';
+
+  @override
+  String get navSales => 'Sales';
+
+  @override
+  String get navPurchasing => 'Purchasing';
+
+  @override
+  String get navMore => 'More';
+
+  @override
+  String get navMoreFeaturesTitle => 'More Features';
+
+  @override
+  String get navStock => 'Stock';
+
+  @override
+  String get navProduction => 'Production';
+
+  @override
+  String get navSuppliers => 'Suppliers';
+
+  @override
+  String get navCustomers => 'Customers';
+
+  @override
+  String get navSettings => 'Settings';
 }

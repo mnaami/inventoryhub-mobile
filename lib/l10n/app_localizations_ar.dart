@@ -113,4 +113,61 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onboardingGetStarted => 'ابدأ الآن';
+
+  @override
+  String get coreStatusLow => 'منخفض';
+
+  @override
+  String get coreStatusOut => 'نفد';
+
+  @override
+  String get coreSearchHint => 'بحث';
+
+  @override
+  String get coreCancel => 'إلغاء';
+
+  @override
+  String get coreDelete => 'حذف';
+
+  @override
+  String get coreRetry => 'إعادة المحاولة';
+
+  @override
+  String get coreNothingHere => 'لا يوجد شيء هنا بعد.';
+
+  @override
+  String get coreSomethingWrong => 'حدث خطأ ما.';
+
+  @override
+  String get coreCouldntLoadMore => 'تعذّر تحميل المزيد. إعادة المحاولة';
+
+  @override
+  String get navProducts => 'المنتجات';
+
+  @override
+  String get navSales => 'المبيعات';
+
+  @override
+  String get navPurchasing => 'المشتريات';
+
+  @override
+  String get navMore => 'المزيد';
+
+  @override
+  String get navMoreFeaturesTitle => 'المزيد من الميزات';
+
+  @override
+  String get navStock => 'المخزون';
+
+  @override
+  String get navProduction => 'الإنتاج';
+
+  @override
+  String get navSuppliers => 'الموردون';
+
+  @override
+  String get navCustomers => 'العملاء';
+
+  @override
+  String get navSettings => 'الإعدادات';
 }

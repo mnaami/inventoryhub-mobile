@@ -45,5 +45,26 @@
   "onboardingSlide3Title": "Make and manage",
   "onboardingSlide3Body": "Turn ingredients into products with recipes, and track it all from live dashboards.",
   "onboardingNext": "Next",
-  "onboardingGetStarted": "Get started"
+  "onboardingGetStarted": "Get started",
+
+  "coreStatusLow": "Low",
+  "coreStatusOut": "Out",
+  "coreSearchHint": "Search",
+  "coreCancel": "Cancel",
+  "coreDelete": "Delete",
+  "coreRetry": "Retry",
+  "coreNothingHere": "Nothing here yet.",
+  "coreSomethingWrong": "Something went wrong.",
+  "coreCouldntLoadMore": "Couldn't load more. Retry",
+
+  "navProducts": "Products",
+  "navSales": "Sales",
+  "navPurchasing": "Purchasing",
+  "navMore": "More",
+  "navMoreFeaturesTitle": "More Features",
+  "navStock": "Stock",
+  "navProduction": "Production",
+  "navSuppliers": "Suppliers",
+  "navCustomers": "Customers",
+  "navSettings": "Settings"
 }

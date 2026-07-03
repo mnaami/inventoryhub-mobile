@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/date_format.dart';
 import '../../../../core/format/quantity_format.dart';
 import '../../../../core/providers.dart';
 import '../../../../core/widgets/async_value_view.dart';
@@ -130,8 +131,7 @@ class _MovementTile extends ConsumerWidget {
   String _fmtDate(DateTime dt) {
     final l = dt.toLocal();
     String two(int n) => n.toString().padLeft(2, '0');
-    return '${l.year}-${two(l.month)}-${two(l.day)} '
-        '${two(l.hour)}:${two(l.minute)}';
+    return '${formatDate(l)} ${two(l.hour)}:${two(l.minute)}';
   }
 
   // Resolves the movement's source document to an order and opens its detail

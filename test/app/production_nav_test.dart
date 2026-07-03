@@ -6,6 +6,7 @@ import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import '../helpers/test_db.dart';
+import '../helpers/l10n.dart';
 
 void main() {
   testWidgets('More sheet opens Production', (tester) async {
@@ -19,7 +20,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: MainScaffold()),
+      child: localizedApp(home: const MainScaffold()),
     ));
     await tester.pumpAndSettle();
 

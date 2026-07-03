@@ -7,6 +7,7 @@ import 'package:inventoryhub_mobile/app/theme/theme_controller.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
+import 'package:inventoryhub_mobile/l10n/app_localizations.dart';
 import '../helpers/test_db.dart';
 
 Future<void> _boot(WidgetTester tester, Map<String, Object> seedPrefs) async {
@@ -33,10 +34,11 @@ Future<void> _boot(WidgetTester tester, Map<String, Object> seedPrefs) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> _openSettings(WidgetTester tester) async {
-  await tester.tap(find.text('More'));
+Future<void> _openSettings(WidgetTester tester, {String locale = 'en'}) async {
+  final l10n = await AppLocalizations.delegate.load(Locale(locale));
+  await tester.tap(find.text(l10n.navMore));
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Settings'));
+  await tester.tap(find.text(l10n.navSettings));
   await tester.pumpAndSettle();
 }
 
@@ -59,7 +61,7 @@ void main() {
   testWidgets('locale=ar override renders Arabic strings and flips to RTL',
       (tester) async {
     await _boot(tester, {'locale': 'ar'});
-    await _openSettings(tester);
+    await _openSettings(tester, locale: 'ar');
 
     expect(find.text('الإعدادات'), findsOneWidget); // Settings title
     expect(find.text('المظهر'), findsOneWidget); // Appearance

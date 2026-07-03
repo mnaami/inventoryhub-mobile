@@ -9,6 +9,7 @@ import 'package:inventoryhub_mobile/features/inventory/product/presentation/prod
 import 'package:inventoryhub_mobile/features/inventory/stock_movement/domain/stock_movement.dart';
 import 'package:inventoryhub_mobile/features/inventory/stock_movement/presentation/stock_providers.dart';
 import '../../../helpers/test_db.dart';
+import '../../../helpers/l10n.dart';
 
 void main() {
   testWidgets('empty state, then a low-stock product appears', (tester) async {
@@ -22,7 +23,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: ProductListScreen()),
+      child: localizedApp(home: const ProductListScreen()),
     ));
     await tester.pumpAndSettle();
     expect(find.textContaining('No products yet'), findsOneWidget);

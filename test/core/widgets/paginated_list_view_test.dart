@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inventoryhub_mobile/core/paging/paged_state.dart';
 import 'package:inventoryhub_mobile/core/widgets/paginated_list_view.dart';
+import '../../helpers/l10n.dart';
 
-Widget _wrap(Widget c) => MaterialApp(home: Scaffold(body: c));
+Widget _wrap(Widget c) => localizedApp(home: Scaffold(body: c));
 
 PaginatedListView<int> view(
   PagedState<int> state, {

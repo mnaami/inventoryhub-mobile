@@ -7,13 +7,14 @@ import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/settings/presentation/sample_data_section.dart';
 import '../../helpers/test_db.dart';
+import '../../helpers/l10n.dart';
 
 Future<Widget> _app(AppDatabase db, SeededContext session) async => ProviderScope(
       overrides: [
         appDatabaseProvider.overrideWithValue(db),
         sessionProvider.overrideWithValue(session),
       ],
-      child: const MaterialApp(home: Scaffold(body: SampleDataSection())),
+      child: localizedApp(home: const Scaffold(body: SampleDataSection())),
     );
 
 void main() {
