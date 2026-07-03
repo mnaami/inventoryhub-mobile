@@ -67,7 +67,14 @@ class _State extends ConsumerState<AddEditProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(isEdit ? l10n.productEditTitle : l10n.productNewTitle)),
+        title: Text(isEdit ? l10n.productEditTitle : l10n.productNewTitle),
+        actions: [
+          TextButton(
+            onPressed: _save,
+            child: Text(l10n.productSave),
+          ),
+        ],
+      ),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -225,12 +232,6 @@ class _State extends ConsumerState<AddEditProductScreen> {
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: AppTokens.space24),
-
-            FilledButton(
-              onPressed: _save,
-              child: Text(l10n.productSave),
             ),
           ],
         ),
