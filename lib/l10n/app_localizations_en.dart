@@ -65,4 +65,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonCancel => 'Cancel';
+
+  @override
+  String get authSignInSubtitle => 'Sign in to continue';
+
+  @override
+  String get authUsernameLabel => 'Username';
+
+  @override
+  String get authPasswordLabel => 'Password';
+
+  @override
+  String get authInvalidCredentials => 'Invalid username or password';
+
+  @override
+  String get authSignInButton => 'Sign in';
+
+  @override
+  String get authDemoHint => 'Tap to fill demo: admin / admin';
 }

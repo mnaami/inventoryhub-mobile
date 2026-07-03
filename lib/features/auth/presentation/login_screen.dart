@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme/app_tokens.dart';
+import '../../../core/l10n/l10n_ext.dart';
 import 'auth_controller.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -48,6 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     return Scaffold(
@@ -61,12 +63,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 Icon(Icons.inventory_2_outlined, size: 56, color: scheme.primary),
                 const SizedBox(height: AppTokens.space16),
-                Text('InventoryHub',
+                Text(l10n.appTitle,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.headlineSmall
                         ?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: AppTokens.space8),
-                Text('Sign in to continue',
+                Text(l10n.authSignInSubtitle,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium
                         ?.copyWith(color: scheme.onSurfaceVariant)),
@@ -77,9 +79,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   autocorrect: false,
                   enableSuggestions: false,
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l10n.authUsernameLabel,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: AppTokens.space12),
@@ -88,14 +90,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   controller: _password,
                   obscureText: true,
                   onSubmitted: (_) => _submit(),
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l10n.authPasswordLabel,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 if (_error) ...[
                   const SizedBox(height: AppTokens.space12),
-                  Text('Invalid username or password',
+                  Text(l10n.authInvalidCredentials,
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: scheme.error)),
                 ],
@@ -110,7 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(strokeWidth: 2))
-                        : const Text('Sign in'),
+                        : Text(l10n.authSignInButton),
                   ),
                 ),
                 const SizedBox(height: AppTokens.space16),
@@ -121,7 +123,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppTokens.space8, vertical: AppTokens.space4),
-                    child: Text('Tap to fill demo: admin / admin',
+                    child: Text(l10n.authDemoHint,
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodySmall
                             ?.copyWith(color: scheme.primary)),

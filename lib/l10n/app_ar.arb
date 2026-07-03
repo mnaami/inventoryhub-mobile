@@ -25,5 +25,12 @@
   "logoutConfirmTitle": "تسجيل الخروج؟",
   "logoutConfirmMessage": "ستحتاج إلى تسجيل الدخول مرة أخرى للمتابعة.",
 
-  "commonCancel": "إلغاء"
+  "commonCancel": "إلغاء",
+
+  "authSignInSubtitle": "سجّل الدخول للمتابعة",
+  "authUsernameLabel": "اسم المستخدم",
+  "authPasswordLabel": "كلمة المرور",
+  "authInvalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة",
+  "authSignInButton": "تسجيل الدخول",
+  "authDemoHint": "اضغط لتعبئة بيانات تجريبية: admin / admin"
 }

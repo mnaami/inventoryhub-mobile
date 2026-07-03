@@ -28,5 +28,12 @@
   "logoutConfirmTitle": "Log out?",
   "logoutConfirmMessage": "You will need to sign in again to continue.",
 
-  "commonCancel": "Cancel"
+  "commonCancel": "Cancel",
+
+  "authSignInSubtitle": "Sign in to continue",
+  "authUsernameLabel": "Username",
+  "authPasswordLabel": "Password",
+  "authInvalidCredentials": "Invalid username or password",
+  "authSignInButton": "Sign in",
+  "authDemoHint": "Tap to fill demo: admin / admin"
 }

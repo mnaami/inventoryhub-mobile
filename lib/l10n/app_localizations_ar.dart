@@ -65,4 +65,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get commonCancel => 'إلغاء';
+
+  @override
+  String get authSignInSubtitle => 'سجّل الدخول للمتابعة';
+
+  @override
+  String get authUsernameLabel => 'اسم المستخدم';
+
+  @override
+  String get authPasswordLabel => 'كلمة المرور';
+
+  @override
+  String get authInvalidCredentials => 'اسم المستخدم أو كلمة المرور غير صحيحة';
+
+  @override
+  String get authSignInButton => 'تسجيل الدخول';
+
+  @override
+  String get authDemoHint => 'اضغط لتعبئة بيانات تجريبية: admin / admin';
 }
