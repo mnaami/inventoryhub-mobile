@@ -162,5 +162,10 @@ class SaleOrderRepositoryImpl implements SaleOrderRepository {
   @override
   Future<List<SaleOrder>> allActive(String orgId) async =>
       (await _orders.allActive(orgId)).map(toSaleOrder).toList();
+
+  @override
+  Future<List<({DateTime orderDate, double totalAmount})>> salesInRange(
+          String orgId, DateTime from, DateTime to) =>
+      _orders.salesInRange(orgId, from, to);
 }
 

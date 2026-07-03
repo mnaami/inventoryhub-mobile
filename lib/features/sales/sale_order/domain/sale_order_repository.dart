@@ -31,6 +31,8 @@ abstract interface class SaleOrderRepository {
   Future<int> countByDateRange(String orgId, DateTime from, DateTime to);
   Future<double> totalAmountByDateRange(String orgId, DateTime from, DateTime to);
   Future<List<SaleOrder>> allActive(String orgId);
+  Future<List<({DateTime orderDate, double totalAmount})>> salesInRange(
+      String orgId, DateTime from, DateTime to);
 
 
   Future<void> recordPayment(SaleOrderPayment payment);

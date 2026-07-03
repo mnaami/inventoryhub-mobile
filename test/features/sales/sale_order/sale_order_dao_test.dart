@@ -120,4 +120,41 @@ void main() {
     expect(firstTwo.map((r) => r.id).toSet().intersection(
         nextTwo.map((r) => r.id).toSet()), isEmpty);
   });
+
+  test('salesInRange applies the same filters as totalAmountByDateRange',
+      () async {
+    // In range, draft — included (drafts count toward revenue KPIs).
+    await db.saleOrderDao.createWithItems(
+        order('1', orderDate: DateTime.utc(2026, 6, 20, 10)), const []);
+    // In range but cancelled — excluded.
+    await db.saleOrderDao.createWithItems(
+        order('2', status: 'cancelled', orderDate: DateTime.utc(2026, 6, 20)),
+        const []);
+    // Before `from` — excluded.
+    await db.saleOrderDao.createWithItems(
+        order('3', orderDate: DateTime.utc(2026, 6, 19, 23)), const []);
+    // Exactly `to` — excluded (exclusive upper bound).
+    await db.saleOrderDao.createWithItems(
+        order('4', orderDate: DateTime.utc(2026, 6, 21)), const []);
+    // In range but soft-deleted — excluded.
+    await db.saleOrderDao.createWithItems(
+        order('5', orderDate: DateTime.utc(2026, 6, 20, 12)), const []);
+    await db.saleOrderDao.softDelete('5', now);
+
+    final rows = await db.saleOrderDao.salesInRange(
+        'org1', DateTime.utc(2026, 6, 20), DateTime.utc(2026, 6, 21));
+
+    expect(rows.length, 1);
+    expect(rows.single.totalAmount, 50); // order() helper's fixed total
+    expect(rows.single.orderDate.toUtc(), DateTime.utc(2026, 6, 20, 10));
+  });
+
+  test('salesInRange includes the from instant (inclusive lower bound)',
+      () async {
+    await db.saleOrderDao.createWithItems(
+        order('1', orderDate: DateTime.utc(2026, 6, 20)), const []);
+    final rows = await db.saleOrderDao.salesInRange(
+        'org1', DateTime.utc(2026, 6, 20), DateTime.utc(2026, 6, 21));
+    expect(rows.length, 1);
+  });
 }

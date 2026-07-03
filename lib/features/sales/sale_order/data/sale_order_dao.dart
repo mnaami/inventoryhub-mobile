@@ -207,5 +207,27 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
           ]))
         .get();
   }
+
+  /// Raw (orderDate, totalAmount) rows for the sales-trend chart. Same
+  /// filters as [totalAmountByDateRange] — active, not cancelled, drafts
+  /// included — so chart buckets agree with the KPI totals.
+  Future<List<({DateTime orderDate, double totalAmount})>> salesInRange(
+      String orgId, DateTime from, DateTime to) async {
+    final q = selectOnly(saleOrders)
+      ..addColumns([saleOrders.orderDate, saleOrders.totalAmount])
+      ..where(saleOrders.organizationId.equals(orgId) &
+          saleOrders.isActive.equals(true) &
+          saleOrders.status.equals('cancelled').not() &
+          saleOrders.orderDate.isBiggerOrEqualValue(from) &
+          saleOrders.orderDate.isSmallerThanValue(to));
+    final rows = await q.get();
+    return [
+      for (final r in rows)
+        (
+          orderDate: r.read(saleOrders.orderDate)!,
+          totalAmount: r.read(saleOrders.totalAmount)!,
+        ),
+    ];
+  }
 }
 
