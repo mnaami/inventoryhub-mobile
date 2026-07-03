@@ -130,6 +130,12 @@ class SaleOrderListCriteria {
     }
   }
 
+  /// Inclusive upper bound (UTC, end-of-day) for the selected preset, or null
+  /// for "all"/open-ended presets. None of the current presets cap the
+  /// upper end (they all run through "now"), so this is always null today;
+  /// it exists to demonstrate the `from`/`to` convention for later screens.
+  DateTime? get to => null;
+
   bool get hasActiveFilters =>
       search.isNotEmpty ||
       status != null ||
@@ -177,6 +183,7 @@ class SaleOrderListNotifier extends PagedListNotifier<SaleOrder> {
           paymentStatus: c.paymentStatus,
           shippingStatus: c.shippingStatus,
           from: c.from,
+          to: c.to,
         );
   }
 }

@@ -46,4 +46,39 @@ void main() {
     expect(s.error, isNull);
     expect(s.items.single.soNumber, 'SO-0002');
   });
+
+  test('date range applies to as inclusive end-of-day', () async {
+    final db = newTestDb();
+    addTearDown(db.close);
+    final session = await SeedService(db, const IdGenerator()).ensureSeeded();
+
+    SaleOrdersCompanion ord(String id, String soNumber, DateTime day) =>
+        SaleOrdersCompanion.insert(
+          id: id,
+          organizationId: session.organizationId,
+          soNumber: soNumber,
+          customerId: 'c1',
+          orderDate: day,
+          totalAmount: const Value(10),
+          createdAt: day,
+          updatedAt: day,
+        );
+    await db.saleOrderDao.createWithItems(
+        ord('1', 'SO-0001', DateTime.utc(2026, 6, 1)), const []);
+    await db.saleOrderDao.createWithItems(
+        ord('2', 'SO-0002', DateTime.utc(2026, 6, 2)), const []);
+    await db.saleOrderDao.createWithItems(
+        ord('3', 'SO-0003', DateTime.utc(2026, 6, 3)), const []);
+
+    final rows = await db.saleOrderDao.paged(
+      session.organizationId,
+      from: DateTime.utc(2026, 6, 2),
+      to: DateTime.utc(2026, 6, 2),
+      limit: 20,
+      offset: 0,
+    );
+
+    expect(rows.length, 1);
+    expect(rows.single.soNumber, 'SO-0002');
+  });
 }
