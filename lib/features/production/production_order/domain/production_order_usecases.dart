@@ -36,9 +36,9 @@ class ProductionOrderService {
   Future<ProductionOrder?> get(String id) => _repo.getOrder(id);
 
   Future<List<ProductionOrder>> list(
-          {ProductionOrderStatus? status, int page = 0}) =>
+          {ProductionOrderStatus? status, String? search, int page = 0}) =>
       _repo.listOrders(_orgId,
-          status: status, limit: pageSize, offset: page * pageSize);
+          status: status, search: search, limit: pageSize, offset: page * pageSize);
 
   Future<ProductionOrder> createPlanned({
     required String productId,

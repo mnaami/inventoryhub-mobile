@@ -31,10 +31,11 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   @override
   Future<List<ProductionOrder>> listOrders(String orgId,
           {ProductionOrderStatus? status,
+          String? search,
           required int limit,
           required int offset}) async =>
       (await _orders.paged(orgId,
-              status: status?.wire, limit: limit, offset: offset))
+              status: status?.wire, search: search, limit: limit, offset: offset))
           .map(toProductionOrder)
           .toList();
 

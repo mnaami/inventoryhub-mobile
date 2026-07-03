@@ -83,6 +83,7 @@ class _CreateProductionOrderScreenState
           .read(productionOrderServiceProvider)
           .createPlanned(productId: productId, quantity: qty);
       ref.invalidate(productionOrdersProvider);
+      ref.invalidate(productionOrderListProvider);
       ref.invalidate(productionDashboardProvider);
       if (mounted) Navigator.of(context).pop();
     } on AppException catch (e) {

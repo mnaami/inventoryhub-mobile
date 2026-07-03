@@ -18,6 +18,7 @@ class ProductionOrderDetailScreen extends ConsumerWidget {
       await action();
       ref.invalidate(productionOrderProvider(orderId));
       ref.invalidate(productionOrdersProvider);
+      ref.invalidate(productionOrderListProvider);
       ref.invalidate(productionDashboardProvider);
       if (context.mounted) {
         ScaffoldMessenger.of(context)
