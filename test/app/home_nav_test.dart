@@ -11,14 +11,15 @@ import '../helpers/test_db.dart';
 import '../helpers/l10n.dart';
 
 void main() {
-  testWidgets('bottom nav shows the four sections and opens Sales',
+  testWidgets('Dashboard is the first tab and survives tabbing away and back',
       (tester) async {
     final db = newTestDb();
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();
     final container = ProviderContainer(overrides: [
       appDatabaseProvider.overrideWithValue(db),
       sessionProvider.overrideWithValue(session),
-      moneyFormatterProvider.overrideWithValue((v) => formatMoney(v, Currency.usd)),
+      moneyFormatterProvider
+          .overrideWithValue((v) => formatMoney(v, Currency.usd)),
     ]);
     addTearDown(container.dispose);
 
@@ -28,15 +29,18 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text('Dashboard'), findsWidgets);
-    expect(find.text('Products'), findsWidgets);
-    expect(find.text('Sales'), findsWidgets);
-    expect(find.text('More'), findsWidgets);
-    expect(find.text('Purchasing'), findsNothing);
+    // Boots on Home.
+    expect(find.text("Today's Sales"), findsOneWidget);
 
-    await tester.tap(find.text('Sales'));
+    // Tab away…
+    await tester.tap(find.text('Products'));
     await tester.pumpAndSettle();
-    expect(find.text('Payment Status Breakdown'), findsOneWidget); // dashboard widget unique to Sales
+    expect(find.text('Stock Status Breakdown'), findsOneWidget);
+
+    // …and back (this path re-invalidates homeDashboardProvider).
+    await tester.tap(find.text('Dashboard'));
+    await tester.pumpAndSettle();
+    expect(find.text("Today's Sales"), findsOneWidget);
     await db.close();
   });
 }

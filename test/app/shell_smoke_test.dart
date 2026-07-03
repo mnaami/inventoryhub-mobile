@@ -9,7 +9,7 @@ import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import '../helpers/test_db.dart';
 
 void main() {
-  testWidgets('app boots to the Products tab with the bottom nav',
+  testWidgets('app boots to the Dashboard tab with the bottom nav',
       (tester) async {
     SharedPreferences.setMockInitialValues({
       'onboarding.seen': true,
@@ -30,10 +30,12 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text('Inventory Dashboard'), findsOneWidget); // app bar
+    expect(find.text('Dashboard'), findsWidgets); // app bar + nav label
+    expect(find.text("Today's Sales"), findsOneWidget); // home stats section
     expect(find.text('Products'), findsOneWidget); // nav label
+    expect(find.text('Sales'), findsOneWidget); // nav label
     expect(find.text('More'), findsOneWidget); // nav label
-    expect(find.text('Stock Status Breakdown'), findsOneWidget);
+    expect(find.text('Purchasing'), findsNothing); // demoted to More sheet
     await db.close();
   });
 }
