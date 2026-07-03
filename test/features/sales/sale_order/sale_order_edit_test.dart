@@ -7,6 +7,7 @@ import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/presentation/sale_order_edit_screen.dart';
+import 'package:inventoryhub_mobile/features/sales/customer/presentation/customer_providers.dart';
 import '../../../helpers/l10n.dart';
 import '../../../helpers/test_db.dart';
 
@@ -33,6 +34,35 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Create draft'));
     await tester.pumpAndSettle();
     expect(find.text('Pick a customer.'), findsOneWidget);
+    await db.close();
+  });
+
+  testWidgets('pre-fills the customer when customerId is provided',
+      (tester) async {
+    final db = newTestDb();
+    final session = await SeedService(db, const IdGenerator()).ensureSeeded();
+    final container = ProviderContainer(overrides: [
+      appDatabaseProvider.overrideWithValue(db),
+      sessionProvider.overrideWithValue(session),
+      moneyFormatterProvider.overrideWithValue((v) => formatMoney(v, Currency.usd)),
+    ]);
+    addTearDown(container.dispose);
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    final customer =
+        await container.read(customerServiceProvider).create(name: 'Acme Co');
+
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: localizedApp(
+          home: SaleOrderEditScreen(customerId: customer.id)),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Acme Co'), findsOneWidget);
+    expect(find.text('Select Customer'), findsNothing);
     await db.close();
   });
 }

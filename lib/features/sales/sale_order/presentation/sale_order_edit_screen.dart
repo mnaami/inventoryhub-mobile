@@ -19,7 +19,8 @@ class _DraftLine {
 }
 
 class SaleOrderEditScreen extends ConsumerStatefulWidget {
-  const SaleOrderEditScreen({super.key});
+  const SaleOrderEditScreen({super.key, this.customerId});
+  final String? customerId;
   @override
   ConsumerState<SaleOrderEditScreen> createState() =>
       _SaleOrderEditScreenState();
@@ -29,6 +30,22 @@ class _SaleOrderEditScreenState extends ConsumerState<SaleOrderEditScreen> {
   Customer? _customer;
   final List<_DraftLine> _lines = [];
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    final customerId = widget.customerId;
+    if (customerId != null) {
+      _loadPreselectedCustomer(customerId);
+    }
+  }
+
+  Future<void> _loadPreselectedCustomer(String customerId) async {
+    final customer = await ref.read(customerServiceProvider).get(customerId);
+    if (mounted && customer != null) {
+      setState(() => _customer = customer);
+    }
+  }
 
   double get _total =>
       _lines.fold(0, (a, l) => a + l.quantity * l.product.sellingPrice);
