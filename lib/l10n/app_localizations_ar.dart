@@ -533,4 +533,138 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get stockMovementEmptySubtitle =>
       'سجّل حركة مخزون واردة أو صادرة لعرض السجل.';
+
+  @override
+  String get productionHomeTitle => 'الإنتاج';
+
+  @override
+  String get productionStatusPlanned => 'مخطط';
+
+  @override
+  String get productionStatusInProgress => 'قيد التنفيذ';
+
+  @override
+  String get productionStatusCompleted => 'مكتمل';
+
+  @override
+  String get productionStatusCancelled => 'ملغى';
+
+  @override
+  String get productionOrdersButton => 'أوامر الإنتاج';
+
+  @override
+  String get recipesButton => 'الوصفات';
+
+  @override
+  String get productionOrderCreateTitle => 'أمر إنتاج جديد';
+
+  @override
+  String get productionOutputProductLabel => 'المنتج الناتج';
+
+  @override
+  String get productionQuantityLabel => 'الكمية';
+
+  @override
+  String get productionCreateButton => 'إنشاء';
+
+  @override
+  String get productionChooseOutputProductError => 'اختر منتجًا ناتجًا.';
+
+  @override
+  String get productionEnterValidQuantityError => 'أدخل كمية صحيحة.';
+
+  @override
+  String get productionActionDone => 'تم.';
+
+  @override
+  String get productionOrderDetailTitle => 'أمر الإنتاج';
+
+  @override
+  String get productionOrderNotFound => 'الأمر غير موجود.';
+
+  @override
+  String productionOutputProductValue(String productId) {
+    return 'المنتج الناتج: $productId';
+  }
+
+  @override
+  String productionQuantityValue(String quantity) {
+    return 'الكمية: $quantity';
+  }
+
+  @override
+  String productionStatusValue(String status) {
+    return 'الحالة: $status';
+  }
+
+  @override
+  String productionStartedValue(String date) {
+    return 'بدأ: $date';
+  }
+
+  @override
+  String productionCompletedValue(String date) {
+    return 'اكتمل: $date';
+  }
+
+  @override
+  String get productionStartButton => 'بدء';
+
+  @override
+  String get productionCompleteButton => 'إكمال (استهلاك + إنتاج)';
+
+  @override
+  String get productionCancelOrderButton => 'إلغاء الأمر';
+
+  @override
+  String get productionOrdersListTitle => 'أوامر الإنتاج';
+
+  @override
+  String get productionOrdersEmpty => 'لا توجد أوامر إنتاج بعد.';
+
+  @override
+  String productionOrderListSubtitle(String quantity, String status) {
+    return '$quantity وحدة · $status';
+  }
+
+  @override
+  String get recipesListTitle => 'الوصفات';
+
+  @override
+  String get recipesEmpty => 'لا توجد وصفات بعد. اضغط + لإضافة واحدة.';
+
+  @override
+  String get recipeActive => 'نشط';
+
+  @override
+  String get recipeInactive => 'غير نشط';
+
+  @override
+  String get recipeDetailTitle => 'الوصفة';
+
+  @override
+  String get recipeMakeActiveTooltip => 'تفعيل';
+
+  @override
+  String get recipeNotFound => 'الوصفة غير موجودة.';
+
+  @override
+  String get recipeActiveLabel => 'الوصفة النشطة';
+
+  @override
+  String get recipeIngredientsHeading => 'المكونات';
+
+  @override
+  String recipeQuantityPerUnit(String quantity, String unit) {
+    return '$quantity $unit / وحدة';
+  }
+
+  @override
+  String get recipeCreateTitle => 'وصفة جديدة';
+
+  @override
+  String get recipeNameLabel => 'اسم الوصفة';
+
+  @override
+  String get recipeMakeActiveSwitchLabel => 'اجعل هذه الوصفة نشطة';
 }

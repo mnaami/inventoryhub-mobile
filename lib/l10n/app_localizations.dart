@@ -1105,6 +1105,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Record stock in or out to see the ledger.'**
   String get stockMovementEmptySubtitle;
+
+  /// No description provided for @productionHomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Production'**
+  String get productionHomeTitle;
+
+  /// No description provided for @productionStatusPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned'**
+  String get productionStatusPlanned;
+
+  /// No description provided for @productionStatusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get productionStatusInProgress;
+
+  /// No description provided for @productionStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get productionStatusCompleted;
+
+  /// No description provided for @productionStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get productionStatusCancelled;
+
+  /// No description provided for @productionOrdersButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Production orders'**
+  String get productionOrdersButton;
+
+  /// No description provided for @recipesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipes'**
+  String get recipesButton;
+
+  /// No description provided for @productionOrderCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New production order'**
+  String get productionOrderCreateTitle;
+
+  /// No description provided for @productionOutputProductLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Output product'**
+  String get productionOutputProductLabel;
+
+  /// No description provided for @productionQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get productionQuantityLabel;
+
+  /// No description provided for @productionCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get productionCreateButton;
+
+  /// No description provided for @productionChooseOutputProductError.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an output product.'**
+  String get productionChooseOutputProductError;
+
+  /// No description provided for @productionEnterValidQuantityError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid quantity.'**
+  String get productionEnterValidQuantityError;
+
+  /// No description provided for @productionActionDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done.'**
+  String get productionActionDone;
+
+  /// No description provided for @productionOrderDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Production order'**
+  String get productionOrderDetailTitle;
+
+  /// No description provided for @productionOrderNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Order not found.'**
+  String get productionOrderNotFound;
+
+  /// No description provided for @productionOutputProductValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Output product: {productId}'**
+  String productionOutputProductValue(String productId);
+
+  /// No description provided for @productionQuantityValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity: {quantity}'**
+  String productionQuantityValue(String quantity);
+
+  /// No description provided for @productionStatusValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: {status}'**
+  String productionStatusValue(String status);
+
+  /// No description provided for @productionStartedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Started: {date}'**
+  String productionStartedValue(String date);
+
+  /// No description provided for @productionCompletedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed: {date}'**
+  String productionCompletedValue(String date);
+
+  /// No description provided for @productionStartButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get productionStartButton;
+
+  /// No description provided for @productionCompleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete (consume + produce)'**
+  String get productionCompleteButton;
+
+  /// No description provided for @productionCancelOrderButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel order'**
+  String get productionCancelOrderButton;
+
+  /// No description provided for @productionOrdersListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Production orders'**
+  String get productionOrdersListTitle;
+
+  /// No description provided for @productionOrdersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No production orders yet.'**
+  String get productionOrdersEmpty;
+
+  /// No description provided for @productionOrderListSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} units · {status}'**
+  String productionOrderListSubtitle(String quantity, String status);
+
+  /// No description provided for @recipesListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipes'**
+  String get recipesListTitle;
+
+  /// No description provided for @recipesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipes yet. Tap + to add one.'**
+  String get recipesEmpty;
+
+  /// No description provided for @recipeActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get recipeActive;
+
+  /// No description provided for @recipeInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get recipeInactive;
+
+  /// No description provided for @recipeDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe'**
+  String get recipeDetailTitle;
+
+  /// No description provided for @recipeMakeActiveTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Make active'**
+  String get recipeMakeActiveTooltip;
+
+  /// No description provided for @recipeNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe not found.'**
+  String get recipeNotFound;
+
+  /// No description provided for @recipeActiveLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Active recipe'**
+  String get recipeActiveLabel;
+
+  /// No description provided for @recipeIngredientsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients'**
+  String get recipeIngredientsHeading;
+
+  /// No description provided for @recipeQuantityPerUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} {unit} / unit'**
+  String recipeQuantityPerUnit(String quantity, String unit);
+
+  /// No description provided for @recipeCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New recipe'**
+  String get recipeCreateTitle;
+
+  /// No description provided for @recipeNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe name'**
+  String get recipeNameLabel;
+
+  /// No description provided for @recipeMakeActiveSwitchLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Make this the active recipe'**
+  String get recipeMakeActiveSwitchLabel;
 }
 
 class _AppLocalizationsDelegate

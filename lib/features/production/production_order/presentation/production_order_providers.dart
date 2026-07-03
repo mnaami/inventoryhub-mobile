@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../inventory/product/domain/product.dart';
 import '../../../inventory/product/presentation/product_providers.dart';
 import '../../../sales/sale_order/data/document_counter_dao.dart';
@@ -50,9 +51,10 @@ final productionOrderProvider =
 final productionDashboardProvider = FutureProvider<ProductionKpis>(
     (ref) => ref.watch(productionOrderServiceProvider).dashboard());
 
-String productionStatusLabel(ProductionOrderStatus s) => switch (s) {
-      ProductionOrderStatus.planned => 'Planned',
-      ProductionOrderStatus.inProgress => 'In progress',
-      ProductionOrderStatus.completed => 'Completed',
-      ProductionOrderStatus.cancelled => 'Cancelled',
+String productionStatusLabel(AppLocalizations l10n, ProductionOrderStatus s) =>
+    switch (s) {
+      ProductionOrderStatus.planned => l10n.productionStatusPlanned,
+      ProductionOrderStatus.inProgress => l10n.productionStatusInProgress,
+      ProductionOrderStatus.completed => l10n.productionStatusCompleted,
+      ProductionOrderStatus.cancelled => l10n.productionStatusCancelled,
     };

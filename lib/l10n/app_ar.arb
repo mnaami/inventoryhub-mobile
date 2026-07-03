@@ -183,5 +183,52 @@
   "stockMovementRecordButton": "تسجيل",
   "stockMovementsTitle": "حركات المخزون",
   "stockMovementEmptyTitle": "لا توجد حركات مخزون بعد",
-  "stockMovementEmptySubtitle": "سجّل حركة مخزون واردة أو صادرة لعرض السجل."
+  "stockMovementEmptySubtitle": "سجّل حركة مخزون واردة أو صادرة لعرض السجل.",
+
+  "productionHomeTitle": "الإنتاج",
+  "productionStatusPlanned": "مخطط",
+  "productionStatusInProgress": "قيد التنفيذ",
+  "productionStatusCompleted": "مكتمل",
+  "productionStatusCancelled": "ملغى",
+  "productionOrdersButton": "أوامر الإنتاج",
+  "recipesButton": "الوصفات",
+
+  "productionOrderCreateTitle": "أمر إنتاج جديد",
+  "productionOutputProductLabel": "المنتج الناتج",
+  "productionQuantityLabel": "الكمية",
+  "productionCreateButton": "إنشاء",
+  "productionChooseOutputProductError": "اختر منتجًا ناتجًا.",
+  "productionEnterValidQuantityError": "أدخل كمية صحيحة.",
+
+  "productionActionDone": "تم.",
+  "productionOrderDetailTitle": "أمر الإنتاج",
+  "productionOrderNotFound": "الأمر غير موجود.",
+  "productionOutputProductValue": "المنتج الناتج: {productId}",
+  "productionQuantityValue": "الكمية: {quantity}",
+  "productionStatusValue": "الحالة: {status}",
+  "productionStartedValue": "بدأ: {date}",
+  "productionCompletedValue": "اكتمل: {date}",
+  "productionStartButton": "بدء",
+  "productionCompleteButton": "إكمال (استهلاك + إنتاج)",
+  "productionCancelOrderButton": "إلغاء الأمر",
+
+  "productionOrdersListTitle": "أوامر الإنتاج",
+  "productionOrdersEmpty": "لا توجد أوامر إنتاج بعد.",
+  "productionOrderListSubtitle": "{quantity} وحدة · {status}",
+
+  "recipesListTitle": "الوصفات",
+  "recipesEmpty": "لا توجد وصفات بعد. اضغط + لإضافة واحدة.",
+  "recipeActive": "نشط",
+  "recipeInactive": "غير نشط",
+
+  "recipeDetailTitle": "الوصفة",
+  "recipeMakeActiveTooltip": "تفعيل",
+  "recipeNotFound": "الوصفة غير موجودة.",
+  "recipeActiveLabel": "الوصفة النشطة",
+  "recipeIngredientsHeading": "المكونات",
+  "recipeQuantityPerUnit": "{quantity} {unit} / وحدة",
+
+  "recipeCreateTitle": "وصفة جديدة",
+  "recipeNameLabel": "اسم الوصفة",
+  "recipeMakeActiveSwitchLabel": "اجعل هذه الوصفة نشطة"
 }

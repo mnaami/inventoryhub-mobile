@@ -533,4 +533,138 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get stockMovementEmptySubtitle =>
       'Record stock in or out to see the ledger.';
+
+  @override
+  String get productionHomeTitle => 'Production';
+
+  @override
+  String get productionStatusPlanned => 'Planned';
+
+  @override
+  String get productionStatusInProgress => 'In progress';
+
+  @override
+  String get productionStatusCompleted => 'Completed';
+
+  @override
+  String get productionStatusCancelled => 'Cancelled';
+
+  @override
+  String get productionOrdersButton => 'Production orders';
+
+  @override
+  String get recipesButton => 'Recipes';
+
+  @override
+  String get productionOrderCreateTitle => 'New production order';
+
+  @override
+  String get productionOutputProductLabel => 'Output product';
+
+  @override
+  String get productionQuantityLabel => 'Quantity';
+
+  @override
+  String get productionCreateButton => 'Create';
+
+  @override
+  String get productionChooseOutputProductError => 'Choose an output product.';
+
+  @override
+  String get productionEnterValidQuantityError => 'Enter a valid quantity.';
+
+  @override
+  String get productionActionDone => 'Done.';
+
+  @override
+  String get productionOrderDetailTitle => 'Production order';
+
+  @override
+  String get productionOrderNotFound => 'Order not found.';
+
+  @override
+  String productionOutputProductValue(String productId) {
+    return 'Output product: $productId';
+  }
+
+  @override
+  String productionQuantityValue(String quantity) {
+    return 'Quantity: $quantity';
+  }
+
+  @override
+  String productionStatusValue(String status) {
+    return 'Status: $status';
+  }
+
+  @override
+  String productionStartedValue(String date) {
+    return 'Started: $date';
+  }
+
+  @override
+  String productionCompletedValue(String date) {
+    return 'Completed: $date';
+  }
+
+  @override
+  String get productionStartButton => 'Start';
+
+  @override
+  String get productionCompleteButton => 'Complete (consume + produce)';
+
+  @override
+  String get productionCancelOrderButton => 'Cancel order';
+
+  @override
+  String get productionOrdersListTitle => 'Production orders';
+
+  @override
+  String get productionOrdersEmpty => 'No production orders yet.';
+
+  @override
+  String productionOrderListSubtitle(String quantity, String status) {
+    return '$quantity units · $status';
+  }
+
+  @override
+  String get recipesListTitle => 'Recipes';
+
+  @override
+  String get recipesEmpty => 'No recipes yet. Tap + to add one.';
+
+  @override
+  String get recipeActive => 'Active';
+
+  @override
+  String get recipeInactive => 'Inactive';
+
+  @override
+  String get recipeDetailTitle => 'Recipe';
+
+  @override
+  String get recipeMakeActiveTooltip => 'Make active';
+
+  @override
+  String get recipeNotFound => 'Recipe not found.';
+
+  @override
+  String get recipeActiveLabel => 'Active recipe';
+
+  @override
+  String get recipeIngredientsHeading => 'Ingredients';
+
+  @override
+  String recipeQuantityPerUnit(String quantity, String unit) {
+    return '$quantity $unit / unit';
+  }
+
+  @override
+  String get recipeCreateTitle => 'New recipe';
+
+  @override
+  String get recipeNameLabel => 'Recipe name';
+
+  @override
+  String get recipeMakeActiveSwitchLabel => 'Make this the active recipe';
 }
