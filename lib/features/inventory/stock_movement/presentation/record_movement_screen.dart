@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../product/presentation/product_providers.dart';
 import '../domain/stock_movement.dart';
 import 'stock_providers.dart';
@@ -35,11 +36,13 @@ class _State extends ConsumerState<RecordMovementScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Stock — ${widget.productName}')),
+      appBar: AppBar(
+          title: Text(l10n.stockMovementScreenTitle(widget.productName))),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -51,7 +54,7 @@ class _State extends ConsumerState<RecordMovementScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Movement type',
+                    l10n.stockMovementTypeHeading,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -62,10 +65,16 @@ class _State extends ConsumerState<RecordMovementScreen> {
                     width: double.infinity,
                     child: SegmentedButton<MovementType>(
                       showSelectedIcon: false,
-                      segments: const [
-                        ButtonSegment(value: MovementType.inbound, label: Text('In')),
-                        ButtonSegment(value: MovementType.outbound, label: Text('Out')),
-                        ButtonSegment(value: MovementType.adjustment, label: Text('Adjust')),
+                      segments: [
+                        ButtonSegment(
+                            value: MovementType.inbound,
+                            label: Text(l10n.stockMovementTypeIn)),
+                        ButtonSegment(
+                            value: MovementType.outbound,
+                            label: Text(l10n.stockMovementTypeOut)),
+                        ButtonSegment(
+                            value: MovementType.adjustment,
+                            label: Text(l10n.stockMovementTypeAdjust)),
                       ],
                       selected: {_type},
                       onSelectionChanged: (s) => setState(() => _type = s.first),
@@ -82,7 +91,7 @@ class _State extends ConsumerState<RecordMovementScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Details',
+                    l10n.stockMovementDetailsHeading,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: scheme.onSurface,
@@ -95,23 +104,23 @@ class _State extends ConsumerState<RecordMovementScreen> {
                         const TextInputType.numberWithOptions(decimal: true, signed: true),
                     decoration: InputDecoration(
                       labelText: _type == MovementType.adjustment
-                          ? 'Quantity (use − to reduce)'
-                          : 'Quantity',
+                          ? l10n.stockMovementQuantityAdjustLabel
+                          : l10n.stockMovementQuantityLabel,
                       prefixIcon: const Icon(Icons.numbers_outlined),
                     ),
                     validator: (v) {
                       final n = double.tryParse(v ?? '');
-                      if (n == null) return 'Enter a number';
-                      if (n == 0) return 'Quantity must not be zero';
+                      if (n == null) return l10n.stockMovementQuantityInvalid;
+                      if (n == 0) return l10n.stockMovementQuantityZero;
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _notes,
-                    decoration: const InputDecoration(
-                      labelText: 'Notes (optional)',
-                      prefixIcon: Icon(Icons.notes_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.stockMovementNotesLabel,
+                      prefixIcon: const Icon(Icons.notes_outlined),
                     ),
                   ),
                 ],
@@ -122,7 +131,7 @@ class _State extends ConsumerState<RecordMovementScreen> {
             // Record action button
             FilledButton(
               onPressed: _save,
-              child: const Text('Record'),
+              child: Text(l10n.stockMovementRecordButton),
             ),
           ],
         ),

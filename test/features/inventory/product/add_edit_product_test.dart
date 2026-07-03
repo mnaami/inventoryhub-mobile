@@ -6,6 +6,7 @@ import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/inventory/product/presentation/add_edit_product_screen.dart';
 import '../../../helpers/test_db.dart';
+import '../../../helpers/l10n.dart';
 
 void main() {
   testWidgets('shows validation error when name is empty and lists the unit',
@@ -25,7 +26,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: AddEditProductScreen()),
+      child: localizedApp(home: const AddEditProductScreen()),
     ));
     await tester.pumpAndSettle();
 

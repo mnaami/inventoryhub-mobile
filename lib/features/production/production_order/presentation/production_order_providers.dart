@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/paging/paged_list_notifier.dart';
+import '../../../../core/paging/paged_state.dart';
 import '../../../../core/providers.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../inventory/product/domain/product.dart';
 import '../../../inventory/product/presentation/product_providers.dart';
 import '../../../sales/sale_order/data/document_counter_dao.dart';
@@ -43,6 +46,67 @@ final productionOrdersProvider =
         .watch(productionOrderServiceProvider)
         .list(status: ref.watch(productionOrderFilterProvider)));
 
+class ProductionOrderListCriteria {
+  const ProductionOrderListCriteria({
+    this.search = '',
+    this.status,
+  });
+
+  final String search;
+  final ProductionOrderStatus? status;
+
+  ProductionOrderListCriteria copyWith({
+    String? search,
+    ProductionOrderStatus? status,
+    bool clearStatus = false,
+  }) =>
+      ProductionOrderListCriteria(
+        search: search ?? this.search,
+        status: clearStatus ? null : (status ?? this.status),
+      );
+
+  bool get hasActiveFilters => search.isNotEmpty || status != null;
+}
+
+class ProductionOrderCriteria extends Notifier<ProductionOrderListCriteria> {
+  @override
+  ProductionOrderListCriteria build() => const ProductionOrderListCriteria();
+
+  void setSearch(String v) => state = state.copyWith(search: v);
+  void setStatus(ProductionOrderStatus? v) =>
+      state = state.copyWith(status: v, clearStatus: v == null);
+  void reset() => state = const ProductionOrderListCriteria();
+}
+
+final productionOrderCriteriaProvider =
+    NotifierProvider<ProductionOrderCriteria, ProductionOrderListCriteria>(
+        ProductionOrderCriteria.new);
+
+class ProductionOrderListNotifier extends PagedListNotifier<ProductionOrder> {
+  @override
+  int get pageSize => ProductionOrderService.pageSize;
+
+  @override
+  PagedState<ProductionOrder> build() {
+    ref.listen(productionOrderCriteriaProvider, (_, __) => reload());
+    return super.build();
+  }
+
+  @override
+  Future<List<ProductionOrder>> fetch(int page) {
+    final c = ref.read(productionOrderCriteriaProvider);
+    return ref.read(productionOrderServiceProvider).list(
+          page: page,
+          search: c.search.isEmpty ? null : c.search,
+          status: c.status,
+        );
+  }
+}
+
+final productionOrderListProvider =
+    NotifierProvider<ProductionOrderListNotifier, PagedState<ProductionOrder>>(
+        ProductionOrderListNotifier.new);
+
 final productionOrderProvider =
     FutureProvider.family<ProductionOrder?, String>(
         (ref, id) => ref.watch(productionOrderServiceProvider).get(id));
@@ -50,9 +114,10 @@ final productionOrderProvider =
 final productionDashboardProvider = FutureProvider<ProductionKpis>(
     (ref) => ref.watch(productionOrderServiceProvider).dashboard());
 
-String productionStatusLabel(ProductionOrderStatus s) => switch (s) {
-      ProductionOrderStatus.planned => 'Planned',
-      ProductionOrderStatus.inProgress => 'In progress',
-      ProductionOrderStatus.completed => 'Completed',
-      ProductionOrderStatus.cancelled => 'Cancelled',
+String productionStatusLabel(AppLocalizations l10n, ProductionOrderStatus s) =>
+    switch (s) {
+      ProductionOrderStatus.planned => l10n.productionStatusPlanned,
+      ProductionOrderStatus.inProgress => l10n.productionStatusInProgress,
+      ProductionOrderStatus.completed => l10n.productionStatusCompleted,
+      ProductionOrderStatus.cancelled => l10n.productionStatusCancelled,
     };

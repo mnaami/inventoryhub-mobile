@@ -8,6 +8,7 @@ abstract interface class ProductionOrderRepository {
   Future<ProductionOrder?> getOrder(String id);
   Future<List<ProductionOrder>> listOrders(String orgId,
       {ProductionOrderStatus? status,
+      String? search,
       required int limit,
       required int offset});
   Future<void> setStatus(String id, ProductionOrderStatus status);

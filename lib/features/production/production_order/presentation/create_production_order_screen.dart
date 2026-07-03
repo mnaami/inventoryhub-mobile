@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import 'production_order_providers.dart';
 
@@ -24,9 +25,10 @@ class _CreateProductionOrderScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final products = ref.watch(allProductsProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('New production order')),
+      appBar: AppBar(title: Text(l10n.productionOrderCreateTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -36,7 +38,7 @@ class _CreateProductionOrderScreenState
               data: (list) => DropdownButtonFormField<String>(
                 initialValue: _productId,
                 decoration:
-                    const InputDecoration(labelText: 'Output product'),
+                    InputDecoration(labelText: l10n.productionOutputProductLabel),
                 items: [
                   for (final p in list)
                     DropdownMenuItem(value: p.id, child: Text(p.name))
@@ -51,10 +53,11 @@ class _CreateProductionOrderScreenState
               controller: _qty,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Quantity'),
+              decoration: InputDecoration(labelText: l10n.productionQuantityLabel),
             ),
             const Spacer(),
-            FilledButton(onPressed: _save, child: const Text('Create')),
+            FilledButton(
+                onPressed: _save, child: Text(l10n.productionCreateButton)),
           ],
         ),
       ),
@@ -62,16 +65,17 @@ class _CreateProductionOrderScreenState
   }
 
   Future<void> _save() async {
+    final l10n = context.l10n;
     final productId = _productId;
     final qty = double.tryParse(_qty.text.trim());
     if (productId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Choose an output product.')));
+          SnackBar(content: Text(l10n.productionChooseOutputProductError)));
       return;
     }
     if (qty == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Enter a valid quantity.')));
+          SnackBar(content: Text(l10n.productionEnterValidQuantityError)));
       return;
     }
     try {
@@ -79,6 +83,7 @@ class _CreateProductionOrderScreenState
           .read(productionOrderServiceProvider)
           .createPlanned(productId: productId, quantity: qty);
       ref.invalidate(productionOrdersProvider);
+      ref.invalidate(productionOrderListProvider);
       ref.invalidate(productionDashboardProvider);
       if (mounted) Navigator.of(context).pop();
     } on AppException catch (e) {

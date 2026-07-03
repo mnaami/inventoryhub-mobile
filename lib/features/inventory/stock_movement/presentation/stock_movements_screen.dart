@@ -4,6 +4,7 @@ import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../domain/stock_movement.dart';
 import 'stock_providers.dart';
 
@@ -12,17 +13,18 @@ class StockMovementsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final ledger = ref.watch(stockLedgerProvider);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Stock movements')),
+      appBar: AppBar(title: Text(l10n.stockMovementsTitle)),
       body: AsyncValueView<List<StockMovement>>(
         value: ledger,
         data: (list) => list.isEmpty
-            ? const EmptyState(
+            ? EmptyState(
                 icon: Icons.swap_vert,
-                title: 'No stock movements yet',
-                subtitle: 'Record stock in or out to see the ledger.',
+                title: l10n.stockMovementEmptyTitle,
+                subtitle: l10n.stockMovementEmptySubtitle,
               )
             : ListView.builder(
                 padding: const EdgeInsets.symmetric(

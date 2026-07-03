@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
+import 'package:inventoryhub_mobile/core/format/money_format.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
@@ -9,6 +11,7 @@ import 'package:inventoryhub_mobile/features/inventory/product/presentation/prod
 import 'package:inventoryhub_mobile/features/inventory/stock_movement/domain/stock_movement.dart';
 import 'package:inventoryhub_mobile/features/inventory/stock_movement/presentation/stock_providers.dart';
 import '../../../helpers/test_db.dart';
+import '../../../helpers/l10n.dart';
 
 void main() {
   testWidgets('empty state, then a low-stock product appears', (tester) async {
@@ -17,12 +20,13 @@ void main() {
     final container = ProviderContainer(overrides: [
       appDatabaseProvider.overrideWithValue(db),
       sessionProvider.overrideWithValue(session),
+      moneyFormatterProvider.overrideWithValue((v) => formatMoney(v, Currency.usd)),
     ]);
     addTearDown(container.dispose);
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: ProductListScreen()),
+      child: localizedApp(home: const ProductListScreen()),
     ));
     await tester.pumpAndSettle();
     expect(find.textContaining('No products yet'), findsOneWidget);

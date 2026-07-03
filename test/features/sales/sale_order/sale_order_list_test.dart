@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
+import 'package:inventoryhub_mobile/core/format/money_format.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/presentation/sale_order_list_screen.dart';
+import '../../../helpers/l10n.dart';
 import '../../../helpers/test_db.dart';
 
 void main() {
@@ -14,12 +17,13 @@ void main() {
     final container = ProviderContainer(overrides: [
       appDatabaseProvider.overrideWithValue(db),
       sessionProvider.overrideWithValue(session),
+      moneyFormatterProvider.overrideWithValue((v) => formatMoney(v, Currency.usd)),
     ]);
     addTearDown(container.dispose);
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: SaleOrderListScreen()),
+      child: localizedApp(home: const SaleOrderListScreen()),
     ));
     await tester.pumpAndSettle();
 
@@ -38,12 +42,13 @@ void main() {
     final container = ProviderContainer(overrides: [
       appDatabaseProvider.overrideWithValue(db),
       sessionProvider.overrideWithValue(session),
+      moneyFormatterProvider.overrideWithValue((v) => formatMoney(v, Currency.usd)),
     ]);
     addTearDown(container.dispose);
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: SaleOrderListScreen()),
+      child: localizedApp(home: const SaleOrderListScreen()),
     ));
     await tester.pumpAndSettle();
 

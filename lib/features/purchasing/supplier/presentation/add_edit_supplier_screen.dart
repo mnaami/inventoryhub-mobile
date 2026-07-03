@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../sales/customer/presentation/contact_selection_screen.dart';
 import '../domain/supplier.dart';
 import 'supplier_providers.dart';
 
@@ -38,6 +40,62 @@ class _AddEditSupplierScreenState extends ConsumerState<AddEditSupplierScreen> {
       c.dispose();
     }
     super.dispose();
+  }
+
+  Future<void> _showContactImportDialog() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ContactSelectionScreen(
+          onContactSelected: (name, phone, email) {
+            setState(() {
+              if (_contact.text.trim().isEmpty) {
+                _contact.text = name;
+              }
+              if (_name.text.trim().isEmpty) {
+                _name.text = name;
+              }
+              
+              if (email.isNotEmpty && _email.text.trim().isEmpty) {
+                _email.text = email;
+              }
+
+              if (phone.isNotEmpty) {
+                final existingPhones = _phone.text
+                    .split(',')
+                    .map((p) => p.trim())
+                    .where((p) => p.isNotEmpty)
+                    .toList();
+
+                final newPhones = phone
+                    .split(',')
+                    .map((p) => p.trim())
+                    .where((p) => p.isNotEmpty)
+                    .toList();
+
+                for (final newPhone in newPhones) {
+                  if (!existingPhones.contains(newPhone)) {
+                    existingPhones.add(newPhone);
+                  }
+                }
+
+                _phone.text = existingPhones.join(', ');
+              }
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Contact information imported successfully!'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   List<String> get _phones => _phone.text
@@ -89,7 +147,16 @@ class _AddEditSupplierScreenState extends ConsumerState<AddEditSupplierScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget.existing == null ? 'New Supplier' : 'Edit Supplier')),
+        title: Text(widget.existing == null ? 'New Supplier' : 'Edit Supplier'),
+        actions: [
+          if (Platform.isAndroid)
+            IconButton(
+              icon: const Icon(Icons.contact_phone),
+              tooltip: 'Import Contact',
+              onPressed: _showContactImportDialog,
+            ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [

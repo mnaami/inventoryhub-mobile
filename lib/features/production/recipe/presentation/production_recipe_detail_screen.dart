@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import 'production_recipe_providers.dart';
@@ -10,14 +11,15 @@ class ProductionRecipeDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final recipe = ref.watch(recipeProvider(recipeId));
     final items = ref.watch(recipeItemsProvider(recipeId));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Recipe'),
+        title: Text(l10n.recipeDetailTitle),
         actions: [
           IconButton(
-            tooltip: 'Make active',
+            tooltip: l10n.recipeMakeActiveTooltip,
             icon: const Icon(Icons.check_circle_outline),
             onPressed: () async {
               try {
@@ -39,7 +41,9 @@ class ProductionRecipeDetailScreen extends ConsumerWidget {
       body: AsyncValueView(
         value: recipe,
         data: (r) {
-          if (r == null) return const Center(child: Text('Recipe not found.'));
+          if (r == null) {
+            return Center(child: Text(l10n.recipeNotFound));
+          }
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
@@ -47,9 +51,9 @@ class ProductionRecipeDetailScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineSmall),
               if (r.description != null) Text(r.description!),
               const SizedBox(height: 8),
-              Text(r.isActive ? 'Active recipe' : 'Inactive'),
+              Text(r.isActive ? l10n.recipeActiveLabel : l10n.recipeInactive),
               const Divider(height: 24),
-              Text('Ingredients',
+              Text(l10n.recipeIngredientsHeading,
                   style: Theme.of(context).textTheme.titleMedium),
               AsyncValueView(
                 value: items,
@@ -58,8 +62,8 @@ class ProductionRecipeDetailScreen extends ConsumerWidget {
                       .map((l) => ListTile(
                             dense: true,
                             title: Text(l.ingredientProductId),
-                            trailing:
-                                Text('${l.quantityPerUnit} ${l.unit} / unit'),
+                            trailing: Text(l10n.recipeQuantityPerUnit(
+                                '${l.quantityPerUnit}', l.unit)),
                           ))
                       .toList(),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/l10n_ext.dart';
 import '../paging/paged_state.dart';
 import '../result/app_exception.dart';
 import '../../app/theme/app_tokens.dart';
@@ -70,7 +71,9 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
     }
     if (s.isEmpty) {
       return widget.empty ??
-          const EmptyState(icon: Icons.inbox_outlined, title: 'Nothing here yet.');
+          EmptyState(
+              icon: Icons.inbox_outlined,
+              title: context.l10n.coreNothingHere);
     }
 
     return RefreshIndicator(
@@ -109,7 +112,7 @@ class _Footer<T> extends StatelessWidget {
           child: TextButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),
-            label: const Text('Couldn\'t load more. Retry'),
+            label: Text(context.l10n.coreCouldntLoadMore),
           ),
         ),
       );
@@ -128,7 +131,7 @@ class _InitialError extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final message = error is AppException
         ? (error as AppException).message
-        : 'Something went wrong.';
+        : context.l10n.coreSomethingWrong;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppTokens.space24),
@@ -139,7 +142,8 @@ class _InitialError extends StatelessWidget {
             const SizedBox(height: AppTokens.space12),
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: AppTokens.space16),
-            FilledButton(onPressed: onRetry, child: const Text('Retry')),
+            FilledButton(
+                onPressed: onRetry, child: Text(context.l10n.coreRetry)),
           ],
         ),
       ),

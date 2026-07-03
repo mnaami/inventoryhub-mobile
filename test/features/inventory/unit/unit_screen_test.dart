@@ -6,6 +6,7 @@ import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/inventory/unit/presentation/units_management_screen.dart';
 import '../../../helpers/test_db.dart';
+import '../../../helpers/l10n.dart';
 
 void main() {
   testWidgets('lists the seeded base unit', (tester) async {
@@ -19,7 +20,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: UnitsManagementScreen()),
+      child: localizedApp(home: const UnitsManagementScreen()),
     ));
     await tester.pumpAndSettle();
     expect(find.textContaining('Piece'), findsOneWidget);

@@ -54,6 +54,13 @@ void main() {
     expect(planned.map((o) => o.id), ['1']);
   });
 
+  test('paged filters by search query', () async {
+    await dao.createRow(order('1'));
+    await dao.createRow(order('2', status: 'completed'));
+    final results = await dao.paged('org1', search: '0002', limit: 20, offset: 0);
+    expect(results.map((o) => o.id), ['2']);
+  });
+
   test('countByStatuses counts matching orders', () async {
     await dao.createRow(order('1'));
     await dao.createRow(order('2'));

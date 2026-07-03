@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import '../../../../app/currency/currency_controller.dart';
 import '../../../../core/format/quantity_format.dart';
 import '../../../../core/paging/paged_state.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -8,6 +8,7 @@ import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/search_field.dart';
 import '../../../../core/widgets/paginated_list_view.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../category/domain/category.dart';
 import '../../category/presentation/category_providers.dart';
 import '../domain/product.dart';
@@ -46,6 +47,7 @@ class _State extends ConsumerState<ProductListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     ref.listen(productSearchQueryProvider, (_, q) {
       ref.read(productCriteriaProvider.notifier).update((c) => c.copyWith(searchQuery: q));
     });
@@ -57,7 +59,7 @@ class _State extends ConsumerState<ProductListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Products'),
+        title: Text(l10n.productsTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.clear_all_rounded),
@@ -78,7 +80,7 @@ class _State extends ConsumerState<ProductListScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: SearchField(
-              hint: 'Search product name or barcode',
+              hint: l10n.productSearchHint,
               onChanged: (q) {
                 ref.read(productSearchQueryProvider.notifier).set(q);
               },
@@ -100,9 +102,9 @@ class _State extends ConsumerState<ProductListScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 child: _tile(context, p),
               ),
-              empty: const EmptyState(
+              empty: EmptyState(
                 icon: Icons.inventory_2_outlined,
-                title: 'No products yet',
+                title: l10n.productEmptyTitle,
               ),
             ),
           ),
@@ -112,6 +114,7 @@ class _State extends ConsumerState<ProductListScreen> {
   }
 
   Widget _buildFilters(BuildContext context, WidgetRef ref, ProductCriteria criteria) {
+    final l10n = context.l10n;
     final categoriesAsync = ref.watch(activeCategoriesProvider);
 
     return SingleChildScrollView(
@@ -121,9 +124,9 @@ class _State extends ConsumerState<ProductListScreen> {
         children: [
           // Low Stock Pill
           _FilterPill<bool?>(
-            label: 'Low Stock',
+            label: l10n.productFilterLowStock,
             isActive: criteria.lowStock != null,
-            displayValue: 'Low Stock Only',
+            displayValue: l10n.productFilterLowStockOnly,
             onChanged: (val) {
               ref.read(productCriteriaProvider.notifier).update((c) => c.copyWith(
                 lowStock: () => val,
@@ -133,18 +136,18 @@ class _State extends ConsumerState<ProductListScreen> {
             onClear: () {
               ref.read(productCriteriaProvider.notifier).update((c) => c.copyWith(lowStock: () => null));
             },
-            items: const [
-              PopupMenuItem(value: null, child: Text('All')),
-              PopupMenuItem(value: true, child: Text('Low Stock Only')),
+            items: [
+              PopupMenuItem(value: null, child: Text(l10n.productFilterAll)),
+              PopupMenuItem(value: true, child: Text(l10n.productFilterLowStockOnly)),
             ],
           ),
           const SizedBox(width: 8),
 
           // Out of Stock Pill
           _FilterPill<bool?>(
-            label: 'Out of Stock',
+            label: l10n.productFilterOutOfStock,
             isActive: criteria.outOfStock != null,
-            displayValue: 'Out of Stock Only',
+            displayValue: l10n.productFilterOutOfStockOnly,
             onChanged: (val) {
               ref.read(productCriteriaProvider.notifier).update((c) => c.copyWith(
                 outOfStock: () => val,
@@ -154,9 +157,9 @@ class _State extends ConsumerState<ProductListScreen> {
             onClear: () {
               ref.read(productCriteriaProvider.notifier).update((c) => c.copyWith(outOfStock: () => null));
             },
-            items: const [
-              PopupMenuItem(value: null, child: Text('All')),
-              PopupMenuItem(value: true, child: Text('Out of Stock Only')),
+            items: [
+              PopupMenuItem(value: null, child: Text(l10n.productFilterAll)),
+              PopupMenuItem(value: true, child: Text(l10n.productFilterOutOfStockOnly)),
             ],
           ),
           const SizedBox(width: 8),
@@ -164,7 +167,7 @@ class _State extends ConsumerState<ProductListScreen> {
           // Category Pill
           categoriesAsync.maybeWhen(
             data: (categories) => _FilterPill<String?>(
-              label: 'Category',
+              label: l10n.productFilterCategory,
               isActive: criteria.categoryId != null,
               displayValue: criteria.categoryId != null
                   ? categories.firstWhere((c) => c.id == criteria.categoryId, orElse: () => categories.first).name
@@ -176,7 +179,7 @@ class _State extends ConsumerState<ProductListScreen> {
                 ref.read(productCriteriaProvider.notifier).update((c) => c.copyWith(categoryId: () => null));
               },
               items: [
-                const PopupMenuItem(value: null, child: Text('All Categories')),
+                PopupMenuItem(value: null, child: Text(l10n.productFilterAllCategories)),
                 ...categories.map((c) => PopupMenuItem(value: c.id, child: Text(c.name))),
               ],
             ),
@@ -188,6 +191,7 @@ class _State extends ConsumerState<ProductListScreen> {
   }
 
   Widget _tile(BuildContext context, Product p) {
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -209,7 +213,7 @@ class _State extends ConsumerState<ProductListScreen> {
             ),
           ),
           Text(
-            'pcs',
+            context.l10n.productUnitSuffixPcs,
             style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
           ),
         ],
@@ -253,7 +257,7 @@ class _State extends ConsumerState<ProductListScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  formatMoney(p.sellingPrice),
+                  money(p.sellingPrice),
                   style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

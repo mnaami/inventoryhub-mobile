@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../l10n/l10n_ext.dart';
 
 /// A debounced text field. Calls [onChanged] [debounce] after typing stops.
 class SearchField extends StatefulWidget {
@@ -7,14 +8,14 @@ class SearchField extends StatefulWidget {
     super.key,
     this.initial = '',
     required this.onChanged,
-    this.hint = 'Search',
+    this.hint,
     this.debounce = const Duration(milliseconds: 300),
     this.autofocus = true,
   });
 
   final String initial;
   final ValueChanged<String> onChanged;
-  final String hint;
+  final String? hint;
   final Duration debounce;
   final bool autofocus;
 
@@ -58,7 +59,7 @@ class _SearchFieldState extends State<SearchField> {
       autofocus: widget.autofocus,
       onChanged: _onChanged,
       decoration: InputDecoration(
-        hintText: widget.hint,
+        hintText: widget.hint ?? context.l10n.coreSearchHint,
         prefixIcon: const Icon(Icons.search, size: 20),
         suffixIcon: _controller.text.isEmpty
             ? null

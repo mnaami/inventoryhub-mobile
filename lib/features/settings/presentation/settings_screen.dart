@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../app/currency/currency_controller.dart';
+import '../../../app/locale/locale_controller.dart';
+import '../../../core/format/money_format.dart';
 import '../../../app/theme/app_tokens.dart';
 import '../../../app/theme/theme_controller.dart';
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../auth/presentation/auth_controller.dart';
@@ -56,21 +60,47 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  Widget _radioTile<T>(
+    BuildContext context, {
+    required String title,
+    required T value,
+    required T groupValue,
+    required ValueChanged<T?> onChanged,
+  }) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return RadioListTile<T>(
+      title: Text(
+        title,
+        style: theme.textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
+        ),
+      ),
+      value: value,
+      groupValue: groupValue,
+      onChanged: onChanged,
+      activeColor: scheme.primary,
+      controlAffinity: ListTileControlAffinity.trailing,
+    );
+  }
+
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Log out?'),
-        content: const Text('You will need to sign in again to continue.'),
+        title: Text(l10n.logoutConfirmTitle),
+        content: Text(l10n.logoutConfirmMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             key: const Key('settings_logout_confirm'),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Log out'),
+            child: Text(l10n.logout),
           ),
         ],
       ),
@@ -82,91 +112,145 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final mode = ref.watch(themeControllerProvider);
-    final controller = ref.read(themeControllerProvider.notifier);
+    final themeController = ref.read(themeControllerProvider.notifier);
+    final locale = ref.watch(localeControllerProvider);
+    final localeController = ref.read(localeControllerProvider.notifier);
+    final currency = ref.watch(currencyControllerProvider);
+    final currencyController = ref.read(currencyControllerProvider.notifier);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
-          const SectionHeader('Appearance'),
+          SectionHeader(l10n.sectionAppearance),
           AppCard(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
             child: RadioGroup<ThemeMode>(
               groupValue: mode,
-              onChanged: (m) => controller.set(m!),
+              onChanged: (m) => themeController.set(m!),
               child: Column(
                 children: [
-                  RadioListTile<ThemeMode>(
-                    title: Text(
-                      'System',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: scheme.onSurface,
-                      ),
-                    ),
+                  _radioTile<ThemeMode>(
+                    context,
+                    title: l10n.themeSystem,
                     value: ThemeMode.system,
                     groupValue: mode,
-                    onChanged: (m) => controller.set(m!),
-                    activeColor: scheme.primary,
-                    controlAffinity: ListTileControlAffinity.trailing,
+                    onChanged: (m) => themeController.set(m!),
                   ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
-                  RadioListTile<ThemeMode>(
-                    title: Text(
-                      'Light',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: scheme.onSurface,
-                      ),
-                    ),
+                  _radioTile<ThemeMode>(
+                    context,
+                    title: l10n.themeLight,
                     value: ThemeMode.light,
                     groupValue: mode,
-                    onChanged: (m) => controller.set(m!),
-                    activeColor: scheme.primary,
-                    controlAffinity: ListTileControlAffinity.trailing,
+                    onChanged: (m) => themeController.set(m!),
                   ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
-                  RadioListTile<ThemeMode>(
-                    title: Text(
-                      'Dark',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: scheme.onSurface,
-                      ),
-                    ),
+                  _radioTile<ThemeMode>(
+                    context,
+                    title: l10n.themeDark,
                     value: ThemeMode.dark,
                     groupValue: mode,
-                    onChanged: (m) => controller.set(m!),
-                    activeColor: scheme.primary,
-                    controlAffinity: ListTileControlAffinity.trailing,
+                    onChanged: (m) => themeController.set(m!),
                   ),
                 ],
               ),
             ),
           ),
           const SizedBox(height: AppTokens.space24),
-          const SectionHeader('Catalog'),
+          SectionHeader(l10n.sectionLanguage),
+          AppCard(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            child: RadioGroup<Locale?>(
+              groupValue: locale,
+              onChanged: (l) => localeController.set(l),
+              child: Column(
+                children: [
+                  _radioTile<Locale?>(
+                    context,
+                    title: l10n.languageSystem,
+                    value: null,
+                    groupValue: locale,
+                    onChanged: (l) => localeController.set(l),
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  _radioTile<Locale?>(
+                    context,
+                    title: l10n.languageEnglish,
+                    value: const Locale('en'),
+                    groupValue: locale,
+                    onChanged: (l) => localeController.set(l),
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  _radioTile<Locale?>(
+                    context,
+                    title: l10n.languageArabic,
+                    value: const Locale('ar'),
+                    groupValue: locale,
+                    onChanged: (l) => localeController.set(l),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: AppTokens.space24),
+          SectionHeader(l10n.sectionCurrency),
+          AppCard(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            child: RadioGroup<Currency?>(
+              groupValue: currency,
+              onChanged: (c) {
+                if (c != null) currencyController.set(c);
+              },
+              child: Column(
+                children: [
+                  _radioTile<Currency?>(
+                    context,
+                    title: l10n.currencyUsd,
+                    value: Currency.usd,
+                    groupValue: currency,
+                    onChanged: (c) {
+                      if (c != null) currencyController.set(c);
+                    },
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  _radioTile<Currency?>(
+                    context,
+                    title: l10n.currencyDzd,
+                    value: Currency.dzd,
+                    groupValue: currency,
+                    onChanged: (c) {
+                      if (c != null) currencyController.set(c);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: AppTokens.space24),
+          SectionHeader(l10n.sectionCatalog),
           _navTile(
             context,
             icon: Icons.category_outlined,
-            title: 'Categories',
+            title: l10n.catalogCategories,
             destination: const CategoryManagementScreen(),
           ),
           const SizedBox(height: AppTokens.space8),
           _navTile(
             context,
             icon: Icons.straighten_rounded,
-            title: 'Units',
+            title: l10n.catalogUnits,
             destination: const UnitsManagementScreen(),
           ),
           const SizedBox(height: AppTokens.space24),
           const SampleDataSection(),
           const SizedBox(height: AppTokens.space24),
-          const SectionHeader('About'),
+          SectionHeader(l10n.sectionAbout),
           AppCard(
             padding: const EdgeInsets.all(4),
             child: AboutListTile(
@@ -189,7 +273,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppTokens.space24),
-          const SectionHeader('Account'),
+          SectionHeader(l10n.sectionAccount),
           AppCard(
             key: const Key('settings_logout'),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -209,7 +293,7 @@ class SettingsScreen extends ConsumerWidget {
                 const SizedBox(width: 14),
                 Expanded(
                   child: Text(
-                    'Log out',
+                    l10n.logout,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: scheme.error,

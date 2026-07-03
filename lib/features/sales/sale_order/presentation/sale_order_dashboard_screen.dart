@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../domain/sale_order.dart';
 import '../domain/sale_order_enums.dart';
 import 'sale_order_detail_screen.dart';
@@ -17,6 +19,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final allOrdersAsync = ref.watch(allSaleOrdersProvider);
@@ -24,10 +27,10 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sales Dashboard'),
+        title: Text(l10n.soDashboardTitle),
         actions: [
           IconButton(
-            tooltip: 'View All Orders',
+            tooltip: l10n.soViewAllOrdersTooltip,
             icon: const Icon(Icons.list_alt_rounded),
             onPressed: () {
               ref.read(saleOrderCriteriaProvider.notifier).reset();
@@ -59,7 +62,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
 
           // Payment Status distribution
           allOrdersAsync.when(
-            data: (orders) => _buildPaymentStatusDistribution(context, ref, orders),
+            data: (orders) => _buildPaymentStatusDistribution(context, ref, orders, l10n),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, st) => Text('Error loading payment status distribution: $e'),
           ),
@@ -67,7 +70,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
 
           // Shipping Status distribution
           allOrdersAsync.when(
-            data: (orders) => _buildShippingStatusDistribution(context, ref, orders),
+            data: (orders) => _buildShippingStatusDistribution(context, ref, orders, l10n),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, st) => Text('Error loading shipping status distribution: $e'),
           ),
@@ -78,6 +81,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildOutstandingCard(BuildContext context, WidgetRef ref, double amount) {
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final hasOutstanding = amount > 0.01;
@@ -110,7 +114,9 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hasOutstanding ? 'Outstanding Receivables' : 'All Payments Cleared',
+                  hasOutstanding
+                      ? context.l10n.soOutstandingReceivables
+                      : context.l10n.soAllPaymentsCleared,
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: scheme.onSurfaceVariant,
@@ -118,7 +124,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppTokens.space4),
                 Text(
-                  formatMoney(amount),
+                  money(amount),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: hasOutstanding ? Colors.orange.shade700 : Colors.green.shade700,
@@ -133,10 +139,11 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPaymentStatusDistribution(BuildContext context, WidgetRef ref, List<SaleOrder> orders) {
+  Widget _buildPaymentStatusDistribution(BuildContext context, WidgetRef ref,
+      List<SaleOrder> orders, AppLocalizations l10n) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    
+
     int notPaid = 0;
     int partial = 0;
     int paid = 0;
@@ -159,7 +166,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Payment Status Breakdown',
+          l10n.soPaymentStatusBreakdown,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w700,
             color: scheme.onSurfaceVariant,
@@ -172,7 +179,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
             children: [
               _buildDistributionRow(
                 context: context,
-                label: 'Paid',
+                label: paymentStatusLabel(l10n, PaymentStatus.paid),
                 count: paid,
                 total: total,
                 color: Colors.green.shade600,
@@ -186,7 +193,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
               const Divider(),
               _buildDistributionRow(
                 context: context,
-                label: 'Partial',
+                label: paymentStatusLabel(l10n, PaymentStatus.partial),
                 count: partial,
                 total: total,
                 color: Colors.amber.shade700,
@@ -200,7 +207,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
               const Divider(),
               _buildDistributionRow(
                 context: context,
-                label: 'Not paid',
+                label: paymentStatusLabel(l10n, PaymentStatus.notPaid),
                 count: notPaid,
                 total: total,
                 color: Colors.red.shade700,
@@ -218,7 +225,8 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildShippingStatusDistribution(BuildContext context, WidgetRef ref, List<SaleOrder> orders) {
+  Widget _buildShippingStatusDistribution(BuildContext context, WidgetRef ref,
+      List<SaleOrder> orders, AppLocalizations l10n) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -244,7 +252,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Shipping Status Breakdown',
+          l10n.soShippingStatusBreakdown,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w700,
             color: scheme.onSurfaceVariant,
@@ -257,7 +265,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
             children: [
               _buildDistributionRow(
                 context: context,
-                label: 'Fully shipped',
+                label: shippingStatusLabel(l10n, ShippingStatus.fullyShipped),
                 count: fullyShipped,
                 total: total,
                 color: Colors.green.shade600,
@@ -271,7 +279,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
               const Divider(),
               _buildDistributionRow(
                 context: context,
-                label: 'Partially shipped',
+                label: shippingStatusLabel(l10n, ShippingStatus.partiallyShipped),
                 count: partiallyShipped,
                 total: total,
                 color: Colors.amber.shade700,
@@ -285,7 +293,7 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
               const Divider(),
               _buildDistributionRow(
                 context: context,
-                label: 'Not shipped',
+                label: shippingStatusLabel(l10n, ShippingStatus.notShipped),
                 count: notShipped,
                 total: total,
                 color: Colors.red.shade700,

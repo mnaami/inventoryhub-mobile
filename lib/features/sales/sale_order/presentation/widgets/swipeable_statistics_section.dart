@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inventoryhub_mobile/core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../sale_order_providers.dart';
 import 'package:inventoryhub_mobile/app/theme/app_tokens.dart';
+import 'package:inventoryhub_mobile/core/l10n/l10n_ext.dart';
+import 'package:inventoryhub_mobile/l10n/app_localizations.dart';
 
 class SwipeableStatisticsSection extends ConsumerStatefulWidget {
   const SwipeableStatisticsSection({super.key});
@@ -57,7 +59,7 @@ class _SwipeableStatisticsSectionState extends ConsumerState<SwipeableStatistics
                   Icon(Icons.analytics_rounded, color: scheme.primary, size: 20),
                   const SizedBox(width: AppTokens.space8),
                   Text(
-                    _getCurrentPeriodTitle(),
+                    _getCurrentPeriodTitle(context.l10n),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: scheme.onSurface,
@@ -90,18 +92,18 @@ class _SwipeableStatisticsSectionState extends ConsumerState<SwipeableStatistics
     );
   }
 
-  String _getCurrentPeriodTitle() {
+  String _getCurrentPeriodTitle(AppLocalizations l10n) {
     switch (_currentPage) {
       case 0:
-        return 'Daily Statistics';
+        return l10n.poStatsDaily;
       case 1:
-        return 'Weekly Statistics';
+        return l10n.poStatsWeekly;
       case 2:
-        return 'Monthly Statistics';
+        return l10n.poStatsMonthly;
       case 3:
-        return 'Yearly Statistics';
+        return l10n.poStatsYearly;
       default:
-        return 'Statistics';
+        return l10n.poStatsDefault;
     }
   }
 
@@ -157,7 +159,7 @@ class _SwipeableStatisticsSectionState extends ConsumerState<SwipeableStatistics
               final countAsync = ref.watch(saleOrderCountProvider((startDate: startDate, endDate: endDate)));
               return _buildCompactStatCard(
                 context,
-                'Total Orders',
+                context.l10n.poStatTotalOrders,
                 countAsync,
                 Icons.shopping_bag_outlined,
                 Theme.of(context).colorScheme.primary,
@@ -172,7 +174,7 @@ class _SwipeableStatisticsSectionState extends ConsumerState<SwipeableStatistics
               final amountAsync = ref.watch(saleOrderAmountProvider((startDate: startDate, endDate: endDate)));
               return _buildCompactStatCard(
                 context,
-                'Total Sales',
+                context.l10n.soStatTotalSales,
                 amountAsync,
                 Icons.attach_money_rounded,
                 Colors.green.shade600,
@@ -193,6 +195,7 @@ class _SwipeableStatisticsSectionState extends ConsumerState<SwipeableStatistics
     Color primaryColor, {
     bool isCurrency = false,
   }) {
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -227,7 +230,7 @@ class _SwipeableStatisticsSectionState extends ConsumerState<SwipeableStatistics
           value.when(
             data: (data) {
               final displayValue = isCurrency
-                  ? formatMoney(data as double)
+                  ? money(data as double)
                   : data.toString();
               return Text(
                 displayValue,

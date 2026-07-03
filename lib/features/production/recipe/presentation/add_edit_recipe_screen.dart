@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../production_order/presentation/production_order_providers.dart'
     show allProductsProvider;
@@ -29,9 +30,10 @@ class _AddEditRecipeScreenState extends ConsumerState<AddEditRecipeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final products = ref.watch(allProductsProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('New recipe')),
+      appBar: AppBar(title: Text(l10n.recipeCreateTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -41,7 +43,7 @@ class _AddEditRecipeScreenState extends ConsumerState<AddEditRecipeScreen> {
               data: (list) => DropdownButtonFormField<String>(
                 initialValue: _productId,
                 decoration:
-                    const InputDecoration(labelText: 'Output product'),
+                    InputDecoration(labelText: l10n.productionOutputProductLabel),
                 items: [
                   for (final p in list)
                     DropdownMenuItem(value: p.id, child: Text(p.name))
@@ -54,18 +56,18 @@ class _AddEditRecipeScreenState extends ConsumerState<AddEditRecipeScreen> {
             const SizedBox(height: 12),
             TextField(
               controller: _name,
-              decoration: const InputDecoration(labelText: 'Recipe name'),
+              decoration: InputDecoration(labelText: l10n.recipeNameLabel),
             ),
             const SizedBox(height: 12),
             SwitchListTile(
-              title: const Text('Make this the active recipe'),
+              title: Text(l10n.recipeMakeActiveSwitchLabel),
               value: _activate,
               onChanged: (v) => setState(() => _activate = v),
             ),
             const Spacer(),
             FilledButton(
               onPressed: _save,
-              child: const Text('Create'),
+              child: Text(l10n.productionCreateButton),
             ),
           ],
         ),
@@ -74,10 +76,11 @@ class _AddEditRecipeScreenState extends ConsumerState<AddEditRecipeScreen> {
   }
 
   Future<void> _save() async {
+    final l10n = context.l10n;
     final productId = _productId;
     if (productId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Choose an output product.')));
+          SnackBar(content: Text(l10n.productionChooseOutputProductError)));
       return;
     }
     try {

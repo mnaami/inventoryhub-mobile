@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme/app_tokens.dart';
+import '../../../core/l10n/l10n_ext.dart';
+import '../../../l10n/app_localizations.dart';
 import 'onboarding_controller.dart';
 
 class _Slide {
@@ -10,14 +12,14 @@ class _Slide {
   final String body;
 }
 
-const _slides = <_Slide>[
-  _Slide(Icons.inventory_2_outlined, 'Know your stock',
-      'Track every product, category, and stock movement — instantly, and fully offline.'),
-  _Slide(Icons.swap_horiz_rounded, 'Sell and restock',
-      'Raise sale and purchase orders, record payments, and keep stock in sync automatically.'),
-  _Slide(Icons.precision_manufacturing_outlined, 'Make and manage',
-      'Turn ingredients into products with recipes, and track it all from live dashboards.'),
-];
+List<_Slide> _slidesFor(AppLocalizations l10n) => <_Slide>[
+      _Slide(Icons.inventory_2_outlined, l10n.onboardingSlide1Title,
+          l10n.onboardingSlide1Body),
+      _Slide(Icons.swap_horiz_rounded, l10n.onboardingSlide2Title,
+          l10n.onboardingSlide2Body),
+      _Slide(Icons.precision_manufacturing_outlined,
+          l10n.onboardingSlide3Title, l10n.onboardingSlide3Body),
+    ];
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -39,8 +41,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Future<void> _finish() =>
       ref.read(onboardingSeenProvider.notifier).markSeen();
 
-  void _next() {
-    if (_page == _slides.length - 1) {
+  void _next(List<_Slide> slides) {
+    if (_page == slides.length - 1) {
       _finish();
     } else {
       _controller.nextPage(
@@ -50,9 +52,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final isLast = _page == _slides.length - 1;
+    final slides = _slidesFor(l10n);
+    final isLast = _page == slides.length - 1;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -62,16 +66,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: TextButton(
                 key: const Key('onboarding_skip'),
                 onPressed: _finish,
-                child: const Text('Skip'),
+                child: Text(l10n.onboardingSkip),
               ),
             ),
             Expanded(
               child: PageView.builder(
                 controller: _controller,
-                itemCount: _slides.length,
+                itemCount: slides.length,
                 onPageChanged: (i) => setState(() => _page = i),
                 itemBuilder: (_, i) {
-                  final s = _slides[i];
+                  final s = slides[i];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Column(
@@ -96,7 +100,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_slides.length, (i) {
+              children: List.generate(slides.length, (i) {
                 final active = i == _page;
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
@@ -119,10 +123,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 width: double.infinity,
                 child: FilledButton(
                   key: Key(isLast ? 'onboarding_get_started' : 'onboarding_next'),
-                  onPressed: _next,
+                  onPressed: () => _next(slides),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Text(isLast ? 'Get started' : 'Next'),
+                    child: Text(
+                        isLast ? l10n.onboardingGetStarted : l10n.onboardingNext),
                   ),
                 ),
               ),

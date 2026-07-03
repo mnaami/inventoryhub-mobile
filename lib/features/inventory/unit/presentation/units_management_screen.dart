@@ -6,6 +6,7 @@ import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../domain/unit.dart';
 import 'add_edit_unit_screen.dart';
 import 'unit_providers.dart';
@@ -15,12 +16,13 @@ class UnitsManagementScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final units = ref.watch(unitsProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Units')),
+      appBar: AppBar(title: Text(l10n.unitsTitle)),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () => _edit(context),
@@ -31,9 +33,9 @@ class UnitsManagementScreen extends ConsumerWidget {
         data: (list) => list.isEmpty
             ? EmptyState(
                 icon: Icons.straighten,
-                title: 'No units yet',
-                subtitle: 'Define units like piece, kg, or litre.',
-                actionLabel: 'Add unit',
+                title: l10n.unitEmptyTitle,
+                subtitle: l10n.unitEmptySubtitle,
+                actionLabel: l10n.unitEmptyAction,
                 onAction: () => _edit(context),
               )
             : ListView.separated(
@@ -93,9 +95,9 @@ class UnitsManagementScreen extends ConsumerWidget {
                                         color: Colors.green.withOpacity(0.08),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: const Text(
-                                        'BASE',
-                                        style: TextStyle(
+                                      child: Text(
+                                        l10n.unitBaseTag,
+                                        style: const TextStyle(
                                           color: Colors.green,
                                           fontSize: 9,
                                           fontWeight: FontWeight.bold,
@@ -108,7 +110,8 @@ class UnitsManagementScreen extends ConsumerWidget {
                               if (!u.isBaseUnit) ...[
                                 const SizedBox(height: 6),
                                 Text(
-                                  '× ${u.conversionFactor} conversion factor',
+                                  l10n.unitConversionFactorSuffix(
+                                      '${u.conversionFactor}'),
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: scheme.onSurfaceVariant,
                                   ),
@@ -136,8 +139,10 @@ class UnitsManagementScreen extends ConsumerWidget {
       ));
 
   Future<void> _delete(BuildContext context, WidgetRef ref, Unit u) async {
+    final l10n = context.l10n;
     if (!await confirmDialog(context,
-        title: 'Delete unit', message: 'Delete "${u.name}"?')) {
+        title: l10n.unitDeleteTitle,
+        message: l10n.unitDeleteConfirm(u.name))) {
       return;
     }
     try {

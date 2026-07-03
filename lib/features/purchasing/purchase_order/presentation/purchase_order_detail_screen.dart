@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/async_value_view.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../inventory/product/presentation/product_providers.dart';
 import '../domain/purchase_order.dart';
 import '../domain/purchase_order_enums.dart';
@@ -43,17 +45,19 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     final order = ref.watch(purchaseOrderProvider(orderId));
     final service = ref.read(purchaseOrderServiceProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Purchase Order')),
+      appBar: AppBar(title: Text(l10n.poDetailTitle)),
       body: AsyncValueView<PurchaseOrder?>(
         value: order,
         data: (o) {
-          if (o == null) return const Center(child: Text('Not found'));
+          if (o == null) return Center(child: Text(l10n.poNotFound));
           final items = ref.watch(purchaseOrderItemsProvider(orderId));
           final receipts = ref.watch(purchaseOrderReceiptsProvider(orderId));
           final payments = ref.watch(purchaseOrderPaymentsProvider(orderId));
@@ -81,7 +85,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                 ),
                               ),
                               Text(
-                                formatMoney(o.totalAmount),
+                                money(o.totalAmount),
                                 style: theme.textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.w800,
                                   color: scheme.primary,
@@ -94,9 +98,9 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                             spacing: 8,
                             runSpacing: 8,
                             children: [
-                              _buildStatusBadge(context, o.status),
-                              _buildPaymentStatusBadge(context, o.paymentStatus),
-                              _buildReceiptStatusBadge(context, o.receiptStatus),
+                              _buildStatusBadge(context, o.status, l10n),
+                              _buildPaymentStatusBadge(context, o.paymentStatus, l10n),
+                              _buildReceiptStatusBadge(context, o.receiptStatus, l10n),
                             ],
                           ),
                         ],
@@ -106,7 +110,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
 
                     // Line Items Section
                     Text(
-                      'Lines',
+                      l10n.poLinesHeading,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: scheme.onSurfaceVariant,
@@ -127,11 +131,12 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                   style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                                 ),
                                 subtitle: Text(
-                                  'Qty ordered: ${list[i].quantity} · received: ${list[i].receivedQuantity}',
+                                  l10n.poLineQtyOrderedReceived(
+                                      '${list[i].quantity}', '${list[i].receivedQuantity}'),
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                                 trailing: Text(
-                                  formatMoney(list[i].totalPrice),
+                                  money(list[i].totalPrice),
                                   style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
                                 ),
                               ),
@@ -146,7 +151,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
 
                     // Receipts Section
                     Text(
-                      'Receipts',
+                      l10n.poReceiptsHeading,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: scheme.onSurfaceVariant,
@@ -156,11 +161,11 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                     AsyncValueView<List<PurchaseOrderReceipt>>(
                       value: receipts,
                       data: (list) => list.isEmpty
-                          ? const AppCard(
+                          ? AppCard(
                               child: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text('No receipts recorded yet.'),
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  child: Text(l10n.poNoReceiptsYet),
                                 ),
                               ),
                             )
@@ -194,12 +199,12 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                                 TextButton(
                                                   onPressed: () => _run(context, ref,
                                                       () => service.postReceipt(o, list[i])),
-                                                  child: const Text('Post'),
+                                                  child: Text(l10n.poPostButton),
                                                 ),
                                                 TextButton(
                                                   onPressed: () => _run(context, ref,
                                                       () => service.cancelReceipt(list[i])),
-                                                  child: const Text('Cancel'),
+                                                  child: Text(l10n.commonCancel),
                                                 ),
                                               ],
                                             )
@@ -216,7 +221,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
 
                     // Payments Section
                     Text(
-                      'Payments',
+                      l10n.poPaymentsHeading,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: scheme.onSurfaceVariant,
@@ -226,11 +231,11 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                     AsyncValueView<List<PurchaseOrderPayment>>(
                       value: payments,
                       data: (list) => list.isEmpty
-                          ? const AppCard(
+                          ? AppCard(
                               child: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text('No payments recorded yet.'),
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  child: Text(l10n.poNoPaymentsYet),
                                 ),
                               ),
                             )
@@ -261,7 +266,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            formatMoney(list[i].amount),
+                                            money(list[i].amount),
                                             style: theme.textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.w700,
                                               color: list[i].status == PaymentDocStatus.posted ? Colors.green : null,
@@ -272,12 +277,12 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                             TextButton(
                                               onPressed: () => _run(context, ref,
                                                   () => service.postPayment(o, list[i])),
-                                              child: const Text('Post'),
+                                              child: Text(l10n.poPostButton),
                                             ),
                                             TextButton(
                                               onPressed: () => _run(context, ref,
                                                   () => service.cancelPayment(list[i])),
-                                              child: const Text('Cancel'),
+                                              child: Text(l10n.commonCancel),
                                             ),
                                           ],
                                         ],
@@ -322,6 +327,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
 
   List<Widget> _actions(BuildContext context, WidgetRef ref,
       dynamic service, PurchaseOrder o) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -337,14 +343,14 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
       if (o.status == PurchaseOrderStatus.draft) ...[
         FilledButton(
           onPressed: () => _run(context, ref, () => service.send(o)),
-          child: const Text('Send'),
+          child: Text(l10n.poSendButton),
         ),
         const SizedBox(height: 12),
       ],
       if (o.status == PurchaseOrderStatus.sent) ...[
         FilledButton(
           onPressed: () => _run(context, ref, () => service.confirm(o)),
-          child: const Text('Confirm'),
+          child: Text(l10n.poConfirmButton),
         ),
         const SizedBox(height: 12),
       ],
@@ -355,7 +361,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                 builder: (_) => CreateReceiptScreen(order: o)));
             _refresh(ref);
           },
-          child: const Text('Receive goods'),
+          child: Text(l10n.poReceiveGoodsButton),
         ),
         const SizedBox(height: 12),
       ],
@@ -366,7 +372,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                 builder: (_) => RecordPaymentScreen(order: o)));
             _refresh(ref);
           },
-          child: const Text('Add payment'),
+          child: Text(l10n.poAddPaymentButton),
         ),
         const SizedBox(height: 12),
       ],
@@ -374,15 +380,15 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
         TextButton(
           onPressed: () async {
             final ok = await confirmDialog(context,
-                title: 'Cancel order',
-                message: 'Cancel ${o.orderNumber}?',
-                confirmLabel: 'Cancel order');
+                title: l10n.poCancelOrderButton,
+                message: l10n.poCancelOrderConfirm(o.orderNumber),
+                confirmLabel: l10n.poCancelOrderButton);
             if (ok && context.mounted) {
               await _run(context, ref, () => service.cancel(o));
             }
           },
           child: Text(
-            'Cancel order',
+            l10n.poCancelOrderButton,
             style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600),
           ),
         ),
@@ -390,7 +396,8 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
     ];
   }
 
-  Widget _buildStatusBadge(BuildContext context, PurchaseOrderStatus status) {
+  Widget _buildStatusBadge(
+      BuildContext context, PurchaseOrderStatus status, AppLocalizations l10n) {
     final color = switch (status) {
       PurchaseOrderStatus.draft => Colors.blueGrey,
       PurchaseOrderStatus.sent => Colors.blue,
@@ -405,13 +412,14 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        poStatusLabel(status),
+        poStatusLabel(l10n, status),
         style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  Widget _buildPaymentStatusBadge(BuildContext context, PaymentStatus status) {
+  Widget _buildPaymentStatusBadge(
+      BuildContext context, PaymentStatus status, AppLocalizations l10n) {
     final color = switch (status) {
       PaymentStatus.notPaid => Colors.red,
       PaymentStatus.partial => Colors.amber,
@@ -424,13 +432,14 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        paymentStatusLabel(status),
+        paymentStatusLabel(l10n, status),
         style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  Widget _buildReceiptStatusBadge(BuildContext context, ReceiptStatus status) {
+  Widget _buildReceiptStatusBadge(
+      BuildContext context, ReceiptStatus status, AppLocalizations l10n) {
     final color = switch (status) {
       ReceiptStatus.notReceived => Colors.red,
       ReceiptStatus.partial => Colors.amber,
@@ -443,7 +452,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        receiptStatusLabel(status),
+        receiptStatusLabel(l10n, status),
         style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
       ),
     );

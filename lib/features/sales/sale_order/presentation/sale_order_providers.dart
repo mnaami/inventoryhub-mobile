@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/paging/paged_list_notifier.dart';
 import '../../../../core/paging/paged_state.dart';
 import '../../../../core/providers.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../data/document_counter_dao.dart';
 import '../data/sale_order_dao.dart';
 import '../data/sale_order_payment_dao.dart';
@@ -57,25 +58,27 @@ final saleOrderShipmentsProvider =
     FutureProvider.family<List<SaleOrderShipping>, String>(
         (ref, id) => ref.watch(saleOrderServiceProvider).shipments(id));
 
-String orderStatusLabel(OrderStatus s) => switch (s) {
-      OrderStatus.draft => 'Draft',
-      OrderStatus.confirmed => 'Confirmed',
-      OrderStatus.processing => 'Processing',
-      OrderStatus.shipped => 'Shipped',
-      OrderStatus.delivered => 'Delivered',
-      OrderStatus.cancelled => 'Cancelled',
+String orderStatusLabel(AppLocalizations l10n, OrderStatus s) => switch (s) {
+      OrderStatus.draft => l10n.soStatusDraft,
+      OrderStatus.confirmed => l10n.soStatusConfirmed,
+      OrderStatus.processing => l10n.soStatusProcessing,
+      OrderStatus.shipped => l10n.soStatusShipped,
+      OrderStatus.delivered => l10n.soStatusDelivered,
+      OrderStatus.cancelled => l10n.soStatusCancelled,
     };
 
-String paymentStatusLabel(PaymentStatus s) => switch (s) {
-      PaymentStatus.notPaid => 'Not paid',
-      PaymentStatus.partial => 'Partial',
-      PaymentStatus.paid => 'Paid',
+String paymentStatusLabel(AppLocalizations l10n, PaymentStatus s) =>
+    switch (s) {
+      PaymentStatus.notPaid => l10n.soPaymentStatusNotPaid,
+      PaymentStatus.partial => l10n.soPaymentStatusPartial,
+      PaymentStatus.paid => l10n.soPaymentStatusPaid,
     };
 
-String shippingStatusLabel(ShippingStatus s) => switch (s) {
-      ShippingStatus.notShipped => 'Not shipped',
-      ShippingStatus.partiallyShipped => 'Partially shipped',
-      ShippingStatus.fullyShipped => 'Fully shipped',
+String shippingStatusLabel(AppLocalizations l10n, ShippingStatus s) =>
+    switch (s) {
+      ShippingStatus.notShipped => l10n.soShippingStatusNotShipped,
+      ShippingStatus.partiallyShipped => l10n.soShippingStatusPartiallyShipped,
+      ShippingStatus.fullyShipped => l10n.soShippingStatusFullyShipped,
     };
 
 enum DatePreset { all, today, week, month }

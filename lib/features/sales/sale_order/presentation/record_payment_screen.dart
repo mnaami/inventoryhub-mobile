@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -30,7 +31,7 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
     setState(() => _error = null);
     final amount = double.tryParse(_amount.text.trim());
     if (amount == null) {
-      setState(() => _error = 'Enter a valid amount.');
+      setState(() => _error = context.l10n.poInvalidAmountError);
       return;
     }
     try {
@@ -45,11 +46,13 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Record Payment')),
+      appBar: AppBar(title: Text(l10n.soRecordPaymentTitle)),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
@@ -65,12 +68,13 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Recording payment for:',
+                        l10n.poRecordingPaymentFor,
                         style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${widget.order.soNumber} · Order Total: ${formatMoney(widget.order.totalAmount)}',
+                        l10n.poOrderTotalLine(
+                            widget.order.soNumber, money(widget.order.totalAmount)),
                         style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -87,22 +91,22 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Payment Information',
+                  l10n.poPaymentInfoHeading,
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _amount,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                    labelText: 'Amount Paid',
+                  decoration: InputDecoration(
+                    labelText: l10n.soAmountPaidLabel,
                     prefixText: '\$ ',
                   ),
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<PaymentMethod>(
                   value: _method,
-                  decoration: const InputDecoration(labelText: 'Payment Method'),
+                  decoration: InputDecoration(labelText: l10n.soPaymentMethodLabel),
                   items: [
                     for (final m in PaymentMethod.values)
                       DropdownMenuItem(
@@ -130,7 +134,7 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
           // Submit button
           FilledButton(
             onPressed: _save,
-            child: const Text('Save Payment'),
+            child: Text(l10n.soSavePaymentButton),
           ),
         ],
       ),

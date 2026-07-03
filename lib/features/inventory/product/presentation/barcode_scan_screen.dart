@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 
 class BarcodeScanScreen extends StatefulWidget {
   const BarcodeScanScreen({super.key});
@@ -13,8 +14,9 @@ class _State extends State<BarcodeScanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Scan barcode')),
+      appBar: AppBar(title: Text(l10n.barcodeScanTitle)),
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -44,6 +46,7 @@ class _ScanOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
+      final l10n = context.l10n;
       final frameSize = constraints.maxWidth * 0.65;
       final frameTop = (constraints.maxHeight - frameSize) * 0.40;
 
@@ -71,10 +74,10 @@ class _ScanOverlay extends StatelessWidget {
             left: 0,
             right: 0,
             top: frameTop + frameSize + AppTokens.space16,
-            child: const Text(
-              'Align barcode within the frame',
+            child: Text(
+              l10n.barcodeScanHint,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 shadows: [Shadow(blurRadius: 4, color: Colors.black54)],

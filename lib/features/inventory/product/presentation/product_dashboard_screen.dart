@@ -5,6 +5,7 @@ import 'widgets/product_swipeable_statistics_section.dart';
 import 'product_list_screen.dart';
 import 'package:inventoryhub_mobile/app/theme/app_tokens.dart';
 import 'package:inventoryhub_mobile/core/widgets/app_card.dart';
+import 'package:inventoryhub_mobile/core/l10n/l10n_ext.dart';
 
 class ProductDashboardScreen extends ConsumerWidget {
   const ProductDashboardScreen({super.key});
@@ -15,13 +16,12 @@ class ProductDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final statsAsync = ref.watch(productDashboardProvider);
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inventory Dashboard'),
+        title: Text(l10n.productDashboardTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
@@ -54,11 +54,12 @@ class ProductDashboardScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Error loading dashboard: $e', style: const TextStyle(color: Colors.red)),
+              Text(l10n.productDashboardErrorLoading('$e'),
+                  style: const TextStyle(color: Colors.red)),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => _refresh(ref),
-                child: const Text('Retry'),
+                child: Text(l10n.productDashboardRetry),
               ),
             ],
           ),
@@ -68,6 +69,7 @@ class ProductDashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildStockAlertBanner(BuildContext context, WidgetRef ref, ProductDashboardData stats) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -85,8 +87,9 @@ class ProductDashboardScreen extends ConsumerWidget {
       cardColor = Colors.red.withOpacity(0.08);
       iconColor = Colors.red.shade700;
       icon = Icons.error_rounded;
-      title = 'Restock Required';
-      subtitle = '${stats.outOfStockCount} products are out of stock. Tap to restock.';
+      title = l10n.productDashboardRestockRequiredTitle;
+      subtitle =
+          l10n.productDashboardRestockRequiredSubtitle(stats.outOfStockCount);
       onTap = () {
         ref.read(productCriteriaProvider.notifier).set(const ProductCriteria(outOfStock: true));
         Navigator.of(context).push(MaterialPageRoute(
@@ -97,8 +100,8 @@ class ProductDashboardScreen extends ConsumerWidget {
       cardColor = Colors.orange.withOpacity(0.08);
       iconColor = Colors.orange.shade700;
       icon = Icons.warning_rounded;
-      title = 'Low Stock Alert';
-      subtitle = '${stats.lowStockCount} products are running low. Tap to review.';
+      title = l10n.productDashboardLowStockAlertTitle;
+      subtitle = l10n.productDashboardLowStockAlertSubtitle(stats.lowStockCount);
       onTap = () {
         ref.read(productCriteriaProvider.notifier).set(const ProductCriteria(lowStock: true));
         Navigator.of(context).push(MaterialPageRoute(
@@ -109,8 +112,8 @@ class ProductDashboardScreen extends ConsumerWidget {
       cardColor = Colors.green.withOpacity(0.08);
       iconColor = Colors.green.shade700;
       icon = Icons.check_circle_rounded;
-      title = 'Stock Levels Healthy';
-      subtitle = 'All products are well stocked. No alerts.';
+      title = l10n.productDashboardHealthyTitle;
+      subtitle = l10n.productDashboardHealthySubtitle;
       onTap = () {
         ref.read(productCriteriaProvider.notifier).set(const ProductCriteria());
         Navigator.of(context).push(MaterialPageRoute(
@@ -161,6 +164,7 @@ class ProductDashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildStockStatusDistribution(BuildContext context, WidgetRef ref, ProductDashboardData stats) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -173,7 +177,7 @@ class ProductDashboardScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Stock Status Breakdown',
+          l10n.productDashboardBreakdownHeading,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w700,
             color: scheme.onSurfaceVariant,
@@ -186,7 +190,7 @@ class ProductDashboardScreen extends ConsumerWidget {
             children: [
               _buildDistributionRow(
                 context,
-                title: 'Well Stocked',
+                title: l10n.productDashboardWellStocked,
                 count: wellStocked,
                 total: total,
                 color: Colors.green,
@@ -200,7 +204,7 @@ class ProductDashboardScreen extends ConsumerWidget {
               const Divider(height: 1),
               _buildDistributionRow(
                 context,
-                title: 'Low Stock',
+                title: l10n.productDashboardLowStock,
                 count: lowStock,
                 total: total,
                 color: Colors.orange,
@@ -214,7 +218,7 @@ class ProductDashboardScreen extends ConsumerWidget {
               const Divider(height: 1),
               _buildDistributionRow(
                 context,
-                title: 'Out of Stock',
+                title: l10n.productDashboardOutOfStock,
                 count: outOfStock,
                 total: total,
                 color: Colors.red,
@@ -278,6 +282,7 @@ class ProductDashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildQuickActions(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -285,7 +290,7 @@ class ProductDashboardScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quick Actions',
+          l10n.productDashboardQuickActionsHeading,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w700,
             color: scheme.onSurfaceVariant,
@@ -308,7 +313,7 @@ class ProductDashboardScreen extends ConsumerWidget {
                     Icon(Icons.list_alt_rounded, color: scheme.primary, size: 24),
                     const SizedBox(height: AppTokens.space8),
                     Text(
-                      'Manage Products',
+                      l10n.productDashboardManageProducts,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),

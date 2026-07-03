@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
@@ -6,6 +5,7 @@ import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/production/production_order/presentation/production_order_list_screen.dart';
 import 'package:inventoryhub_mobile/features/production/production_order/presentation/production_order_providers.dart';
+import '../../../helpers/l10n.dart';
 import '../../../helpers/test_db.dart';
 
 void main() {
@@ -24,7 +24,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: ProductionOrderListScreen()),
+      child: localizedApp(home: const ProductionOrderListScreen()),
     ));
     await tester.pumpAndSettle();
 

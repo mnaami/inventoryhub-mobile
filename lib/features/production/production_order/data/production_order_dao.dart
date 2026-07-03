@@ -29,12 +29,17 @@ class ProductionOrderDao extends DatabaseAccessor<AppDatabase>
   Future<List<ProductionOrderRow>> paged(
     String orgId, {
     String? status,
+    String? search,
     required int limit,
     required int offset,
   }) {
     final q = select(productionOrders)
       ..where((o) => o.organizationId.equals(orgId));
     if (status != null) q.where((o) => o.status.equals(status));
+    if (search != null && search.trim().isNotEmpty) {
+      final like = '%${search.trim()}%';
+      q.where((o) => o.orderNumber.like(like));
+    }
     q
       ..orderBy([
         (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)

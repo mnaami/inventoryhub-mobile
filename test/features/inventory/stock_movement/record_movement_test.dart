@@ -9,6 +9,7 @@ import 'package:inventoryhub_mobile/features/inventory/stock_movement/domain/sto
 import 'package:inventoryhub_mobile/features/inventory/stock_movement/presentation/record_movement_screen.dart';
 import 'package:inventoryhub_mobile/features/inventory/stock_movement/presentation/stock_providers.dart';
 import '../../../helpers/test_db.dart';
+import '../../../helpers/l10n.dart';
 
 void main() {
   testWidgets('recording an inbound movement raises current stock',
@@ -33,7 +34,7 @@ void main() {
 
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(
+      child: localizedApp(
         home: RecordMovementScreen(
             productId: product.id, productName: product.name),
       ),

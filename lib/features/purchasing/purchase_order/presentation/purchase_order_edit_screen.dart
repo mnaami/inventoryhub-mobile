@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/format/money_format.dart';
+import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
+import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
@@ -36,6 +37,7 @@ class _PurchaseOrderEditScreenState
   Future<void> _pickSupplier() async {
     final suppliers = await ref.read(suppliersProvider.future);
     if (!mounted) return;
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -53,7 +55,7 @@ class _PurchaseOrderEditScreenState
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Text(
-                'Select Supplier',
+                l10n.poSelectSupplierTitle,
                 style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
               ),
             ),
@@ -84,6 +86,8 @@ class _PurchaseOrderEditScreenState
   Future<void> _addProduct() async {
     final products = await ref.read(productServiceProvider).list(page: 0);
     if (!mounted) return;
+    final money = ref.watch(moneyFormatterProvider);
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -101,7 +105,7 @@ class _PurchaseOrderEditScreenState
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Text(
-                'Select Product',
+                l10n.poSelectProductTitle,
                 style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
               ),
             ),
@@ -118,7 +122,7 @@ class _PurchaseOrderEditScreenState
                         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       subtitle: Text(
-                        '${formatMoney(p.purchasePrice)} each',
+                        l10n.poPriceEach(money(p.purchasePrice)),
                         style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                       ),
                       onTap: () => Navigator.pop(context, p),
@@ -136,7 +140,7 @@ class _PurchaseOrderEditScreenState
   Future<void> _save() async {
     setState(() => _error = null);
     if (_supplier == null) {
-      setState(() => _error = 'Pick a supplier.');
+      setState(() => _error = context.l10n.poPickSupplierError);
       return;
     }
     try {
@@ -160,11 +164,13 @@ class _PurchaseOrderEditScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('New Purchase Order')),
+      appBar: AppBar(title: Text(l10n.poCreateTitle)),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
@@ -188,12 +194,12 @@ class _PurchaseOrderEditScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Supplier',
+                        l10n.poSupplierLabel,
                         style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        _supplier?.name ?? 'Select supplier...',
+                        _supplier?.name ?? l10n.poSelectSupplierPlaceholder,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: _supplier != null ? scheme.onSurface : scheme.onSurfaceVariant,
@@ -210,7 +216,7 @@ class _PurchaseOrderEditScreenState
 
           // Lines List Header
           Text(
-            'Order Items',
+            l10n.poOrderItemsHeading,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
               color: scheme.onSurfaceVariant,
@@ -225,7 +231,7 @@ class _PurchaseOrderEditScreenState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24),
                   child: Text(
-                    'No products added yet.',
+                    l10n.poNoProductsAdded,
                     style: TextStyle(color: scheme.onSurfaceVariant),
                   ),
                 ),
@@ -251,7 +257,7 @@ class _PurchaseOrderEditScreenState
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  '${formatMoney(_lines[i].product.purchasePrice)} each',
+                                  l10n.poPriceEach(money(_lines[i].product.purchasePrice)),
                                   style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                                 ),
                               ],
@@ -265,7 +271,7 @@ class _PurchaseOrderEditScreenState
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
-                                labelText: 'Qty',
+                                labelText: l10n.poQtyLabel,
                                 filled: true,
                                 fillColor: scheme.surfaceContainerLow,
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -290,7 +296,7 @@ class _PurchaseOrderEditScreenState
           OutlinedButton.icon(
             onPressed: _addProduct,
             icon: const Icon(Icons.add, size: 20),
-            label: const Text('Add Product'),
+            label: Text(l10n.poAddProductButton),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
@@ -304,11 +310,11 @@ class _PurchaseOrderEditScreenState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Estimated Total',
+                  l10n.poEstimatedTotal,
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  formatMoney(_total),
+                  money(_total),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: scheme.primary,
@@ -332,7 +338,7 @@ class _PurchaseOrderEditScreenState
           // Action Button
           FilledButton(
             onPressed: _save,
-            child: const Text('Create draft'),
+            child: Text(l10n.poCreateDraftButton),
           ),
         ],
       ),
