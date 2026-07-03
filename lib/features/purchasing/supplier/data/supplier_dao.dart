@@ -28,6 +28,24 @@ class SupplierDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  Future<List<SupplierRow>> paged(
+    String orgId, {
+    String? search,
+    required int limit,
+    required int offset,
+  }) {
+    final q = select(suppliers)
+      ..where((s) => s.organizationId.equals(orgId) & s.isActive.equals(true));
+    if (search != null && search.trim().isNotEmpty) {
+      final like = '%${search.trim()}%';
+      q.where((s) => s.name.like(like) | s.email.like(like));
+    }
+    q
+      ..orderBy([(s) => OrderingTerm(expression: s.name)])
+      ..limit(limit, offset: offset);
+    return q.get();
+  }
+
   Future<SupplierRow?> byId(String id) =>
       (select(suppliers)
             ..where((s) => s.id.equals(id) & s.isActive.equals(true)))

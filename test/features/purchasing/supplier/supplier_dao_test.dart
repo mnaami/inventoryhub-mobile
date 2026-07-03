@@ -47,4 +47,24 @@ void main() {
     await repo.softDelete(a.id);
     expect((await repo.listActive('org1')).map((s) => s.name), ['Globex']);
   });
+
+  test('listSuppliers paginates and filters correctly', () async {
+    final s1 = await repo.create(make('Acme', email: 'a@x.com'));
+    final s2 = await repo.create(make('Globex', email: 'g@x.com'));
+    final s3 = await repo.create(make('Initech', email: 'i@x.com'));
+
+    // Test pagination (limit/offset)
+    final p1 = await repo.listSuppliers('org1', limit: 2, offset: 0);
+    expect(p1.length, 2);
+    expect(p1.map((s) => s.name), ['Acme', 'Globex']); // sorted alphabetically
+
+    final p2 = await repo.listSuppliers('org1', limit: 2, offset: 2);
+    expect(p2.length, 1);
+    expect(p2.map((s) => s.name), ['Initech']);
+
+    // Test search filtering
+    final pSearch = await repo.listSuppliers('org1', search: 'glob', limit: 5, offset: 0);
+    expect(pSearch.length, 1);
+    expect(pSearch.first.name, 'Globex');
+  });
 }

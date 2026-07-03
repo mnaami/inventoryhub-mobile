@@ -44,4 +44,21 @@ void main() {
     await repo.softDelete(a.id);
     expect((await repo.listActive('org1')).map((c) => c.name), ['Globex']);
   });
+
+  test('paged supports limit, offset, and search', () async {
+    final a = await repo.create(make('Acme', email: 'a@x.com'));
+    final b = await repo.create(make('Globex', email: 'g@x.com'));
+    final c = await repo.create(make('Initech', email: 'i@x.com'));
+
+    // Test search filter
+    final searchResult = await repo.listActivePaged('org1', search: 'glob', limit: 10, offset: 0);
+    expect(searchResult.map((x) => x.name), ['Globex']);
+
+    // Test ordering & pagination limit/offset (alphabetical order)
+    final page1 = await repo.listActivePaged('org1', limit: 2, offset: 0);
+    expect(page1.map((x) => x.name), ['Acme', 'Globex']);
+
+    final page2 = await repo.listActivePaged('org1', limit: 2, offset: 2);
+    expect(page2.map((x) => x.name), ['Initech']);
+  });
 }

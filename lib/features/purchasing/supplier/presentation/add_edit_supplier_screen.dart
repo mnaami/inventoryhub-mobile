@@ -151,6 +151,7 @@ class _AddEditSupplierScreenState extends ConsumerState<AddEditSupplierScreen> {
         ));
       }
       ref.invalidate(suppliersProvider);
+      ref.invalidate(supplierListProvider);
       if (mounted) Navigator.of(context).pop(true);
     } on ValidationException catch (e) {
       setState(() => _error = e.message);

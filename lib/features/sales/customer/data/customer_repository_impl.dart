@@ -12,6 +12,22 @@ class CustomerRepositoryImpl implements CustomerRepository {
       (await _dao.listActive(organizationId)).map(toCustomer).toList();
 
   @override
+  Future<List<Customer>> listActivePaged(
+    String organizationId, {
+    String? search,
+    required int limit,
+    required int offset,
+  }) async {
+    final rows = await _dao.paged(
+      organizationId,
+      limit: limit,
+      offset: offset,
+      search: search,
+    );
+    return rows.map(toCustomer).toList();
+  }
+
+  @override
   Future<List<Customer>> search(String organizationId, String query) async =>
       (await _dao.search(organizationId, query)).map(toCustomer).toList();
 
