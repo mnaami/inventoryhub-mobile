@@ -28,7 +28,7 @@ enum Currency {
       };
 }
 
-final _moneyFormat = NumberFormat('#,##0.##', 'en');
+final _moneyFormat = NumberFormat('#,##0.00', 'en');
 
 /// Formats a money amount with thousands separators, dropping trailing zero
 /// decimals, then attaches [currency]'s symbol on the correct side.
