@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
@@ -40,6 +41,82 @@ void main() {
     await tester.tap(find.text('Dashboard'));
     await tester.pumpAndSettle();
     expect(find.text("Today's Sales"), findsOneWidget);
+    await db.close();
+  });
+
+  testWidgets('Can swipe between tabs left and right on body', (tester) async {
+    final db = newTestDb();
+    final session = await SeedService(db, const IdGenerator()).ensureSeeded();
+    final container = ProviderContainer(overrides: [
+      appDatabaseProvider.overrideWithValue(db),
+      sessionProvider.overrideWithValue(session),
+      moneyFormatterProvider
+          .overrideWithValue((v) => formatMoney(v, Currency.usd)),
+    ]);
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: localizedApp(home: const MainScaffold()),
+    ));
+    await tester.pumpAndSettle();
+
+    // Starts on Dashboard tab
+    expect(find.text("Today's Sales"), findsOneWidget);
+
+    // Swipe left on body to Products tab
+    await tester.fling(find.byKey(const Key('main_page_view')), const Offset(-600, 0), 1000);
+    await tester.pumpAndSettle();
+    expect(find.text('Stock Status Breakdown'), findsOneWidget);
+
+    // Swipe left again on body to Sales tab
+    await tester.fling(find.byKey(const Key('main_page_view')), const Offset(-600, 0), 1000);
+    await tester.pumpAndSettle();
+    expect(find.text('Payment Status Breakdown'), findsOneWidget);
+
+    // Swipe right back to Products tab
+    await tester.fling(find.byKey(const Key('main_page_view')), const Offset(600, 0), 1000);
+    await tester.pumpAndSettle();
+    expect(find.text('Stock Status Breakdown'), findsOneWidget);
+
+    await db.close();
+  });
+
+  testWidgets('Can swipe between tabs left and right directly on bottom bar', (tester) async {
+    final db = newTestDb();
+    final session = await SeedService(db, const IdGenerator()).ensureSeeded();
+    final container = ProviderContainer(overrides: [
+      appDatabaseProvider.overrideWithValue(db),
+      sessionProvider.overrideWithValue(session),
+      moneyFormatterProvider
+          .overrideWithValue((v) => formatMoney(v, Currency.usd)),
+    ]);
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: localizedApp(home: const MainScaffold()),
+    ));
+    await tester.pumpAndSettle();
+
+    // Starts on Dashboard tab
+    expect(find.text("Today's Sales"), findsOneWidget);
+
+    // Swipe left on Bottom Bar to Products tab
+    await tester.fling(find.byType(NavigationBar), const Offset(-600, 0), 1000);
+    await tester.pumpAndSettle();
+    expect(find.text('Stock Status Breakdown'), findsOneWidget);
+
+    // Swipe left again on Bottom Bar to Sales tab
+    await tester.fling(find.byType(NavigationBar), const Offset(-600, 0), 1000);
+    await tester.pumpAndSettle();
+    expect(find.text('Payment Status Breakdown'), findsOneWidget);
+
+    // Swipe right back to Products tab
+    await tester.fling(find.byType(NavigationBar), const Offset(600, 0), 1000);
+    await tester.pumpAndSettle();
+    expect(find.text('Stock Status Breakdown'), findsOneWidget);
+
     await db.close();
   });
 }

@@ -65,12 +65,25 @@ class MainScaffold extends ConsumerStatefulWidget {
 
 class _MainScaffoldState extends ConsumerState<MainScaffold> {
   int _index = 0;
+  late final PageController _pageController;
 
   static const _tabs = [
     HomeDashboardScreen(),
     ProductDashboardScreen(),
     SaleOrderDashboardScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _index);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _push(Widget screen) {
     Navigator.of(context)
@@ -205,33 +218,103 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      body: IndexedStack(index: _index, children: _tabs),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) {
-          if (i == 3) {
-            _openMore();
-          } else {
-            if (i == 0 && _index != 0) {
-              ref.invalidate(homeDashboardProvider);
+      body: PageView(
+        key: const Key('main_page_view'),
+        controller: _pageController,
+        onPageChanged: (i) {
+          if (i == 0 && _index != 0) {
+            ref.invalidate(homeDashboardProvider);
+          }
+          setState(() => _index = i);
+        },
+        children: _tabs.map((tab) => _KeepAlivePage(child: tab)).toList(),
+      ),
+      bottomNavigationBar: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity == null) return;
+          if (details.primaryVelocity! < 0) {
+            // Swipe left (finger moves right-to-left) -> Go to next tab
+            if (_index < _tabs.length - 1) {
+              final nextIndex = _index + 1;
+              if (nextIndex == 0 && _index != 0) {
+                ref.invalidate(homeDashboardProvider);
+              }
+              setState(() => _index = nextIndex);
+              _pageController.animateToPage(
+                nextIndex,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
             }
-            setState(() => _index = i);
+          } else if (details.primaryVelocity! > 0) {
+            // Swipe right (finger moves left-to-right) -> Go to previous tab
+            if (_index > 0) {
+              final prevIndex = _index - 1;
+              if (prevIndex == 0 && _index != 0) {
+                ref.invalidate(homeDashboardProvider);
+              }
+              setState(() => _index = prevIndex);
+              _pageController.animateToPage(
+                prevIndex,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
           }
         },
-        destinations: [
-          NavigationDestination(
-              icon: const Icon(Icons.space_dashboard_outlined),
-              label: l10n.navDashboard),
-          NavigationDestination(
-              icon: const Icon(Icons.inventory_2_outlined),
-              label: l10n.navProducts),
-          NavigationDestination(
-              icon: const Icon(Icons.point_of_sale_outlined),
-              label: l10n.navSales),
-          NavigationDestination(
-              icon: const Icon(Icons.more_horiz), label: l10n.navMore),
-        ],
+        child: NavigationBar(
+          selectedIndex: _index,
+          onDestinationSelected: (i) {
+            if (i == 3) {
+              _openMore();
+            } else {
+              if (i == 0 && _index != 0) {
+                ref.invalidate(homeDashboardProvider);
+              }
+              setState(() => _index = i);
+              _pageController.animateToPage(
+                i,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          },
+          destinations: [
+            NavigationDestination(
+                icon: const Icon(Icons.space_dashboard_outlined),
+                label: l10n.navDashboard),
+            NavigationDestination(
+                icon: const Icon(Icons.inventory_2_outlined),
+                label: l10n.navProducts),
+            NavigationDestination(
+                icon: const Icon(Icons.point_of_sale_outlined),
+                label: l10n.navSales),
+            NavigationDestination(
+                icon: const Icon(Icons.more_horiz), label: l10n.navMore),
+          ],
+        ),
       ),
     );
   }
+}
+
+class _KeepAlivePage extends StatefulWidget {
+  final Widget child;
+  const _KeepAlivePage({required this.child});
+
+  @override
+  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<_KeepAlivePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
