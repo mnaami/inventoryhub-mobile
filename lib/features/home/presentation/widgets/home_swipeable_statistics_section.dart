@@ -33,6 +33,12 @@ class HomeSwipeableStatisticsSection extends ConsumerWidget {
         onTap: () {
           final criteria = ref.read(saleOrderCriteriaProvider.notifier);
           criteria.reset();
+          // NOTE: for week/month, this preset's ROLLING window (now-7d/now-30d,
+          // UTC, see sale_order_providers.dart) can disagree with the calendar
+          // window (Monday-of-week/first-of-month, local time) used to compute
+          // the card above, so the pushed list's count may differ from what was
+          // just shown. Only "today" is guaranteed to match. Unifying preset
+          // semantics app-wide is tracked as a separate follow-up, not this slice.
           criteria.setDatePreset(presets[page]);
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => const SaleOrderListScreen()));

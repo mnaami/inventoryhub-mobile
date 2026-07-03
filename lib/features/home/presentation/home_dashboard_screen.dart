@@ -14,8 +14,7 @@ import '../../purchasing/purchase_order/presentation/purchase_order_providers.da
     as po;
 import '../../sales/sale_order/domain/sale_order_enums.dart';
 import '../../sales/sale_order/presentation/sale_order_list_screen.dart';
-import '../../sales/sale_order/presentation/sale_order_providers.dart'
-    hide DatePreset;
+import '../../sales/sale_order/presentation/sale_order_providers.dart';
 import '../domain/home_dashboard_data.dart';
 import 'home_providers.dart';
 import 'widgets/home_swipeable_statistics_section.dart';
