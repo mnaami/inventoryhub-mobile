@@ -278,6 +278,23 @@ class _Filters extends ConsumerWidget {
                 },
               ),
             ),
+          if (criteria.supplierId != null) ...[
+            Consumer(
+              builder: (context, ref, _) {
+                final supplierVal = ref.watch(supplierProvider(criteria.supplierId!));
+                final name = supplierVal.asData?.value?.name ?? 'Loading...';
+                return _FilterPill<String?>(
+                  label: 'Supplier',
+                  isActive: true,
+                  displayValue: name,
+                  onChanged: (_) {},
+                  onClear: () => n.setSupplierId(null),
+                  items: const [],
+                );
+              },
+            ),
+            const SizedBox(width: 8),
+          ],
           _FilterPill<PurchaseOrderStatus?>(
             label: l10n.poFilterStatusLabel,
             isActive: criteria.status != null,

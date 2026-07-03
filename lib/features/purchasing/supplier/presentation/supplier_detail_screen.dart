@@ -10,6 +10,9 @@ import '../../../../l10n/app_localizations.dart';
 import '../domain/supplier.dart';
 import 'add_edit_supplier_screen.dart';
 import 'supplier_providers.dart';
+import '../../purchase_order/presentation/purchase_order_list_screen.dart';
+import '../../purchase_order/presentation/purchase_order_detail_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SupplierDetailScreen extends ConsumerWidget {
   const SupplierDetailScreen({super.key, required this.supplierId});
@@ -43,8 +46,29 @@ class SupplierDetailScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
+    final supplierObj = supplier.asData?.value;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Supplier')),
+      appBar: AppBar(
+        title: const Text('Supplier'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: supplierObj == null
+                ? null
+                : () async {
+                    final saved = await Navigator.of(context).push<bool>(
+                      MaterialPageRoute(
+                        builder: (_) => AddEditSupplierScreen(existing: supplierObj),
+                      ),
+                    );
+                    if (saved == true) {
+                      ref.invalidate(supplierProvider(supplierId));
+                    }
+                  },
+          ),
+        ],
+      ),
       body: AsyncValueView<Supplier?>(
         value: supplier,
         data: (s) {
@@ -141,15 +165,38 @@ class SupplierDetailScreen extends ConsumerWidget {
                       const Divider(height: 1),
                     ],
                     if (s.phones.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.phone_outlined, color: scheme.primary),
-                        title: Text(
-                          s.phones.join(', '),
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                      for (final phone in s.phones) ...[
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(Icons.phone_outlined, color: scheme.primary),
+                          title: Text(
+                            phone,
+                            style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                          ),
+                          trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
+                          onTap: () async {
+                            final Uri uri = Uri(scheme: 'tel', path: phone);
+                            try {
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              } else {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Could not launch phone call to $phone')),
+                                  );
+                                }
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error launching call: $e')),
+                                );
+                              }
+                            }
+                          },
                         ),
-                      ),
-                      const Divider(height: 1),
+                        const Divider(height: 1),
+                      ],
                     ],
                     if (s.address != null && s.address!.isNotEmpty) ...[
                       ListTile(
@@ -187,12 +234,36 @@ class SupplierDetailScreen extends ConsumerWidget {
               const SizedBox(height: AppTokens.space24),
 
               // Section Header
-              Text(
-                'Purchase orders',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: scheme.onSurfaceVariant,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Purchase orders',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Consumer(builder: (context, ref, _) {
+                    final orders = ref.watch(supplierOrdersProvider(supplierId));
+                    return orders.maybeWhen(
+                      data: (list) {
+                        if (list.isEmpty) return const SizedBox.shrink();
+                        return TextButton(
+                          onPressed: () {
+                            ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+                            ref.read(purchaseOrderCriteriaProvider.notifier).setSupplierId(supplierId);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const PurchaseOrderListScreen()),
+                            );
+                          },
+                          child: const Text('View all'),
+                        );
+                      },
+                      orElse: () => const SizedBox.shrink(),
+                    );
+                  }),
+                ],
               ),
               const SizedBox(height: AppTokens.space8),
 
@@ -209,14 +280,15 @@ class SupplierDetailScreen extends ConsumerWidget {
                         ),
                       );
                     }
+                    final displayList = list.take(5).toList();
                     return AppCard(
                       padding: EdgeInsets.zero,
                       child: Column(
                         children: [
-                          for (int i = 0; i < list.length; i++) ...[
+                          for (int i = 0; i < displayList.length; i++) ...[
                             ListTile(
                               title: Text(
-                                list[i].orderNumber,
+                                displayList[i].orderNumber,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: scheme.onSurface,
@@ -226,19 +298,26 @@ class SupplierDetailScreen extends ConsumerWidget {
                                 padding: const EdgeInsets.only(top: 4),
                                 child: Row(
                                   children: [
-                                    _buildStatusBadge(context, list[i].status),
+                                    _buildStatusBadge(context, displayList[i].status),
                                   ],
                                 ),
                               ),
                               trailing: Text(
-                                money(list[i].totalAmount),
+                                money(displayList[i].totalAmount),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: scheme.onSurface,
                                 ),
                               ),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => PurchaseOrderDetailScreen(orderId: displayList[i].id),
+                                  ),
+                                );
+                              },
                             ),
-                            if (i < list.length - 1) const Divider(height: 1),
+                            if (i < displayList.length - 1) const Divider(height: 1),
                           ],
                         ],
                       ),
@@ -247,18 +326,6 @@ class SupplierDetailScreen extends ConsumerWidget {
                   orElse: () => const SizedBox.shrink(),
                 );
               }),
-              const SizedBox(height: AppTokens.space24),
-
-              // Edit Button
-              OutlinedButton.icon(
-                icon: const Icon(Icons.edit_outlined),
-                label: const Text('Edit'),
-                onPressed: () async {
-                  await Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => AddEditSupplierScreen(existing: s)));
-                  ref.invalidate(supplierProvider(supplierId));
-                },
-              ),
             ],
           );
         },
