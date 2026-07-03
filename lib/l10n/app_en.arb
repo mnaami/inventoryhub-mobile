@@ -457,5 +457,11 @@
   "soPaymentMethodLabel": "Payment Method",
   "soSavePaymentButton": "Save Payment",
 
+  "salesDashboardQuickActionsHeading": "Quick Actions",
+  "salesDashboardCustomersAction": "Customers",
+  "salesDashboardOrdersAction": "Orders",
+  "purchasingDashboardQuickActionsHeading": "Quick Actions",
+  "purchasingDashboardSuppliersAction": "Suppliers",
+  "purchasingDashboardOrdersAction": "Orders",
   "soStatTotalSales": "Total Sales"
 }

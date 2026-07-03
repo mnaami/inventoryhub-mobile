@@ -2258,6 +2258,42 @@ abstract class AppLocalizations {
   /// **'Save Payment'**
   String get soSavePaymentButton;
 
+  /// No description provided for @salesDashboardQuickActionsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get salesDashboardQuickActionsHeading;
+
+  /// No description provided for @salesDashboardCustomersAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers'**
+  String get salesDashboardCustomersAction;
+
+  /// No description provided for @salesDashboardOrdersAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get salesDashboardOrdersAction;
+
+  /// No description provided for @purchasingDashboardQuickActionsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get purchasingDashboardQuickActionsHeading;
+
+  /// No description provided for @purchasingDashboardSuppliersAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Suppliers'**
+  String get purchasingDashboardSuppliersAction;
+
+  /// No description provided for @purchasingDashboardOrdersAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get purchasingDashboardOrdersAction;
+
   /// No description provided for @soStatTotalSales.
   ///
   /// In en, this message translates to:

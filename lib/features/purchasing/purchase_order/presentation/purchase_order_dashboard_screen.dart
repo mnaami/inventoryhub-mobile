@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
-import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -13,6 +12,8 @@ import 'purchase_order_edit_screen.dart';
 import 'purchase_order_list_screen.dart';
 import 'purchase_order_providers.dart';
 import 'widgets/purchase_order_swipeable_statistics_section.dart';
+import '../../supplier/presentation/supplier_list_screen.dart';
+import '../../supplier/presentation/supplier_providers.dart';
 
 class PurchaseOrderDashboardScreen extends ConsumerWidget {
   const PurchaseOrderDashboardScreen({super.key});
@@ -20,25 +21,12 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final allOrdersAsync = ref.watch(allPurchaseOrdersProvider);
     final kpisAsync = ref.watch(purchaseDashboardProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.poDashboardTitle),
-        actions: [
-          IconButton(
-            tooltip: l10n.poViewAllOrdersTooltip,
-            icon: const Icon(Icons.list_alt_rounded),
-            onPressed: () {
-              ref.read(purchaseOrderCriteriaProvider.notifier).reset();
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => const PurchaseOrderListScreen()));
-            },
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'purchasing_fab',
@@ -48,6 +36,10 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
+          // Quick Actions
+          _buildQuickActions(context, ref),
+          const SizedBox(height: AppTokens.space24),
+
           // Period Stats Section
           const PurchaseOrderSwipeableStatisticsSection(),
           const SizedBox(height: AppTokens.space24),
@@ -357,6 +349,79 @@ class PurchaseOrderDashboardScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.purchasingDashboardQuickActionsHeading,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppTokens.space12),
+        Row(
+          children: [
+            Expanded(
+              child: AppCard(
+                onTap: () {
+                  ref.read(supplierCriteriaProvider.notifier).reset();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SupplierListScreen()),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.local_shipping_outlined, color: scheme.primary, size: 28),
+                    const SizedBox(height: AppTokens.space8),
+                    Text(
+                      l10n.purchasingDashboardSuppliersAction,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: AppTokens.space12),
+            Expanded(
+              child: AppCard(
+                onTap: () {
+                  ref.read(purchaseOrderCriteriaProvider.notifier).reset();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const PurchaseOrderListScreen()),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.receipt_long_rounded, color: scheme.primary, size: 28),
+                    const SizedBox(height: AppTokens.space8),
+                    Text(
+                      l10n.purchasingDashboardOrdersAction,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

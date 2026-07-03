@@ -400,5 +400,11 @@
   "soPaymentMethodLabel": "طريقة الدفع",
   "soSavePaymentButton": "حفظ الدفعة",
 
+  "salesDashboardQuickActionsHeading": "إجراءات سريعة",
+  "salesDashboardCustomersAction": "العملاء",
+  "salesDashboardOrdersAction": "الطلبات",
+  "purchasingDashboardQuickActionsHeading": "إجراءات سريعة",
+  "purchasingDashboardSuppliersAction": "الموردين",
+  "purchasingDashboardOrdersAction": "الطلبات",
   "soStatTotalSales": "إجمالي المبيعات"
 }

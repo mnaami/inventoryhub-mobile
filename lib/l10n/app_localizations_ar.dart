@@ -1138,5 +1138,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get soSavePaymentButton => 'حفظ الدفعة';
 
   @override
+  String get salesDashboardQuickActionsHeading => 'إجراءات سريعة';
+
+  @override
+  String get salesDashboardCustomersAction => 'العملاء';
+
+  @override
+  String get salesDashboardOrdersAction => 'الطلبات';
+
+  @override
+  String get purchasingDashboardQuickActionsHeading => 'إجراءات سريعة';
+
+  @override
+  String get purchasingDashboardSuppliersAction => 'الموردين';
+
+  @override
+  String get purchasingDashboardOrdersAction => 'الطلبات';
+
+  @override
   String get soStatTotalSales => 'إجمالي المبيعات';
 }

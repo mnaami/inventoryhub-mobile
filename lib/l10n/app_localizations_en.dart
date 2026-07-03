@@ -1138,5 +1138,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soSavePaymentButton => 'Save Payment';
 
   @override
+  String get salesDashboardQuickActionsHeading => 'Quick Actions';
+
+  @override
+  String get salesDashboardCustomersAction => 'Customers';
+
+  @override
+  String get salesDashboardOrdersAction => 'Orders';
+
+  @override
+  String get purchasingDashboardQuickActionsHeading => 'Quick Actions';
+
+  @override
+  String get purchasingDashboardSuppliersAction => 'Suppliers';
+
+  @override
+  String get purchasingDashboardOrdersAction => 'Orders';
+
+  @override
   String get soStatTotalSales => 'Total Sales';
 }

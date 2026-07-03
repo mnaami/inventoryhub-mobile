@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../core/l10n/l10n_ext.dart';
-import '../features/inventory/product/presentation/product_list_screen.dart';
 import '../features/inventory/product/presentation/product_dashboard_screen.dart';
 import '../features/inventory/stock_movement/presentation/stock_movements_screen.dart';
-import '../features/sales/customer/presentation/customer_list_screen.dart';
 import '../features/sales/sale_order/presentation/sale_order_dashboard_screen.dart';
 import '../features/purchasing/purchase_order/presentation/purchase_order_dashboard_screen.dart';
-import '../features/purchasing/supplier/presentation/supplier_list_screen.dart';
 import '../features/production/presentation/production_home_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/auth/domain/auth_state.dart';
@@ -174,24 +171,6 @@ class _MainScaffoldState extends State<MainScaffold> {
                 onTap: () {
                   Navigator.pop(ctx);
                   _push(const ProductionHomeScreen());
-                },
-              ),
-              const Divider(height: 1, indent: 20, endIndent: 20),
-              _sheetTile(
-                icon: Icons.local_shipping_outlined,
-                title: l10n.navSuppliers,
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _push(const SupplierListScreen());
-                },
-              ),
-              const Divider(height: 1, indent: 20, endIndent: 20),
-              _sheetTile(
-                icon: Icons.people_outline_rounded,
-                title: l10n.navCustomers,
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _push(const CustomerListScreen());
                 },
               ),
               const Divider(height: 1, indent: 20, endIndent: 20),

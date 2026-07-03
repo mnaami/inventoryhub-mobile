@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
-import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -13,6 +12,9 @@ import 'sale_order_edit_screen.dart';
 import 'sale_order_list_screen.dart';
 import 'sale_order_providers.dart';
 import 'widgets/swipeable_statistics_section.dart';
+import '../../customer/presentation/customer_list_screen.dart';
+import '../../customer/presentation/customer_providers.dart';
+
 
 class SaleOrderDashboardScreen extends ConsumerWidget {
   const SaleOrderDashboardScreen({super.key});
@@ -20,25 +22,12 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final allOrdersAsync = ref.watch(allSaleOrdersProvider);
     final kpisAsync = ref.watch(saleDashboardProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.soDashboardTitle),
-        actions: [
-          IconButton(
-            tooltip: l10n.soViewAllOrdersTooltip,
-            icon: const Icon(Icons.list_alt_rounded),
-            onPressed: () {
-              ref.read(saleOrderCriteriaProvider.notifier).reset();
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => const SaleOrderListScreen()));
-            },
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'sales_fab',
@@ -48,6 +37,10 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
+          // Quick Actions
+          _buildQuickActions(context, ref),
+          const SizedBox(height: AppTokens.space24),
+
           // Period Stats Section
           const SwipeableStatisticsSection(),
           const SizedBox(height: AppTokens.space24),
@@ -357,6 +350,79 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.salesDashboardQuickActionsHeading,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppTokens.space12),
+        Row(
+          children: [
+            Expanded(
+              child: AppCard(
+                onTap: () {
+                  ref.read(customerCriteriaProvider.notifier).reset();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const CustomerListScreen()),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.people_outline_rounded, color: scheme.primary, size: 28),
+                    const SizedBox(height: AppTokens.space8),
+                    Text(
+                      l10n.salesDashboardCustomersAction,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: AppTokens.space12),
+            Expanded(
+              child: AppCard(
+                onTap: () {
+                  ref.read(saleOrderCriteriaProvider.notifier).reset();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SaleOrderListScreen()),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.receipt_long_rounded, color: scheme.primary, size: 28),
+                    const SizedBox(height: AppTokens.space8),
+                    Text(
+                      l10n.salesDashboardOrdersAction,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
