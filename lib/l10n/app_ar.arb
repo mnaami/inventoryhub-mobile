@@ -70,6 +70,39 @@
   "navSuppliers": "الموردون",
   "navCustomers": "العملاء",
   "navSettings": "الإعدادات",
+  "navDashboard": "الرئيسية",
+  "homeDashboardTitle": "لوحة المعلومات",
+  "homeSalesToday": "مبيعات اليوم",
+  "homeSalesThisWeek": "مبيعات هذا الأسبوع",
+  "homeSalesThisMonth": "مبيعات هذا الشهر",
+  "homeStatOrders": "الطلبات",
+  "homeStatRevenue": "الإيرادات",
+  "homeSalesTrendToday": "اتجاه المبيعات — اليوم",
+  "homeSalesTrend7d": "اتجاه المبيعات — 7 أيام",
+  "homeSalesTrend30d": "اتجاه المبيعات — 30 يومًا",
+  "homeSalesTrendEmpty": "لا توجد مبيعات في هذه الفترة بعد",
+  "homeMoneyHeading": "الأموال الواردة والصادرة",
+  "homeReceivables": "مستحقات لك من العملاء",
+  "homePayables": "مستحقات عليك للموردين",
+  "homeStockHeading": "لمحة عن المخزون",
+  "homeStockValue": "إجمالي قيمة المخزون",
+  "homeLowStock": "منتجات منخفضة المخزون",
+  "homeOutOfStock": "منتجات نفدت من المخزون",
+  "homeOpenWorkHeading": "الأعمال المفتوحة",
+  "homeOpenSaleOrders": "طلبات بيع مفتوحة",
+  "homeUnshipped": "بانتظار الشحن",
+  "homeOpenPurchaseOrders": "طلبات شراء مفتوحة",
+  "homeUnreceived": "بانتظار الاستلام",
+  "homeInProduction": "قيد الإنتاج",
+  "homeErrorLoading": "خطأ في تحميل لوحة المعلومات: {error}",
+  "@homeErrorLoading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "homeRetry": "إعادة المحاولة",
 
   "categoryEditTitle": "تعديل الفئة",
   "categoryNewTitle": "فئة جديدة",
