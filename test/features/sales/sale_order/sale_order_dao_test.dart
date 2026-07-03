@@ -104,7 +104,7 @@ void main() {
     await db.saleOrderDao.createWithItems(
         order('2', createdAt: DateTime.utc(2026, 6, 1)), const []);
     final recent = await db.saleOrderDao.paged('org1',
-        from: DateTime.utc(2026, 5, 1), to: DateTime.utc(2026, 7, 1),
+        from: DateTime.utc(2026, 5, 1), to: DateTime.utc(2026, 7, 2),
         limit: 20, offset: 0);
     expect(recent.single.id, '2');
   });

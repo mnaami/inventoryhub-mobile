@@ -47,7 +47,7 @@ void main() {
     expect(s.items.single.soNumber, 'SO-0002');
   });
 
-  test('date range applies to as inclusive end-of-day', () async {
+  test('date range applies to as an exclusive upper bound', () async {
     final db = newTestDb();
     addTearDown(db.close);
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();
@@ -73,7 +73,7 @@ void main() {
     final rows = await db.saleOrderDao.paged(
       session.organizationId,
       from: DateTime.utc(2026, 6, 2),
-      to: DateTime.utc(2026, 6, 2),
+      to: DateTime.utc(2026, 6, 3),
       limit: 20,
       offset: 0,
     );

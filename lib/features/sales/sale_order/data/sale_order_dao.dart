@@ -76,9 +76,10 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
       q.where((o) => o.soNumber.like(like));
     }
     if (from != null) q.where((o) => o.createdAt.isBiggerOrEqualValue(from));
-    if (to != null) {
-      q.where((o) => o.createdAt.isSmallerThanValue(_endOfDay(to)));
-    }
+    // `to` is an EXCLUSIVE upper bound: pass the instant just after the
+    // window ends (e.g. `_endOfDay`-style "start of the next day"), not an
+    // inclusive calendar day. Matches `PurchaseOrderDao.paged`'s contract.
+    if (to != null) q.where((o) => o.createdAt.isSmallerThanValue(to));
     q
       ..orderBy([
         (o) => OrderingTerm(expression: o.createdAt, mode: OrderingMode.desc)
@@ -86,10 +87,6 @@ class SaleOrderDao extends DatabaseAccessor<AppDatabase>
       ..limit(limit, offset: offset);
     return q.get();
   }
-
-  /// Exclusive upper bound: the instant just after the end of [d]'s day.
-  DateTime _endOfDay(DateTime d) =>
-      DateTime(d.year, d.month, d.day).add(const Duration(days: 1));
 
   Future<void> setStatus(String id, String status, DateTime now) {
     return (update(saleOrders)..where((o) => o.id.equals(id))).write(
