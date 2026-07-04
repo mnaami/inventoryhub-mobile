@@ -856,6 +856,44 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String recipeForOutputProduct(String name) {
+    return 'For output product: $name';
+  }
+
+  @override
+  String get recipeIngredientLoading => 'Loading ingredient…';
+
+  @override
+  String get recipeNoIngredientsYet => 'No ingredients yet — tap + to add.';
+
+  @override
+  String get recipeAddIngredientTitle => 'Add ingredient';
+
+  @override
+  String get recipeEditIngredientTitle => 'Edit ingredient';
+
+  @override
+  String get recipeIngredientProductLabel => 'Ingredient product';
+
+  @override
+  String get recipeIngredientQuantityLabel => 'Quantity per unit produced';
+
+  @override
+  String get recipeIngredientQuantityHelper => 'Per unit of output produced';
+
+  @override
+  String get recipeSaveIngredientButton => 'Save';
+
+  @override
+  String get recipeRemoveIngredientButton => 'Remove';
+
+  @override
+  String get recipeSelectIngredientError => 'Choose an ingredient product.';
+
+  @override
+  String get recipeNoProductsToAdd => 'No other products available to add.';
+
+  @override
   String get recipeCreateTitle => 'New recipe';
 
   @override

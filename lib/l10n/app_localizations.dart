@@ -1675,6 +1675,78 @@ abstract class AppLocalizations {
   /// **'{quantity} {unit} / unit'**
   String recipeQuantityPerUnit(String quantity, String unit);
 
+  /// No description provided for @recipeForOutputProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'For output product: {name}'**
+  String recipeForOutputProduct(String name);
+
+  /// No description provided for @recipeIngredientLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading ingredient…'**
+  String get recipeIngredientLoading;
+
+  /// No description provided for @recipeNoIngredientsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No ingredients yet — tap + to add.'**
+  String get recipeNoIngredientsYet;
+
+  /// No description provided for @recipeAddIngredientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ingredient'**
+  String get recipeAddIngredientTitle;
+
+  /// No description provided for @recipeEditIngredientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit ingredient'**
+  String get recipeEditIngredientTitle;
+
+  /// No description provided for @recipeIngredientProductLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient product'**
+  String get recipeIngredientProductLabel;
+
+  /// No description provided for @recipeIngredientQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity per unit produced'**
+  String get recipeIngredientQuantityLabel;
+
+  /// No description provided for @recipeIngredientQuantityHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Per unit of output produced'**
+  String get recipeIngredientQuantityHelper;
+
+  /// No description provided for @recipeSaveIngredientButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get recipeSaveIngredientButton;
+
+  /// No description provided for @recipeRemoveIngredientButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get recipeRemoveIngredientButton;
+
+  /// No description provided for @recipeSelectIngredientError.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an ingredient product.'**
+  String get recipeSelectIngredientError;
+
+  /// No description provided for @recipeNoProductsToAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'No other products available to add.'**
+  String get recipeNoProductsToAdd;
+
   /// No description provided for @recipeCreateTitle.
   ///
   /// In en, this message translates to:

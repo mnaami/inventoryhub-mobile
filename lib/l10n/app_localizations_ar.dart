@@ -856,6 +856,44 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String recipeForOutputProduct(String name) {
+    return 'لمنتج ناتج: $name';
+  }
+
+  @override
+  String get recipeIngredientLoading => 'جارٍ تحميل المكوّن…';
+
+  @override
+  String get recipeNoIngredientsYet => 'لا توجد مكونات بعد — اضغط + للإضافة.';
+
+  @override
+  String get recipeAddIngredientTitle => 'إضافة مكوّن';
+
+  @override
+  String get recipeEditIngredientTitle => 'تعديل المكوّن';
+
+  @override
+  String get recipeIngredientProductLabel => 'منتج المكوّن';
+
+  @override
+  String get recipeIngredientQuantityLabel => 'الكمية لكل وحدة منتَجة';
+
+  @override
+  String get recipeIngredientQuantityHelper => 'لكل وحدة من الناتج';
+
+  @override
+  String get recipeSaveIngredientButton => 'حفظ';
+
+  @override
+  String get recipeRemoveIngredientButton => 'إزالة';
+
+  @override
+  String get recipeSelectIngredientError => 'اختر منتج المكوّن.';
+
+  @override
+  String get recipeNoProductsToAdd => 'لا توجد منتجات أخرى متاحة للإضافة.';
+
+  @override
   String get recipeCreateTitle => 'وصفة جديدة';
 
   @override
