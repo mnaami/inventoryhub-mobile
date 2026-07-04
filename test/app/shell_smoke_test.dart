@@ -34,8 +34,9 @@ void main() {
     expect(find.text("Today's Sales"), findsOneWidget); // home stats section
     expect(find.text('Products'), findsOneWidget); // nav label
     expect(find.text('Sales'), findsOneWidget); // nav label
+    expect(find.text('Production'), findsOneWidget); // nav label
     expect(find.text('More'), findsOneWidget); // nav label
-    expect(find.text('Purchasing'), findsNothing); // demoted to More sheet
+    expect(find.text('Purchasing'), findsNothing); // demoted to More screen
     await db.close();
   });
 }

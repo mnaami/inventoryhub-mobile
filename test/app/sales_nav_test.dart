@@ -11,7 +11,7 @@ import '../helpers/test_db.dart';
 import '../helpers/l10n.dart';
 
 void main() {
-  testWidgets('bottom nav shows the four sections and opens Sales',
+  testWidgets('bottom nav shows the five sections and opens Sales',
       (tester) async {
     final db = newTestDb();
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();
@@ -31,6 +31,7 @@ void main() {
     expect(find.text('Dashboard'), findsWidgets);
     expect(find.text('Products'), findsWidgets);
     expect(find.text('Sales'), findsWidgets);
+    expect(find.text('Production'), findsWidgets);
     expect(find.text('More'), findsWidgets);
     expect(find.text('Purchasing'), findsNothing);
 

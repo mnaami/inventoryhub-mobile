@@ -9,8 +9,6 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../auth/presentation/auth_controller.dart';
-import '../../inventory/category/presentation/category_management_screen.dart';
-import '../../inventory/unit/presentation/units_management_screen.dart';
 import 'sample_data_section.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -231,21 +229,6 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
             ),
-          ),
-          const SizedBox(height: AppTokens.space24),
-          SectionHeader(l10n.sectionCatalog),
-          _navTile(
-            context,
-            icon: Icons.category_outlined,
-            title: l10n.catalogCategories,
-            destination: const CategoryManagementScreen(),
-          ),
-          const SizedBox(height: AppTokens.space8),
-          _navTile(
-            context,
-            icon: Icons.straighten_rounded,
-            title: l10n.catalogUnits,
-            destination: const UnitsManagementScreen(),
           ),
           const SizedBox(height: AppTokens.space24),
           const SampleDataSection(),
