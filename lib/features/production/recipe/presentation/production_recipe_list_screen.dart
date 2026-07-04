@@ -5,6 +5,7 @@ import '../../../../core/widgets/async_value_view.dart';
 import 'add_edit_recipe_screen.dart';
 import 'production_recipe_detail_screen.dart';
 import 'production_recipe_providers.dart';
+import '../../../inventory/product/presentation/product_providers.dart';
 
 class ProductionRecipeListScreen extends ConsumerWidget {
   const ProductionRecipeListScreen({super.key});
@@ -28,10 +29,24 @@ class ProductionRecipeListScreen extends ConsumerWidget {
                 itemCount: list.length,
                 itemBuilder: (_, i) {
                   final r = list[i];
+                  final theme = Theme.of(context);
+                  final scheme = theme.colorScheme;
                   return ListTile(
                     title: Text(r.name),
-                    subtitle: Text(
-                        r.isActive ? l10n.recipeActive : l10n.recipeInactive),
+                    subtitle: Consumer(
+                      builder: (context, ref, _) {
+                        final p = ref.watch(productProvider(r.productId));
+                        return p.maybeWhen(
+                          data: (product) => Text(
+                            'For: ${product?.name ?? r.productId} · ${r.isActive ? l10n.recipeActive : l10n.recipeInactive}',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                          orElse: () => Text(r.isActive ? l10n.recipeActive : l10n.recipeInactive),
+                        );
+                      },
+                    ),
                     trailing: r.isActive
                         ? const Icon(Icons.check_circle, color: Colors.green)
                         : null,

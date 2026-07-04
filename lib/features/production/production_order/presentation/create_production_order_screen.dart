@@ -18,6 +18,15 @@ class _CreateProductionOrderScreenState
   String? _productId;
 
   @override
+  void initState() {
+    super.initState();
+    // allProductsProvider is a shared cache that is not invalidated when
+    // products are created elsewhere; refresh it so newly added products
+    // appear in the output-product picker.
+    ref.invalidate(allProductsProvider);
+  }
+
+  @override
   void dispose() {
     _qty.dispose();
     super.dispose();

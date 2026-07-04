@@ -713,6 +713,106 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productionCancelOrderButton => 'Cancel order';
 
   @override
+  String productionCreatedValue(String date) {
+    return 'Created: $date';
+  }
+
+  @override
+  String get productionOutputProductHeading => 'Output product';
+
+  @override
+  String get productionProductNotFound => 'Product not found';
+
+  @override
+  String productionBarcodeValue(String barcode) {
+    return 'Barcode: $barcode';
+  }
+
+  @override
+  String get productionTargetQuantityLabel => 'Target quantity';
+
+  @override
+  String get productionOnHandStockLabel => 'On-hand stock';
+
+  @override
+  String get productionRequiredIngredientsHeading => 'Required ingredients';
+
+  @override
+  String get productionNoActiveRecipeTitle => 'No active recipe';
+
+  @override
+  String get productionNoActiveRecipeBody =>
+      'No active recipe is set for this product. An active recipe is required to complete the production.';
+
+  @override
+  String get productionNoRecipeDetailsTerminal =>
+      'No recipe details available (order is completed or cancelled).';
+
+  @override
+  String productionRecipeNameValue(String name) {
+    return 'Recipe: $name';
+  }
+
+  @override
+  String get productionIngredientsChecklist => 'Ingredients checklist';
+
+  @override
+  String get productionRecipeNoIngredients =>
+      'Active recipe has no ingredients defined.';
+
+  @override
+  String productionRecipeLoadError(String error) {
+    return 'Error loading recipe details: $error';
+  }
+
+  @override
+  String get productionIngredientNotFound => 'Ingredient product not found';
+
+  @override
+  String productionIngredientRequired(
+    String total,
+    String unit,
+    String per,
+    String qty,
+  ) {
+    return 'Required: $total $unit ($per × $qty)';
+  }
+
+  @override
+  String productionIngredientAvailable(String stock, String unit) {
+    return 'Available: $stock $unit';
+  }
+
+  @override
+  String get productionIngredientConsumed => 'Consumed';
+
+  @override
+  String get productionIngredientInStock => 'In stock';
+
+  @override
+  String productionIngredientNeed(String amount) {
+    return 'Need $amount';
+  }
+
+  @override
+  String get productionSearchHint => 'Search order number';
+
+  @override
+  String get productionClearAllFiltersTooltip => 'Clear all filters';
+
+  @override
+  String get productionUnknownProduct => 'Unknown product';
+
+  @override
+  String get productionClearAll => 'Clear all';
+
+  @override
+  String get productionFilterStatusLabel => 'Status';
+
+  @override
+  String get productionFilterAnyStatus => 'Any status';
+
+  @override
   String get productionOrdersListTitle => 'Production orders';
 
   @override
@@ -754,6 +854,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String recipeQuantityPerUnit(String quantity, String unit) {
     return '$quantity $unit / unit';
   }
+
+  @override
+  String recipeForOutputProduct(String name) {
+    return 'For output product: $name';
+  }
+
+  @override
+  String get recipeIngredientLoading => 'Loading ingredient…';
+
+  @override
+  String get recipeNoIngredientsYet => 'No ingredients yet — tap + to add.';
+
+  @override
+  String get recipeAddIngredientTitle => 'Add ingredient';
+
+  @override
+  String get recipeEditIngredientTitle => 'Edit ingredient';
+
+  @override
+  String get recipeIngredientProductLabel => 'Ingredient product';
+
+  @override
+  String get recipeIngredientQuantityLabel => 'Quantity per unit produced';
+
+  @override
+  String get recipeIngredientQuantityHelper => 'Per unit of output produced';
+
+  @override
+  String get recipeSaveIngredientButton => 'Save';
+
+  @override
+  String get recipeRemoveIngredientButton => 'Remove';
+
+  @override
+  String get recipeSelectIngredientError => 'Choose an ingredient product.';
+
+  @override
+  String get recipeNoProductsToAdd => 'No other products available to add.';
 
   @override
   String get recipeCreateTitle => 'New recipe';

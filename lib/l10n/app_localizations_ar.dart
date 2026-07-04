@@ -713,6 +713,106 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productionCancelOrderButton => 'إلغاء الأمر';
 
   @override
+  String productionCreatedValue(String date) {
+    return 'أُنشئ: $date';
+  }
+
+  @override
+  String get productionOutputProductHeading => 'المنتج الناتج';
+
+  @override
+  String get productionProductNotFound => 'المنتج غير موجود';
+
+  @override
+  String productionBarcodeValue(String barcode) {
+    return 'الباركود: $barcode';
+  }
+
+  @override
+  String get productionTargetQuantityLabel => 'الكمية المستهدفة';
+
+  @override
+  String get productionOnHandStockLabel => 'المخزون المتاح';
+
+  @override
+  String get productionRequiredIngredientsHeading => 'المكونات المطلوبة';
+
+  @override
+  String get productionNoActiveRecipeTitle => 'لا توجد وصفة نشطة';
+
+  @override
+  String get productionNoActiveRecipeBody =>
+      'لا توجد وصفة نشطة لهذا المنتج. يلزم وجود وصفة نشطة لإكمال الإنتاج.';
+
+  @override
+  String get productionNoRecipeDetailsTerminal =>
+      'لا تتوفر تفاصيل الوصفة (الأمر مكتمل أو ملغى).';
+
+  @override
+  String productionRecipeNameValue(String name) {
+    return 'الوصفة: $name';
+  }
+
+  @override
+  String get productionIngredientsChecklist => 'قائمة المكونات';
+
+  @override
+  String get productionRecipeNoIngredients =>
+      'الوصفة النشطة لا تحتوي على مكونات.';
+
+  @override
+  String productionRecipeLoadError(String error) {
+    return 'خطأ في تحميل تفاصيل الوصفة: $error';
+  }
+
+  @override
+  String get productionIngredientNotFound => 'منتج المكوّن غير موجود';
+
+  @override
+  String productionIngredientRequired(
+    String total,
+    String unit,
+    String per,
+    String qty,
+  ) {
+    return 'مطلوب: $total $unit ($per × $qty)';
+  }
+
+  @override
+  String productionIngredientAvailable(String stock, String unit) {
+    return 'متاح: $stock $unit';
+  }
+
+  @override
+  String get productionIngredientConsumed => 'مُستهلك';
+
+  @override
+  String get productionIngredientInStock => 'متوفر';
+
+  @override
+  String productionIngredientNeed(String amount) {
+    return 'ينقص $amount';
+  }
+
+  @override
+  String get productionSearchHint => 'ابحث برقم الأمر';
+
+  @override
+  String get productionClearAllFiltersTooltip => 'مسح كل عوامل التصفية';
+
+  @override
+  String get productionUnknownProduct => 'منتج غير معروف';
+
+  @override
+  String get productionClearAll => 'مسح الكل';
+
+  @override
+  String get productionFilterStatusLabel => 'الحالة';
+
+  @override
+  String get productionFilterAnyStatus => 'أي حالة';
+
+  @override
   String get productionOrdersListTitle => 'أوامر الإنتاج';
 
   @override
@@ -754,6 +854,44 @@ class AppLocalizationsAr extends AppLocalizations {
   String recipeQuantityPerUnit(String quantity, String unit) {
     return '$quantity $unit / وحدة';
   }
+
+  @override
+  String recipeForOutputProduct(String name) {
+    return 'لمنتج ناتج: $name';
+  }
+
+  @override
+  String get recipeIngredientLoading => 'جارٍ تحميل المكوّن…';
+
+  @override
+  String get recipeNoIngredientsYet => 'لا توجد مكونات بعد — اضغط + للإضافة.';
+
+  @override
+  String get recipeAddIngredientTitle => 'إضافة مكوّن';
+
+  @override
+  String get recipeEditIngredientTitle => 'تعديل المكوّن';
+
+  @override
+  String get recipeIngredientProductLabel => 'منتج المكوّن';
+
+  @override
+  String get recipeIngredientQuantityLabel => 'الكمية لكل وحدة منتَجة';
+
+  @override
+  String get recipeIngredientQuantityHelper => 'لكل وحدة من الناتج';
+
+  @override
+  String get recipeSaveIngredientButton => 'حفظ';
+
+  @override
+  String get recipeRemoveIngredientButton => 'إزالة';
+
+  @override
+  String get recipeSelectIngredientError => 'اختر منتج المكوّن.';
+
+  @override
+  String get recipeNoProductsToAdd => 'لا توجد منتجات أخرى متاحة للإضافة.';
 
   @override
   String get recipeCreateTitle => 'وصفة جديدة';

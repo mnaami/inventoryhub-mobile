@@ -82,4 +82,39 @@ void main() {
     await tester.pump();
     expect(loaded, true);
   });
+
+  testWidgets('pull-to-refresh empty state triggers onRefresh', (tester) async {
+    var refreshed = false;
+    await tester.pumpWidget(_wrap(view(
+      const PagedState<int>(
+          items: [],
+          page: 0,
+          hasMore: false,
+          isLoadingInitial: false,
+          isLoadingMore: false),
+      onRefresh: () async => refreshed = true,
+    )));
+    await tester.drag(find.byType(Scrollable), const Offset(0, 300));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(refreshed, true);
+  });
+
+  testWidgets('pull-to-refresh initial error state triggers onRefresh', (tester) async {
+    var refreshed = false;
+    await tester.pumpWidget(_wrap(view(
+      PagedState<int>(
+          items: const [],
+          page: 0,
+          hasMore: false,
+          isLoadingInitial: false,
+          isLoadingMore: false,
+          error: StateError('x')),
+      onRefresh: () async => refreshed = true,
+    )));
+    await tester.drag(find.byType(Scrollable), const Offset(0, 300));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(refreshed, true);
+  });
 }

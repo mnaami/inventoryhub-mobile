@@ -7,11 +7,18 @@ import '../../../inventory/product/domain/product.dart';
 import '../../../inventory/product/presentation/product_providers.dart';
 import '../../../sales/sale_order/data/document_counter_dao.dart';
 import '../../recipe/data/production_recipe_dao.dart';
+import '../../recipe/domain/production_recipe.dart';
+import '../../recipe/presentation/production_recipe_providers.dart';
 import '../data/production_order_dao.dart';
 import '../data/production_order_repository_impl.dart';
 import '../domain/production_order.dart';
 import '../domain/production_order_enums.dart';
 import '../domain/production_order_usecases.dart';
+
+final activeRecipeForProductProvider =
+    FutureProvider.family<ProductionRecipe?, String>((ref, productId) =>
+        ref.watch(productionRecipeServiceProvider).activeFor(productId));
+
 
 /// First page of products, for output/ingredient selection dropdowns. Mirrors
 /// the purchasing edit screen, which selects from `productServiceProvider.list(0)`.

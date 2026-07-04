@@ -33,6 +33,10 @@ class ProductDashboardScreen extends ConsumerWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             children: [
+              // Quick Actions to manage inventory
+              _buildQuickActions(context),
+              const SizedBox(height: AppTokens.space24),
+
               // Swipeable statistics
               const ProductSwipeableStatisticsSection(),
               const SizedBox(height: AppTokens.space24),
@@ -43,10 +47,6 @@ class ProductDashboardScreen extends ConsumerWidget {
   
               // Stock Status Distribution
               _buildStockStatusDistribution(context, ref, stats),
-              const SizedBox(height: AppTokens.space24),
-  
-              // Quick Actions to manage inventory
-              _buildQuickActions(context),
             ],
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
