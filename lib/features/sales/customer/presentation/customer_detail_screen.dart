@@ -10,6 +10,9 @@ import '../../../../l10n/app_localizations.dart';
 import '../domain/customer.dart';
 import 'add_edit_customer_screen.dart';
 import 'customer_providers.dart';
+import 'widgets/customer_business_snapshot_card.dart';
+import 'widgets/customer_credit_limit_bar.dart';
+import 'widgets/customer_quick_actions.dart';
 import '../../sale_order/presentation/sale_order_list_screen.dart';
 import '../../sale_order/presentation/sale_order_detail_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -78,6 +81,9 @@ class CustomerDetailScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             children: [
+              CustomerQuickActions(customer: c),
+              const SizedBox(height: AppTokens.space16),
+
               // Header Highlight Card (Initial + Name + Outstanding Balance)
               AppCard(
                 padding: const EdgeInsets.all(20),
@@ -132,9 +138,34 @@ class CustomerDetailScreen extends ConsumerWidget {
                         orElse: () => const SizedBox.shrink(),
                       );
                     }),
+                    if (c.creditLimit != null)
+                      Consumer(builder: (context, ref, _) {
+                        final outstanding =
+                            ref.watch(customerOutstandingProvider(customerId));
+                        return outstanding.maybeWhen(
+                          data: (v) => Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: CustomerCreditLimitBar(
+                              outstanding: v,
+                              creditLimit: c.creditLimit!,
+                            ),
+                          ),
+                          orElse: () => const SizedBox.shrink(),
+                        );
+                      }),
                   ],
                 ),
               ),
+              const SizedBox(height: AppTokens.space16),
+
+              // Business Snapshot Card (lifetime value + order trend)
+              Consumer(builder: (context, ref, _) {
+                final orders = ref.watch(customerOrdersProvider(customerId));
+                return orders.maybeWhen(
+                  data: (list) => CustomerBusinessSnapshotCard(orders: list),
+                  orElse: () => const SizedBox.shrink(),
+                );
+              }),
               const SizedBox(height: AppTokens.space16),
 
               // Contact & Terms Info Card
