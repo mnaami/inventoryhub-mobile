@@ -67,13 +67,35 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
       return const Center(child: CircularProgressIndicator());
     }
     if (s.items.isEmpty && s.error != null) {
-      return _InitialError(error: s.error!, onRetry: widget.onRetryInitial);
+      return RefreshIndicator(
+        onRefresh: widget.onRefresh,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: _InitialError(error: s.error!, onRetry: widget.onRetryInitial),
+            ),
+          ],
+        ),
+      );
     }
     if (s.isEmpty) {
-      return widget.empty ??
-          EmptyState(
-              icon: Icons.inbox_outlined,
-              title: context.l10n.coreNothingHere);
+      return RefreshIndicator(
+        onRefresh: widget.onRefresh,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: widget.empty ??
+                  EmptyState(
+                      icon: Icons.inbox_outlined,
+                      title: context.l10n.coreNothingHere),
+            ),
+          ],
+        ),
+      );
     }
 
     return RefreshIndicator(
