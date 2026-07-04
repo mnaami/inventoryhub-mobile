@@ -18,9 +18,14 @@ class ProductionRecipeDetailScreen extends ConsumerWidget {
 
   void _openIngredientSheet(
     BuildContext context,
+    WidgetRef ref,
     ProductionRecipe recipe, {
     ProductionRecipeItem? item,
   }) {
+    // The product picker reads the shared allProductsProvider, a cache that is
+    // not invalidated when products are created elsewhere. Refresh it so newly
+    // added products are always selectable as ingredients.
+    ref.invalidate(allProductsProvider);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -70,7 +75,7 @@ class ProductionRecipeDetailScreen extends ConsumerWidget {
           ? null
           : FloatingActionButton(
               tooltip: l10n.recipeAddIngredientTitle,
-              onPressed: () => _openIngredientSheet(context, loadedRecipe),
+              onPressed: () => _openIngredientSheet(context, ref, loadedRecipe),
               child: const Icon(Icons.add),
             ),
       body: AsyncValueView(
@@ -146,7 +151,8 @@ class ProductionRecipeDetailScreen extends ConsumerWidget {
                                 final barcode = product?.barcode;
                                 return ListTile(
                                   contentPadding: EdgeInsets.zero,
-                                  onTap: () => _openIngredientSheet(context, r,
+                                  onTap: () => _openIngredientSheet(
+                                      context, ref, r,
                                       item: l),
                                   title: Text(
                                     product?.name ?? l.ingredientProductId,

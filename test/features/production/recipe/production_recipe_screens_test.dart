@@ -6,6 +6,8 @@ import 'package:inventoryhub_mobile/core/db/app_database.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/providers.dart';
 import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
+import 'package:inventoryhub_mobile/features/production/production_order/presentation/production_order_providers.dart'
+    show allProductsProvider;
 import 'package:inventoryhub_mobile/features/production/recipe/presentation/production_recipe_detail_screen.dart';
 import 'package:inventoryhub_mobile/features/production/recipe/presentation/production_recipe_list_screen.dart';
 import 'package:inventoryhub_mobile/features/production/recipe/presentation/production_recipe_providers.dart';
@@ -118,6 +120,64 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Flour Bag'), findsNothing);
     expect(find.textContaining('No ingredients yet'), findsOneWidget);
+
+    await db.close();
+  });
+
+  testWidgets('ingredient picker reflects products created after first load',
+      (tester) async {
+    final db = newTestDb();
+    final session = await SeedService(db, const IdGenerator()).ensureSeeded();
+    final container = ProviderContainer(overrides: [
+      appDatabaseProvider.overrideWithValue(db),
+      sessionProvider.overrideWithValue(session),
+    ]);
+    addTearDown(container.dispose);
+
+    final now = DateTime.now().toUtc();
+    await db.into(db.products).insert(ProductsCompanion.insert(
+          id: 'cake',
+          organizationId: session.organizationId,
+          name: 'Chocolate Cake',
+          unitId: session.defaultUnitId,
+          createdAt: now,
+          updatedAt: now,
+        ));
+
+    final recipe = await container.read(productionRecipeServiceProvider).create(
+        productId: 'cake', name: 'Standard cake', activate: true);
+
+    // Prime the shared allProductsProvider cache while only the output
+    // product exists — this is the state that used to make the picker empty.
+    await container.read(allProductsProvider.future);
+
+    // A new product is created elsewhere WITHOUT invalidating the cache.
+    await db.into(db.products).insert(ProductsCompanion.insert(
+          id: 'sugar',
+          organizationId: session.organizationId,
+          name: 'Sugar',
+          unitId: session.defaultUnitId,
+          createdAt: now,
+          updatedAt: now,
+        ));
+
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: localizedApp(
+        home: ProductionRecipeDetailScreen(recipeId: recipe.id),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    // The picker refreshed on open, so the newly created Sugar is selectable
+    // rather than showing "No other products available to add".
+    expect(find.text('No other products available to add'), findsNothing);
+    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.pumpAndSettle();
+    expect(find.text('Sugar'), findsWidgets);
 
     await db.close();
   });
