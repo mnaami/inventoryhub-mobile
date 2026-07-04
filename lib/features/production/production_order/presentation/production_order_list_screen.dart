@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/format/quantity_format.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -10,6 +11,7 @@ import '../domain/production_order_enums.dart';
 import 'create_production_order_screen.dart';
 import 'production_order_detail_screen.dart';
 import 'production_order_providers.dart';
+import '../../../inventory/product/presentation/product_providers.dart';
 
 class ProductionOrderListScreen extends ConsumerStatefulWidget {
   const ProductionOrderListScreen({super.key});
@@ -39,7 +41,7 @@ class _ProductionOrderListScreenState
         title: _searching
             ? SearchField(
                 initial: criteria.search,
-                hint: 'Search order number',
+                hint: l10n.productionSearchHint,
                 onChanged: (v) => ref
                     .read(productionOrderCriteriaProvider.notifier)
                     .setSearch(v),
@@ -48,7 +50,7 @@ class _ProductionOrderListScreenState
         actions: [
           if (criteria.hasActiveFilters)
             IconButton(
-              tooltip: 'Clear all filters',
+              tooltip: l10n.productionClearAllFiltersTooltip,
               icon: const Icon(Icons.filter_alt_off),
               onPressed: () {
                 ref.read(productionOrderCriteriaProvider.notifier).reset();
@@ -126,10 +128,26 @@ class _ProductionOrderListScreenState
                                 color: scheme.onSurface,
                               ),
                             ),
+                            const SizedBox(height: 2),
+                            Consumer(
+                              builder: (context, ref, _) {
+                                final p = ref.watch(productProvider(o.productId));
+                                return p.maybeWhen(
+                                  data: (product) => Text(
+                                    product?.name ?? l10n.productionUnknownProduct,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: scheme.onSurfaceVariant,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  orElse: () => const SizedBox.shrink(),
+                                );
+                              },
+                            ),
                             const SizedBox(height: 4),
                             Text(
                               l10n.productionOrderListSubtitle(
-                                  '${o.quantity}',
+                                  formatQty(o.quantity),
                                   productionStatusLabel(l10n, o.status)),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: scheme.onSurfaceVariant,
@@ -195,7 +213,7 @@ class _Filters extends ConsumerWidget {
                 avatar: Icon(Icons.filter_alt_off_rounded,
                     size: 14, color: scheme.error),
                 label: Text(
-                  'Clear All',
+                  l10n.productionClearAll,
                   style: TextStyle(
                     color: scheme.error,
                     fontWeight: FontWeight.w700,
@@ -212,7 +230,7 @@ class _Filters extends ConsumerWidget {
               ),
             ),
           _FilterPill<ProductionOrderStatus?>(
-            label: 'Status',
+            label: l10n.productionFilterStatusLabel,
             isActive: criteria.status != null,
             displayValue: criteria.status != null
                 ? productionStatusLabel(l10n, criteria.status!)
@@ -220,7 +238,7 @@ class _Filters extends ConsumerWidget {
             onChanged: n.setStatus,
             onClear: () => n.setStatus(null),
             items: [
-              const PopupMenuItem(value: null, child: Text('Any Status')),
+              PopupMenuItem(value: null, child: Text(l10n.productionFilterAnyStatus)),
               for (final s in ProductionOrderStatus.values)
                 PopupMenuItem(
                     value: s, child: Text(productionStatusLabel(l10n, s))),

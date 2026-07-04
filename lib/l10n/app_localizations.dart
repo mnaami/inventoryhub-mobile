@@ -1436,6 +1436,167 @@ abstract class AppLocalizations {
   /// **'Cancel order'**
   String get productionCancelOrderButton;
 
+  /// No description provided for @productionCreatedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: {date}'**
+  String productionCreatedValue(String date);
+
+  /// No description provided for @productionOutputProductHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Output product'**
+  String get productionOutputProductHeading;
+
+  /// No description provided for @productionProductNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found'**
+  String get productionProductNotFound;
+
+  /// No description provided for @productionBarcodeValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode: {barcode}'**
+  String productionBarcodeValue(String barcode);
+
+  /// No description provided for @productionTargetQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target quantity'**
+  String get productionTargetQuantityLabel;
+
+  /// No description provided for @productionOnHandStockLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'On-hand stock'**
+  String get productionOnHandStockLabel;
+
+  /// No description provided for @productionRequiredIngredientsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Required ingredients'**
+  String get productionRequiredIngredientsHeading;
+
+  /// No description provided for @productionNoActiveRecipeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No active recipe'**
+  String get productionNoActiveRecipeTitle;
+
+  /// No description provided for @productionNoActiveRecipeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No active recipe is set for this product. An active recipe is required to complete the production.'**
+  String get productionNoActiveRecipeBody;
+
+  /// No description provided for @productionNoRecipeDetailsTerminal.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipe details available (order is completed or cancelled).'**
+  String get productionNoRecipeDetailsTerminal;
+
+  /// No description provided for @productionRecipeNameValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe: {name}'**
+  String productionRecipeNameValue(String name);
+
+  /// No description provided for @productionIngredientsChecklist.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients checklist'**
+  String get productionIngredientsChecklist;
+
+  /// No description provided for @productionRecipeNoIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Active recipe has no ingredients defined.'**
+  String get productionRecipeNoIngredients;
+
+  /// No description provided for @productionRecipeLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading recipe details: {error}'**
+  String productionRecipeLoadError(String error);
+
+  /// No description provided for @productionIngredientNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient product not found'**
+  String get productionIngredientNotFound;
+
+  /// No description provided for @productionIngredientRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required: {total} {unit} ({per} × {qty})'**
+  String productionIngredientRequired(
+    String total,
+    String unit,
+    String per,
+    String qty,
+  );
+
+  /// No description provided for @productionIngredientAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available: {stock} {unit}'**
+  String productionIngredientAvailable(String stock, String unit);
+
+  /// No description provided for @productionIngredientConsumed.
+  ///
+  /// In en, this message translates to:
+  /// **'Consumed'**
+  String get productionIngredientConsumed;
+
+  /// No description provided for @productionIngredientInStock.
+  ///
+  /// In en, this message translates to:
+  /// **'In stock'**
+  String get productionIngredientInStock;
+
+  /// No description provided for @productionIngredientNeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Need {amount}'**
+  String productionIngredientNeed(String amount);
+
+  /// No description provided for @productionSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search order number'**
+  String get productionSearchHint;
+
+  /// No description provided for @productionClearAllFiltersTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all filters'**
+  String get productionClearAllFiltersTooltip;
+
+  /// No description provided for @productionUnknownProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown product'**
+  String get productionUnknownProduct;
+
+  /// No description provided for @productionClearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get productionClearAll;
+
+  /// No description provided for @productionFilterStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get productionFilterStatusLabel;
+
+  /// No description provided for @productionFilterAnyStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Any status'**
+  String get productionFilterAnyStatus;
+
   /// No description provided for @productionOrdersListTitle.
   ///
   /// In en, this message translates to:

@@ -16,3 +16,13 @@ final unitServiceProvider = Provider<UnitService>((ref) {
 final unitsProvider = FutureProvider<List<Unit>>((ref) {
   return ref.watch(unitServiceProvider).list();
 });
+
+/// Resolves a unit id to its display symbol (e.g. `kg`). Returns an empty
+/// string when the unit is unknown, so callers can render just the quantity.
+final unitSymbolProvider = FutureProvider.family<String, String>((ref, unitId) async {
+  final units = await ref.watch(unitsProvider.future);
+  for (final u in units) {
+    if (u.id == unitId) return u.symbol;
+  }
+  return '';
+});
