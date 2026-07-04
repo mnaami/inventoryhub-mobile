@@ -10,6 +10,7 @@ import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/sales/customer/presentation/customer_providers.dart';
 import 'package:inventoryhub_mobile/features/sales/customer/presentation/widgets/customer_quick_actions.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/domain/sale_order_usecases.dart';
+import 'package:inventoryhub_mobile/features/sales/sale_order/presentation/record_payment_screen.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/presentation/sale_order_providers.dart';
 import '../../../../../helpers/l10n.dart';
 import '../../../../../helpers/test_db.dart';
@@ -91,6 +92,50 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Record Payment'), findsOneWidget);
+  });
+
+  testWidgets(
+      'shows order picker when the customer has multiple payable orders',
+      (tester) async {
+    final container = await _seededContainer();
+    addTearDown(container.dispose);
+    final customer =
+        await container.read(customerServiceProvider).create(name: 'Acme Co');
+    final order1 = await container.read(saleOrderServiceProvider).createDraft(
+      customerId: customer.id,
+      lines: const [
+        NewLine(
+            productId: 'p1', productName: 'Widget', quantity: 1, unitPrice: 100),
+      ],
+    );
+    await container.read(saleOrderServiceProvider).confirm(order1);
+    final order2 = await container.read(saleOrderServiceProvider).createDraft(
+      customerId: customer.id,
+      lines: const [
+        NewLine(
+            productId: 'p2', productName: 'Gadget', quantity: 1, unitPrice: 200),
+      ],
+    );
+    await container.read(saleOrderServiceProvider).confirm(order2);
+
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: localizedApp(
+          home: Scaffold(body: CustomerQuickActions(customer: customer))),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Record Payment'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Select an order'), findsOneWidget);
+    expect(find.text(order1.soNumber), findsOneWidget);
+    expect(find.text(order2.soNumber), findsOneWidget);
+
+    await tester.tap(find.text(order1.soNumber));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RecordPaymentScreen), findsOneWidget);
   });
 
   testWidgets('shows Call when the customer has a phone number',

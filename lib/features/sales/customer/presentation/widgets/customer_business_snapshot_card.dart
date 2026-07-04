@@ -132,7 +132,7 @@ class CustomerBusinessSnapshotCard extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(2),
                                 color: i == buckets.length - 1
                                     ? scheme.primary
-                                    : scheme.primary.withValues(alpha: 0.55),
+                                    : scheme.primary.withOpacity(0.55),
                               ),
                             ],
                           ),

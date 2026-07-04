@@ -6,6 +6,7 @@ import '../../../sale_order/domain/sale_order.dart';
 import '../../../sale_order/domain/sale_order_enums.dart';
 import '../../../sale_order/presentation/record_payment_screen.dart';
 import '../../../sale_order/presentation/sale_order_edit_screen.dart';
+import '../../../sale_order/presentation/sale_order_providers.dart';
 import '../../domain/customer.dart';
 import '../customer_providers.dart';
 
@@ -64,10 +65,14 @@ class CustomerQuickActions extends ConsumerWidget {
       );
     }
     if (target == null || !context.mounted) return;
+    final chosen = target;
     await Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => RecordPaymentScreen(order: target!)));
+        MaterialPageRoute(builder: (_) => RecordPaymentScreen(order: chosen)));
     ref.invalidate(customerOrdersProvider(customer.id));
     ref.invalidate(customerOutstandingProvider(customer.id));
+    ref.invalidate(saleOrdersProvider);
+    ref.invalidate(saleOrderProvider(chosen.id));
+    ref.invalidate(saleOrderPaymentsProvider(chosen.id));
   }
 
   Future<void> _call(BuildContext context) async {
