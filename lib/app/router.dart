@@ -29,10 +29,14 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     refreshListenable: refresh,
     routes: [
-      GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
       GoRoute(
-          path: '/currency-select',
-          builder: (_, __) => const CurrencySelectScreen()),
+        path: '/onboarding',
+        builder: (_, __) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/currency-select',
+        builder: (_, __) => const CurrencySelectScreen(),
+      ),
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/', builder: (_, __) => const MainScaffold()),
     ],
@@ -86,8 +90,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   }
 
   void _push(Widget screen) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (_) => screen));
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
   }
 
   Widget _sheetTile({
@@ -229,70 +232,82 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         },
         children: _tabs.map((tab) => _KeepAlivePage(child: tab)).toList(),
       ),
-      bottomNavigationBar: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onHorizontalDragEnd: (details) {
-          if (details.primaryVelocity == null) return;
-          if (details.primaryVelocity! < 0) {
-            // Swipe left (finger moves right-to-left) -> Go to next tab
-            if (_index < _tabs.length - 1) {
-              final nextIndex = _index + 1;
-              if (nextIndex == 0 && _index != 0) {
-                ref.invalidate(homeDashboardProvider);
+      bottomNavigationBar: AnimatedPadding(
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOut,
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onHorizontalDragEnd: (details) {
+            if (details.primaryVelocity == null) return;
+            if (details.primaryVelocity! < 0) {
+              // Swipe left (finger moves right-to-left) -> Go to next tab
+              if (_index < _tabs.length - 1) {
+                final nextIndex = _index + 1;
+                if (nextIndex == 0 && _index != 0) {
+                  ref.invalidate(homeDashboardProvider);
+                }
+                setState(() => _index = nextIndex);
+                _pageController.animateToPage(
+                  nextIndex,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
               }
-              setState(() => _index = nextIndex);
-              _pageController.animateToPage(
-                nextIndex,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            }
-          } else if (details.primaryVelocity! > 0) {
-            // Swipe right (finger moves left-to-right) -> Go to previous tab
-            if (_index > 0) {
-              final prevIndex = _index - 1;
-              if (prevIndex == 0 && _index != 0) {
-                ref.invalidate(homeDashboardProvider);
+            } else if (details.primaryVelocity! > 0) {
+              // Swipe right (finger moves left-to-right) -> Go to previous tab
+              if (_index > 0) {
+                final prevIndex = _index - 1;
+                if (prevIndex == 0 && _index != 0) {
+                  ref.invalidate(homeDashboardProvider);
+                }
+                setState(() => _index = prevIndex);
+                _pageController.animateToPage(
+                  prevIndex,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
               }
-              setState(() => _index = prevIndex);
-              _pageController.animateToPage(
-                prevIndex,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            }
-          }
-        },
-        child: NavigationBar(
-          selectedIndex: _index,
-          onDestinationSelected: (i) {
-            if (i == 3) {
-              _openMore();
-            } else {
-              if (i == 0 && _index != 0) {
-                ref.invalidate(homeDashboardProvider);
-              }
-              setState(() => _index = i);
-              _pageController.animateToPage(
-                i,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
             }
           },
-          destinations: [
-            NavigationDestination(
+          child: NavigationBar(
+            selectedIndex: _index,
+            onDestinationSelected: (i) {
+              if (i == 3) {
+                _openMore();
+              } else {
+                if (i == 0 && _index != 0) {
+                  ref.invalidate(homeDashboardProvider);
+                }
+                setState(() => _index = i);
+                _pageController.animateToPage(
+                  i,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
+            destinations: [
+              NavigationDestination(
                 icon: const Icon(Icons.space_dashboard_outlined),
-                label: l10n.navDashboard),
-            NavigationDestination(
+                label: l10n.navDashboard,
+              ),
+              NavigationDestination(
                 icon: const Icon(Icons.inventory_2_outlined),
-                label: l10n.navProducts),
-            NavigationDestination(
+                label: l10n.navProducts,
+              ),
+              NavigationDestination(
                 icon: const Icon(Icons.point_of_sale_outlined),
-                label: l10n.navSales),
-            NavigationDestination(
-                icon: const Icon(Icons.more_horiz), label: l10n.navMore),
-          ],
+                label: l10n.navSales,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.more_horiz),
+                label: l10n.navMore,
+              ),
+            ],
+          ),
         ),
       ),
     );
