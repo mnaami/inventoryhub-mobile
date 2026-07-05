@@ -44,6 +44,10 @@ class _AddEditEmployeeScreenState
 
   Future<void> _save() async {
     setState(() => _error = null);
+    if (_name.text.trim().isEmpty) {
+      setState(() => _error = context.l10n.employeeNameRequiredError);
+      return;
+    }
     final service = ref.read(employeeServiceProvider);
     final phone = _phone.text.trim().isEmpty ? null : _phone.text.trim();
     final notes = _notes.text.trim().isEmpty ? null : _notes.text.trim();
