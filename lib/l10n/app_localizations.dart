@@ -2712,6 +2712,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Inactive'**
   String get employeeInactive;
+
+  /// No description provided for @employeeDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee'**
+  String get employeeDetailTitle;
+
+  /// No description provided for @employeeNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee not found'**
+  String get employeeNotFound;
+
+  /// No description provided for @employeeOwedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Owed'**
+  String get employeeOwedLabel;
+
+  /// No description provided for @employeeCreditLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit'**
+  String get employeeCreditLabel;
+
+  /// No description provided for @employeeActiveLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get employeeActiveLabel;
+
+  /// No description provided for @employeeRecordPaymentAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Payment'**
+  String get employeeRecordPaymentAction;
+
+  /// No description provided for @employeeEarningsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings'**
+  String get employeeEarningsHeading;
+
+  /// No description provided for @employeeEarningsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No earnings yet.'**
+  String get employeeEarningsEmpty;
+
+  /// No description provided for @employeePaymentsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get employeePaymentsHeading;
+
+  /// No description provided for @employeePaymentsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments yet.'**
+  String get employeePaymentsEmpty;
+
+  /// No description provided for @employeeRatesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Piece rates (overrides)'**
+  String get employeeRatesHeading;
+
+  /// No description provided for @employeeRatesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No overrides yet.'**
+  String get employeeRatesEmpty;
+
+  /// No description provided for @employeeRateAddAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add override'**
+  String get employeeRateAddAction;
+
+  /// No description provided for @employeeQtyRateLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{qty} × {rate}'**
+  String employeeQtyRateLine(String qty, String rate);
+
+  /// No description provided for @employeeNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Employee'**
+  String get employeeNewTitle;
+
+  /// No description provided for @employeeEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Employee'**
+  String get employeeEditTitle;
+
+  /// No description provided for @employeeNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get employeeNameLabel;
+
+  /// No description provided for @employeePhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get employeePhoneLabel;
+
+  /// No description provided for @employeeNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get employeeNotesLabel;
+
+  /// No description provided for @employeeSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get employeeSaveButton;
+
+  /// No description provided for @employeeNameRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee name is required.'**
+  String get employeeNameRequiredError;
+
+  /// No description provided for @employeeRecordPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Payment'**
+  String get employeeRecordPaymentTitle;
+
+  /// No description provided for @employeePaymentAmountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get employeePaymentAmountLabel;
+
+  /// No description provided for @employeePaymentDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get employeePaymentDateLabel;
+
+  /// No description provided for @employeePaymentNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get employeePaymentNotesLabel;
+
+  /// No description provided for @employeePaymentInvalidAmountError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid amount greater than zero.'**
+  String get employeePaymentInvalidAmountError;
+
+  /// No description provided for @employeeRateSheetAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add piece rate override'**
+  String get employeeRateSheetAddTitle;
+
+  /// No description provided for @employeeRateSheetEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit piece rate override'**
+  String get employeeRateSheetEditTitle;
+
+  /// No description provided for @employeeRateProductLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get employeeRateProductLabel;
+
+  /// No description provided for @employeeRateRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get employeeRateRateLabel;
+
+  /// No description provided for @employeeRateDefaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Product default: {rate}'**
+  String employeeRateDefaultHint(String rate);
+
+  /// No description provided for @employeeRateRemoveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove override'**
+  String get employeeRateRemoveAction;
+
+  /// No description provided for @employeeRateInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a product and enter a rate greater than zero.'**
+  String get employeeRateInvalidError;
+
+  /// No description provided for @employeeRateNoProductsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'All products already have an override for this employee.'**
+  String get employeeRateNoProductsAvailable;
 }
 
 class _AppLocalizationsDelegate

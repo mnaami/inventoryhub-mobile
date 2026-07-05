@@ -15,6 +15,8 @@ import '../features/onboarding/presentation/currency_select_screen.dart';
 import '../features/home/presentation/home_dashboard_screen.dart';
 import '../features/home/presentation/home_providers.dart';
 import '../features/employees/employee/presentation/employee_list_screen.dart';
+import '../features/employees/employee/presentation/employee_detail_screen.dart';
+import '../features/employees/employee/presentation/add_edit_employee_screen.dart';
 import 'currency/currency_controller.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -41,6 +43,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/employees',
         builder: (_, __) => const EmployeeListScreen(),
+      ),
+      GoRoute(
+        path: '/employees/new',
+        builder: (_, __) => const AddEditEmployeeScreen(),
+      ),
+      GoRoute(
+        path: '/employees/:id',
+        builder: (_, state) =>
+            EmployeeDetailScreen(employeeId: state.pathParameters['id']!),
       ),
     ],
     redirect: (context, state) {

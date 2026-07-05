@@ -1387,4 +1387,112 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get employeeInactive => 'غير نشط';
+
+  @override
+  String get employeeDetailTitle => 'الموظف';
+
+  @override
+  String get employeeNotFound => 'الموظف غير موجود';
+
+  @override
+  String get employeeOwedLabel => 'مستحق';
+
+  @override
+  String get employeeCreditLabel => 'رصيد';
+
+  @override
+  String get employeeActiveLabel => 'نشط';
+
+  @override
+  String get employeeRecordPaymentAction => 'تسجيل دفعة';
+
+  @override
+  String get employeeEarningsHeading => 'الأرباح';
+
+  @override
+  String get employeeEarningsEmpty => 'لا توجد أرباح بعد.';
+
+  @override
+  String get employeePaymentsHeading => 'الدفعات';
+
+  @override
+  String get employeePaymentsEmpty => 'لا توجد دفعات بعد.';
+
+  @override
+  String get employeeRatesHeading => 'أسعار القطعة (استثناءات)';
+
+  @override
+  String get employeeRatesEmpty => 'لا توجد استثناءات بعد.';
+
+  @override
+  String get employeeRateAddAction => 'إضافة استثناء';
+
+  @override
+  String employeeQtyRateLine(String qty, String rate) {
+    return '$qty × $rate';
+  }
+
+  @override
+  String get employeeNewTitle => 'موظف جديد';
+
+  @override
+  String get employeeEditTitle => 'تعديل الموظف';
+
+  @override
+  String get employeeNameLabel => 'الاسم';
+
+  @override
+  String get employeePhoneLabel => 'الهاتف';
+
+  @override
+  String get employeeNotesLabel => 'ملاحظات';
+
+  @override
+  String get employeeSaveButton => 'حفظ';
+
+  @override
+  String get employeeNameRequiredError => 'اسم الموظف مطلوب.';
+
+  @override
+  String get employeeRecordPaymentTitle => 'تسجيل دفعة';
+
+  @override
+  String get employeePaymentAmountLabel => 'المبلغ';
+
+  @override
+  String get employeePaymentDateLabel => 'التاريخ';
+
+  @override
+  String get employeePaymentNotesLabel => 'ملاحظات';
+
+  @override
+  String get employeePaymentInvalidAmountError =>
+      'أدخل مبلغًا صحيحًا أكبر من صفر.';
+
+  @override
+  String get employeeRateSheetAddTitle => 'إضافة استثناء سعر القطعة';
+
+  @override
+  String get employeeRateSheetEditTitle => 'تعديل استثناء سعر القطعة';
+
+  @override
+  String get employeeRateProductLabel => 'المنتج';
+
+  @override
+  String get employeeRateRateLabel => 'السعر';
+
+  @override
+  String employeeRateDefaultHint(String rate) {
+    return 'السعر الافتراضي للمنتج: $rate';
+  }
+
+  @override
+  String get employeeRateRemoveAction => 'إزالة الاستثناء';
+
+  @override
+  String get employeeRateInvalidError => 'اختر منتجًا وأدخل سعرًا أكبر من صفر.';
+
+  @override
+  String get employeeRateNoProductsAvailable =>
+      'جميع المنتجات لديها بالفعل استثناء لهذا الموظف.';
 }

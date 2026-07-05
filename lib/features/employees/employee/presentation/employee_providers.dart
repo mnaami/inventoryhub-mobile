@@ -24,12 +24,14 @@ final employeeServiceProvider = Provider<EmployeeService>((ref) {
 final productionEarningDaoProvider = Provider<ProductionEarningDao>(
     (ref) => ProductionEarningDao(ref.watch(appDatabaseProvider)));
 
+final employeePayRateDaoProvider = Provider<ProductionPayRateDao>(
+    (ref) => ProductionPayRateDao(ref.watch(appDatabaseProvider)));
+
 final employeePayRateServiceProvider =
     Provider<ProductionPayRateService>((ref) {
-  final db = ref.watch(appDatabaseProvider);
   final session = ref.watch(sessionProvider);
   return ProductionPayRateService(
-    dao: ProductionPayRateDao(db),
+    dao: ref.watch(employeePayRateDaoProvider),
     ids: ref.watch(idGeneratorProvider),
     organizationId: session.organizationId,
   );

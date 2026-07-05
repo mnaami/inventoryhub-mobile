@@ -1387,4 +1387,113 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get employeeInactive => 'Inactive';
+
+  @override
+  String get employeeDetailTitle => 'Employee';
+
+  @override
+  String get employeeNotFound => 'Employee not found';
+
+  @override
+  String get employeeOwedLabel => 'Owed';
+
+  @override
+  String get employeeCreditLabel => 'Credit';
+
+  @override
+  String get employeeActiveLabel => 'Active';
+
+  @override
+  String get employeeRecordPaymentAction => 'Record Payment';
+
+  @override
+  String get employeeEarningsHeading => 'Earnings';
+
+  @override
+  String get employeeEarningsEmpty => 'No earnings yet.';
+
+  @override
+  String get employeePaymentsHeading => 'Payments';
+
+  @override
+  String get employeePaymentsEmpty => 'No payments yet.';
+
+  @override
+  String get employeeRatesHeading => 'Piece rates (overrides)';
+
+  @override
+  String get employeeRatesEmpty => 'No overrides yet.';
+
+  @override
+  String get employeeRateAddAction => 'Add override';
+
+  @override
+  String employeeQtyRateLine(String qty, String rate) {
+    return '$qty × $rate';
+  }
+
+  @override
+  String get employeeNewTitle => 'New Employee';
+
+  @override
+  String get employeeEditTitle => 'Edit Employee';
+
+  @override
+  String get employeeNameLabel => 'Name';
+
+  @override
+  String get employeePhoneLabel => 'Phone';
+
+  @override
+  String get employeeNotesLabel => 'Notes';
+
+  @override
+  String get employeeSaveButton => 'Save';
+
+  @override
+  String get employeeNameRequiredError => 'Employee name is required.';
+
+  @override
+  String get employeeRecordPaymentTitle => 'Record Payment';
+
+  @override
+  String get employeePaymentAmountLabel => 'Amount';
+
+  @override
+  String get employeePaymentDateLabel => 'Date';
+
+  @override
+  String get employeePaymentNotesLabel => 'Notes';
+
+  @override
+  String get employeePaymentInvalidAmountError =>
+      'Enter a valid amount greater than zero.';
+
+  @override
+  String get employeeRateSheetAddTitle => 'Add piece rate override';
+
+  @override
+  String get employeeRateSheetEditTitle => 'Edit piece rate override';
+
+  @override
+  String get employeeRateProductLabel => 'Product';
+
+  @override
+  String get employeeRateRateLabel => 'Rate';
+
+  @override
+  String employeeRateDefaultHint(String rate) {
+    return 'Product default: $rate';
+  }
+
+  @override
+  String get employeeRateRemoveAction => 'Remove override';
+
+  @override
+  String get employeeRateInvalidError =>
+      'Select a product and enter a rate greater than zero.';
+
+  @override
+  String get employeeRateNoProductsAvailable =>
+      'All products already have an override for this employee.';
 }
