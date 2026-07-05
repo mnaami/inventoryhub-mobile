@@ -58,11 +58,23 @@ class _PieceRateTile extends ConsumerStatefulWidget {
 
 class _PieceRateTileState extends ConsumerState<_PieceRateTile> {
   final _rate = TextEditingController();
-  bool _initialized = false;
+  final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // Seed synchronously if the family provider already has cached data
+    // (e.g. re-visiting this screen). If it's still loading, the
+    // `ref.listen` callback in build() picks up the value once it arrives.
+    final current =
+        ref.read(productDefaultRateProvider(widget.product.id)).value;
+    _rate.text = _formatRate(current?.rate ?? 0);
+  }
 
   @override
   void dispose() {
     _rate.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -97,14 +109,20 @@ class _PieceRateTileState extends ConsumerState<_PieceRateTile> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final defaultRate = ref.watch(productDefaultRateProvider(widget.product.id));
 
-    // Seed the field once from the resolved default rate (0 if none set).
-    defaultRate.whenData((row) {
-      if (!_initialized) {
-        _initialized = true;
-        _rate.text = _formatRate(row?.rate ?? 0);
-      }
+    // Reflect the provider's latest value whenever it changes — initial
+    // load, or a refetch after invalidation elsewhere (e.g. after save) —
+    // but never while the user is actively editing the field, so we don't
+    // clobber their typing. `ref.listen` is build-safe: it schedules the
+    // callback rather than mutating state during build, so unlike the old
+    // "seed once" boolean it can't go stale across the AsyncValue lifecycle
+    // (loading -> data -> loading again on invalidate -> new data).
+    ref.listen(productDefaultRateProvider(widget.product.id), (prev, next) {
+      next.whenData((row) {
+        if (!_focusNode.hasFocus) {
+          _rate.text = _formatRate(row?.rate ?? 0);
+        }
+      });
     });
 
     return Card(
@@ -129,6 +147,7 @@ class _PieceRateTileState extends ConsumerState<_PieceRateTile> {
               child: TextField(
                 key: Key('piece_rate_field_${widget.product.id}'),
                 controller: _rate,
+                focusNode: _focusNode,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(

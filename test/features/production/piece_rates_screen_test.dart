@@ -73,5 +73,10 @@ void main() {
     final persisted = await rateService.resolveRate(
         employeeId: 'unknown-employee', productId: unrated.id);
     expect(persisted, 7.0);
+
+    // The field itself reflects the persisted value after the save
+    // triggers a refetch (not just the value the user typed) — guards
+    // against the provider's refreshed data being silently discarded.
+    expect(find.widgetWithText(TextField, '7'), findsOneWidget);
   });
 }
