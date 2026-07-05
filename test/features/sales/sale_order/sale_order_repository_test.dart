@@ -1,4 +1,6 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inventoryhub_mobile/core/db/app_database.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/data/document_counter_dao.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/data/sale_order_dao.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/data/sale_order_payment_dao.dart';
@@ -34,5 +36,37 @@ void main() {
     expect((await repo.listOrders('org1', limit: 20, offset: 0)).length, 1);
     expect(await repo.nextNumber('org1', 'sale_order', 'SO'), 'SO-0001');
     await db.close();
+  });
+
+  test('pagedPayments maps DAO rows to SalePaymentListItem with order context',
+      () async {
+    final db = newTestDb();
+    addTearDown(db.close);
+    final repo = SaleOrderRepositoryImpl(
+      SaleOrderDao(db),
+      SaleOrderPaymentDao(db),
+      SaleOrderShippingDao(db),
+      DocumentCounterDao(db),
+    );
+    final now = DateTime.utc(2026, 6, 2);
+    await db.into(db.saleOrders).insert(SaleOrdersCompanion.insert(
+          id: 'so1', organizationId: 'org1', soNumber: 'SO-0001',
+          customerId: 'c1', orderDate: now, totalAmount: const Value(100),
+          createdAt: now, updatedAt: now,
+        ));
+    await db.saleOrderPaymentDao.recordPayment(SaleOrderPaymentsCompanion.insert(
+      id: 'p1', organizationId: 'org1', saleOrderId: 'so1',
+      paymentNumber: 'PAY-0001', amount: 42, method: 'cash',
+      status: const Value('completed'), paymentDate: now,
+      createdAt: now, updatedAt: now,
+    ));
+
+    final items = await repo.pagedPayments('org1', limit: 20, offset: 0);
+
+    expect(items.length, 1);
+    expect(items.single, isA<SalePaymentListItem>());
+    expect(items.single.soNumber, 'SO-0001');
+    expect(items.single.customerId, 'c1');
+    expect(items.single.method, PaymentMethod.cash);
   });
 }

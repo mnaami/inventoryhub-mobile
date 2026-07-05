@@ -129,6 +129,27 @@ class SaleOrderRepositoryImpl implements SaleOrderRepository {
       (await _payments.paymentsFor(orderId)).map(toSaleOrderPayment).toList();
 
   @override
+  Future<List<SalePaymentListItem>> pagedPayments(String orgId,
+          {PaymentMethod? method,
+          PaymentRecordStatus? status,
+          DateTime? from,
+          DateTime? to,
+          String? search,
+          required int limit,
+          required int offset}) async =>
+      (await _payments.pagedPayments(orgId,
+              method: method?.wire,
+              status: status?.wire,
+              from: from,
+              to: to,
+              search: search,
+              limit: limit,
+              offset: offset))
+          .map((r) => toSalePaymentListItem(r.payment,
+              soNumber: r.soNumber, customerId: r.customerId))
+          .toList();
+
+  @override
   Future<double> completedTotal(String orderId) =>
       _payments.completedTotal(orderId);
 

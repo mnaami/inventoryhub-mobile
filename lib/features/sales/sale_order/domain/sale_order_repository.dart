@@ -43,6 +43,14 @@ abstract interface class SaleOrderRepository {
       required DateTime paymentDate});
   Future<void> deletePayment(String paymentId);
   Future<List<SaleOrderPayment>> paymentsFor(String orderId);
+  Future<List<SalePaymentListItem>> pagedPayments(String orgId,
+      {PaymentMethod? method,
+      PaymentRecordStatus? status,
+      DateTime? from,
+      DateTime? to,
+      String? search,
+      required int limit,
+      required int offset});
   Future<double> completedTotal(String orderId);
 
   Future<void> createShipment(SaleOrderShipping shipping,
