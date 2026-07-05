@@ -3006,6 +3006,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All products already have an override for this employee.'**
   String get employeeRateNoProductsAvailable;
+
+  /// No description provided for @spLedgerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get spLedgerTitle;
+
+  /// No description provided for @spLedgerEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments yet.'**
+  String get spLedgerEmpty;
+
+  /// No description provided for @spFilterMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Method'**
+  String get spFilterMethodLabel;
+
+  /// No description provided for @spFilterStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get spFilterStatusLabel;
+
+  /// No description provided for @spMethodAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any method'**
+  String get spMethodAny;
+
+  /// No description provided for @spStatusAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any status'**
+  String get spStatusAny;
+
+  /// No description provided for @spMethodCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get spMethodCash;
+
+  /// No description provided for @spMethodCreditCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit card'**
+  String get spMethodCreditCard;
+
+  /// No description provided for @spMethodBankTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank transfer'**
+  String get spMethodBankTransfer;
+
+  /// No description provided for @spMethodCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get spMethodCheck;
+
+  /// No description provided for @spMethodDigitalWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital wallet'**
+  String get spMethodDigitalWallet;
+
+  /// No description provided for @spMethodOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get spMethodOther;
+
+  /// No description provided for @spStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get spStatusPending;
+
+  /// No description provided for @spStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get spStatusCompleted;
+
+  /// No description provided for @spStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get spStatusFailed;
+
+  /// No description provided for @spStatusRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get spStatusRefunded;
 }
 
 class _AppLocalizationsDelegate

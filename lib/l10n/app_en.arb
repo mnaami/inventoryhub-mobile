@@ -606,5 +606,22 @@
   "@employeeRateDefaultHint": {"placeholders": {"rate": {"type": "String"}}},
   "employeeRateRemoveAction": "Remove override",
   "employeeRateInvalidError": "Select a product and enter a rate greater than zero.",
-  "employeeRateNoProductsAvailable": "All products already have an override for this employee."
+  "employeeRateNoProductsAvailable": "All products already have an override for this employee.",
+
+  "spLedgerTitle": "Payments",
+  "spLedgerEmpty": "No payments yet.",
+  "spFilterMethodLabel": "Method",
+  "spFilterStatusLabel": "Status",
+  "spMethodAny": "Any method",
+  "spStatusAny": "Any status",
+  "spMethodCash": "Cash",
+  "spMethodCreditCard": "Credit card",
+  "spMethodBankTransfer": "Bank transfer",
+  "spMethodCheck": "Check",
+  "spMethodDigitalWallet": "Digital wallet",
+  "spMethodOther": "Other",
+  "spStatusPending": "Pending",
+  "spStatusCompleted": "Completed",
+  "spStatusFailed": "Failed",
+  "spStatusRefunded": "Refunded"
 }

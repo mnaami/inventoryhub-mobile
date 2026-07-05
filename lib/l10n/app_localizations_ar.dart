@@ -1542,4 +1542,52 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get employeeRateNoProductsAvailable =>
       'جميع المنتجات لديها بالفعل استثناء لهذا الموظف.';
+
+  @override
+  String get spLedgerTitle => 'المدفوعات';
+
+  @override
+  String get spLedgerEmpty => 'لا توجد مدفوعات بعد.';
+
+  @override
+  String get spFilterMethodLabel => 'الطريقة';
+
+  @override
+  String get spFilterStatusLabel => 'الحالة';
+
+  @override
+  String get spMethodAny => 'أي طريقة';
+
+  @override
+  String get spStatusAny => 'أي حالة';
+
+  @override
+  String get spMethodCash => 'نقداً';
+
+  @override
+  String get spMethodCreditCard => 'بطاقة ائتمان';
+
+  @override
+  String get spMethodBankTransfer => 'تحويل بنكي';
+
+  @override
+  String get spMethodCheck => 'شيك';
+
+  @override
+  String get spMethodDigitalWallet => 'محفظة رقمية';
+
+  @override
+  String get spMethodOther => 'أخرى';
+
+  @override
+  String get spStatusPending => 'قيد الانتظار';
+
+  @override
+  String get spStatusCompleted => 'مكتمل';
+
+  @override
+  String get spStatusFailed => 'فشل';
+
+  @override
+  String get spStatusRefunded => 'مسترد';
 }

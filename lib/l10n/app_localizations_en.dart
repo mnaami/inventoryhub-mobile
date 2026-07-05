@@ -1543,4 +1543,52 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get employeeRateNoProductsAvailable =>
       'All products already have an override for this employee.';
+
+  @override
+  String get spLedgerTitle => 'Payments';
+
+  @override
+  String get spLedgerEmpty => 'No payments yet.';
+
+  @override
+  String get spFilterMethodLabel => 'Method';
+
+  @override
+  String get spFilterStatusLabel => 'Status';
+
+  @override
+  String get spMethodAny => 'Any method';
+
+  @override
+  String get spStatusAny => 'Any status';
+
+  @override
+  String get spMethodCash => 'Cash';
+
+  @override
+  String get spMethodCreditCard => 'Credit card';
+
+  @override
+  String get spMethodBankTransfer => 'Bank transfer';
+
+  @override
+  String get spMethodCheck => 'Check';
+
+  @override
+  String get spMethodDigitalWallet => 'Digital wallet';
+
+  @override
+  String get spMethodOther => 'Other';
+
+  @override
+  String get spStatusPending => 'Pending';
+
+  @override
+  String get spStatusCompleted => 'Completed';
+
+  @override
+  String get spStatusFailed => 'Failed';
+
+  @override
+  String get spStatusRefunded => 'Refunded';
 }

@@ -541,5 +541,22 @@
   "@employeeRateDefaultHint": {"placeholders": {"rate": {"type": "String"}}},
   "employeeRateRemoveAction": "إزالة الاستثناء",
   "employeeRateInvalidError": "اختر منتجًا وأدخل سعرًا أكبر من صفر.",
-  "employeeRateNoProductsAvailable": "جميع المنتجات لديها بالفعل استثناء لهذا الموظف."
+  "employeeRateNoProductsAvailable": "جميع المنتجات لديها بالفعل استثناء لهذا الموظف.",
+
+  "spLedgerTitle": "المدفوعات",
+  "spLedgerEmpty": "لا توجد مدفوعات بعد.",
+  "spFilterMethodLabel": "الطريقة",
+  "spFilterStatusLabel": "الحالة",
+  "spMethodAny": "أي طريقة",
+  "spStatusAny": "أي حالة",
+  "spMethodCash": "نقداً",
+  "spMethodCreditCard": "بطاقة ائتمان",
+  "spMethodBankTransfer": "تحويل بنكي",
+  "spMethodCheck": "شيك",
+  "spMethodDigitalWallet": "محفظة رقمية",
+  "spMethodOther": "أخرى",
+  "spStatusPending": "قيد الانتظار",
+  "spStatusCompleted": "مكتمل",
+  "spStatusFailed": "فشل",
+  "spStatusRefunded": "مسترد"
 }
