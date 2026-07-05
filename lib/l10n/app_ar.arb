@@ -484,6 +484,9 @@
 
   "soRecordPaymentTitle": "تسجيل دفعة",
   "soAmountPaidLabel": "المبلغ المدفوع",
+  "soTotalLabel": "الإجمالي",
+  "soPaidLabel": "المدفوع",
+  "soRemainingLabel": "المتبقي",
   "soPaymentMethodLabel": "طريقة الدفع",
   "soSavePaymentButton": "حفظ الدفعة",
 

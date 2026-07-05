@@ -1388,6 +1388,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get soAmountPaidLabel => 'المبلغ المدفوع';
 
   @override
+  String get soTotalLabel => 'الإجمالي';
+
+  @override
+  String get soPaidLabel => 'المدفوع';
+
+  @override
+  String get soRemainingLabel => 'المتبقي';
+
+  @override
   String get soPaymentMethodLabel => 'طريقة الدفع';
 
   @override

@@ -2707,6 +2707,24 @@ abstract class AppLocalizations {
   /// **'Amount Paid'**
   String get soAmountPaidLabel;
 
+  /// No description provided for @soTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get soTotalLabel;
+
+  /// No description provided for @soPaidLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get soPaidLabel;
+
+  /// No description provided for @soRemainingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get soRemainingLabel;
+
   /// No description provided for @soPaymentMethodLabel.
   ///
   /// In en, this message translates to:

@@ -1388,6 +1388,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soAmountPaidLabel => 'Amount Paid';
 
   @override
+  String get soTotalLabel => 'Total';
+
+  @override
+  String get soPaidLabel => 'Paid';
+
+  @override
+  String get soRemainingLabel => 'Remaining';
+
+  @override
   String get soPaymentMethodLabel => 'Payment Method';
 
   @override

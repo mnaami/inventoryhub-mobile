@@ -549,6 +549,9 @@
 
   "soRecordPaymentTitle": "Record Payment",
   "soAmountPaidLabel": "Amount Paid",
+  "soTotalLabel": "Total",
+  "soPaidLabel": "Paid",
+  "soRemainingLabel": "Remaining",
   "soPaymentMethodLabel": "Payment Method",
   "soSavePaymentButton": "Save Payment",
 
