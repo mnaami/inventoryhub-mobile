@@ -416,90 +416,114 @@ class SampleDataService {
     }
   }
 
-  /// Employee attribution + piece-rate pay demo data. Inserts employees, a
-  /// couple of product default pay rates plus one employee override, a few
-  /// already-`completed` production orders attributed to those employees
-  /// (inserted directly — NOT via [ProductionOrderDao.complete] — so no
-  /// recipe/stock-consumption entanglement; see report for the tradeoff),
-  /// one earning per order snapshotting the applicable rate, and one partial
-  /// employee payment so the demo shows a non-zero owed balance.
+  /// Employee attribution + piece-rate pay demo data. Inserts a handful of
+  /// employees, product default pay rates plus a couple of employee overrides,
+  /// several already-`completed` production orders attributed to those
+  /// employees (inserted directly — NOT via [ProductionOrderDao.complete] — so
+  /// no recipe/stock-consumption entanglement; see report for the tradeoff),
+  /// one rate-snapshot earning per order, and employee payments chosen to show
+  /// a spread of balances: partially paid (owes), paid in full (zero), unpaid
+  /// (owes full), and overpaid (a negative/credit balance — overpayment is
+  /// allowed).
   Future<void> _seedEmployees(_Refs refs, DateTime now) async {
     final orgId = _session.organizationId;
 
-    final employeeIds = <String>[];
+    final employeeIdByName = <String, String>{};
     for (final e in _kEmployees) {
       final id = _ids.newId();
-      employeeIds.add(id);
+      final name = e[0] as String;
+      employeeIdByName[name] = id;
       await _db.employeeDao.createRow(EmployeesCompanion.insert(
         id: id,
         organizationId: orgId,
-        name: e[0] as String,
+        name: name,
         phone: Value(e[1] as String),
+        notes: Value(e[2] as String?),
         isSample: const Value(true),
         createdAt: now,
         updatedAt: now,
       ));
     }
-    final marcusId = employeeIds[0];
-    final priyaId = employeeIds[1];
 
-    final drill = _product(refs, 'Cordless Drill 18V');
-    final plywood = _product(refs, 'Plywood Sheet');
+    // Product default rates (employee_id null) for the output products below.
+    const defaultRates = <String, double>{
+      'Cordless Drill 18V': 5.0,
+      'Plywood Sheet': 3.0,
+      'Claw Hammer': 1.5,
+      'Paint Roller Set': 2.0,
+      'Adjustable Wrench': 2.5,
+    };
+    // Employee overrides (employeeName, productName, rate): each employee earns
+    // a different per-unit rate than the product default on that product.
+    const overrides = <List<Object>>[
+      ['Marcus Webb', 'Cordless Drill 18V', 6.0],
+      ['Priya Nair', 'Plywood Sheet', 3.5],
+    ];
 
-    // Default rates (employee_id null) for two output products.
-    const drillDefaultRate = 5.0;
-    const plywoodDefaultRate = 3.0;
-    // Override: Marcus earns more per drill than the product default.
-    const marcusDrillOverrideRate = 6.0;
+    for (final entry in defaultRates.entries) {
+      await _db.productionPayRateDao.upsert(ProductionPayRatesCompanion.insert(
+        id: _ids.newId(),
+        organizationId: orgId,
+        productId: _product(refs, entry.key).id,
+        rate: entry.value,
+        isSample: const Value(true),
+        createdAt: now,
+        updatedAt: now,
+      ));
+    }
+    for (final o in overrides) {
+      await _db.productionPayRateDao.upsert(ProductionPayRatesCompanion.insert(
+        id: _ids.newId(),
+        organizationId: orgId,
+        productId: _product(refs, o[1] as String).id,
+        employeeId: Value(employeeIdByName[o[0] as String]!),
+        rate: o[2] as double,
+        isSample: const Value(true),
+        createdAt: now,
+        updatedAt: now,
+      ));
+    }
 
-    await _db.productionPayRateDao.upsert(ProductionPayRatesCompanion.insert(
-      id: _ids.newId(),
-      organizationId: orgId,
-      productId: drill.id,
-      rate: drillDefaultRate,
-      isSample: const Value(true),
-      createdAt: now,
-      updatedAt: now,
-    ));
-    await _db.productionPayRateDao.upsert(ProductionPayRatesCompanion.insert(
-      id: _ids.newId(),
-      organizationId: orgId,
-      productId: plywood.id,
-      rate: plywoodDefaultRate,
-      isSample: const Value(true),
-      createdAt: now,
-      updatedAt: now,
-    ));
-    await _db.productionPayRateDao.upsert(ProductionPayRatesCompanion.insert(
-      id: _ids.newId(),
-      organizationId: orgId,
-      productId: drill.id,
-      employeeId: Value(marcusId),
-      rate: marcusDrillOverrideRate,
-      isSample: const Value(true),
-      createdAt: now,
-      updatedAt: now,
-    ));
+    // The rate that applies for an (employee, product) pair: override if one
+    // exists, else the product default. Keeps every earning below internally
+    // consistent with the rate table just seeded.
+    double resolveRate(String employeeName, String productName) {
+      for (final o in overrides) {
+        if (o[0] == employeeName && o[1] == productName) return o[2] as double;
+      }
+      return defaultRates[productName]!;
+    }
 
-    // (employeeId, product, quantity, rate) — rate is the one that applies
-    // (override where present, else the product default) so the demo data
-    // stays internally consistent with the rate table above.
-    final orders = <List<Object>>[
-      [marcusId, drill, 4.0, marcusDrillOverrideRate],
-      [priyaId, plywood, 10.0, plywoodDefaultRate],
-      [marcusId, plywood, 5.0, plywoodDefaultRate],
+    // Attributed, already-completed production orders spread across recent days.
+    // (employeeName, productName, quantity, daysAgo)
+    const orderSpecs = <List<Object>>[
+      ['Marcus Webb', 'Cordless Drill 18V', 4.0, 5],
+      ['Marcus Webb', 'Plywood Sheet', 5.0, 3],
+      ['Marcus Webb', 'Claw Hammer', 8.0, 2],
+      ['Priya Nair', 'Plywood Sheet', 10.0, 5],
+      ['Priya Nair', 'Paint Roller Set', 6.0, 4],
+      ['Priya Nair', 'Plywood Sheet', 8.0, 1],
+      ['Diego Santos', 'Adjustable Wrench', 6.0, 6],
+      ['Diego Santos', 'Claw Hammer', 10.0, 2],
+      ['Aisha Khan', 'Paint Roller Set', 5.0, 3],
+      ['Aisha Khan', 'Cordless Drill 18V', 2.0, 1],
+      ['Tom Becker', 'Plywood Sheet', 4.0, 2],
     ];
 
     final earnedByEmployee = <String, double>{};
-    for (final spec in orders) {
-      final employeeId = spec[0] as String;
-      final product = spec[1] as _ProductRef;
+    for (final spec in orderSpecs) {
+      final employeeName = spec[0] as String;
+      final productName = spec[1] as String;
       final quantity = spec[2] as double;
-      final rate = spec[3] as double;
+      final daysAgo = spec[3] as int;
+      final employeeId = employeeIdByName[employeeName]!;
+      final product = _product(refs, productName);
+      final rate = resolveRate(employeeName, productName);
       final amount = quantity * rate;
-      earnedByEmployee[employeeId] = (earnedByEmployee[employeeId] ?? 0) + amount;
+      earnedByEmployee[employeeId] =
+          (earnedByEmployee[employeeId] ?? 0) + amount;
 
-      final orderDate = now.subtract(const Duration(days: 5));
+      final orderDate = now.subtract(Duration(days: daysAgo));
       final orderId = _ids.newId();
       final orderNumber =
           await _db.documentCounterDao.next(orgId, 'production_order', 'PRD');
@@ -533,24 +557,31 @@ class SampleDataService {
           );
     }
 
-    // Partially pay Marcus so his balance (earned - paid) is a non-zero
-    // amount owed, showcasing the balance feature.
-    final marcusEarned = earnedByEmployee[marcusId]!;
-    final partialPayment = (marcusEarned / 2).roundToDouble();
-    final payDate = now.subtract(const Duration(days: 1));
-    final paymentNumber =
-        await _db.documentCounterDao.next(orgId, 'employee_payment', 'EPAY');
-    await _db.employeePaymentDao.createRow(EmployeePaymentsCompanion.insert(
-      id: _ids.newId(),
-      organizationId: orgId,
-      employeeId: marcusId,
-      paymentNumber: paymentNumber,
-      amount: partialPayment,
-      paymentDate: payDate,
-      isSample: const Value(true),
-      createdAt: payDate,
-      updatedAt: payDate,
-    ));
+    // Payments giving a spread of balances (earned - paid). Priya is paid in
+    // full (computed from her earnings); Marcus is paid down partially (owes);
+    // Aisha is overpaid (credit balance); Diego and Tom go unpaid (owe full).
+    // (employeeName, amount, daysAgo)
+    final payments = <List<Object>>[
+      ['Marcus Webb', 25.0, 1],
+      ['Priya Nair', earnedByEmployee[employeeIdByName['Priya Nair']!]!, 2],
+      ['Aisha Khan', 25.0, 1],
+    ];
+    for (final p in payments) {
+      final payDate = now.subtract(Duration(days: p[2] as int));
+      final paymentNumber =
+          await _db.documentCounterDao.next(orgId, 'employee_payment', 'EPAY');
+      await _db.employeePaymentDao.createRow(EmployeePaymentsCompanion.insert(
+        id: _ids.newId(),
+        organizationId: orgId,
+        employeeId: employeeIdByName[p[0] as String]!,
+        paymentNumber: paymentNumber,
+        amount: p[1] as double,
+        paymentDate: payDate,
+        isSample: const Value(true),
+        createdAt: payDate,
+        updatedAt: payDate,
+      ));
+    }
   }
 
   Future<void> _seedFoundation(_Refs refs, DateTime now) async {
@@ -766,10 +797,13 @@ const _kSuppliers = <List<Object>>[
   ['Timberline Supply', 'Jo Quinn', 45],
 ];
 
-// (name, phone) for the piece-rate pay demo.
-const _kEmployees = <List<Object>>[
-  ['Marcus Webb', '555-0142'],
-  ['Priya Nair', '555-0198'],
+// (name, phone, notes|null) for the piece-rate pay demo.
+const _kEmployees = <List<Object?>>[
+  ['Marcus Webb', '555-0142', 'Senior assembler'],
+  ['Priya Nair', '555-0198', 'Finishing specialist'],
+  ['Diego Santos', '555-0173', null],
+  ['Aisha Khan', '555-0121', 'Part-time'],
+  ['Tom Becker', '555-0155', null],
 ];
 
 const _kPurchaseOrders = <_PoSpec>[
