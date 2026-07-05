@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../purchasing/purchase_order/presentation/purchase_order_dashboard_screen.dart';
 import '../../inventory/stock_movement/presentation/stock_movements_screen.dart';
@@ -73,6 +74,13 @@ class MoreScreen extends ConsumerWidget {
                 ),
               );
             },
+          ),
+          const Divider(height: 1, indent: 20, endIndent: 20),
+          _moreTile(
+            context,
+            icon: Icons.badge_outlined,
+            title: l10n.moreEmployees,
+            onTap: () => context.push('/employees'),
           ),
           const Divider(height: 1, indent: 20, endIndent: 20),
           _moreTile(

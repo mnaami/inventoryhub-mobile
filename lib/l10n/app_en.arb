@@ -544,5 +544,10 @@
   "purchasingDashboardQuickActionsHeading": "Quick Actions",
   "purchasingDashboardSuppliersAction": "Suppliers",
   "purchasingDashboardOrdersAction": "Orders",
-  "soStatTotalSales": "Total Sales"
+  "soStatTotalSales": "Total Sales",
+
+  "moreEmployees": "Employees",
+  "employeesTitle": "Employees",
+  "employeesEmpty": "No employees yet. Tap + to add one.",
+  "employeeInactive": "Inactive"
 }

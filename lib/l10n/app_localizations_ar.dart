@@ -1375,4 +1375,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get soStatTotalSales => 'إجمالي المبيعات';
+
+  @override
+  String get moreEmployees => 'الموظفون';
+
+  @override
+  String get employeesTitle => 'الموظفون';
+
+  @override
+  String get employeesEmpty => 'لا يوجد موظفون بعد. اضغط + لإضافة موظف.';
+
+  @override
+  String get employeeInactive => 'غير نشط';
 }

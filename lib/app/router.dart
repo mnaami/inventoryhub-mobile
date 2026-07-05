@@ -14,6 +14,7 @@ import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/onboarding/presentation/currency_select_screen.dart';
 import '../features/home/presentation/home_dashboard_screen.dart';
 import '../features/home/presentation/home_providers.dart';
+import '../features/employees/employee/presentation/employee_list_screen.dart';
 import 'currency/currency_controller.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -37,6 +38,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/', builder: (_, __) => const MainScaffold()),
+      GoRoute(
+        path: '/employees',
+        builder: (_, __) => const EmployeeListScreen(),
+      ),
     ],
     redirect: (context, state) {
       final seen = ref.read(onboardingSeenProvider);

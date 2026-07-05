@@ -2688,6 +2688,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Sales'**
   String get soStatTotalSales;
+
+  /// No description provided for @moreEmployees.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees'**
+  String get moreEmployees;
+
+  /// No description provided for @employeesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees'**
+  String get employeesTitle;
+
+  /// No description provided for @employeesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No employees yet. Tap + to add one.'**
+  String get employeesEmpty;
+
+  /// No description provided for @employeeInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get employeeInactive;
 }
 
 class _AppLocalizationsDelegate

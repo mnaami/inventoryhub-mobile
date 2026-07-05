@@ -1375,4 +1375,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get soStatTotalSales => 'Total Sales';
+
+  @override
+  String get moreEmployees => 'Employees';
+
+  @override
+  String get employeesTitle => 'Employees';
+
+  @override
+  String get employeesEmpty => 'No employees yet. Tap + to add one.';
+
+  @override
+  String get employeeInactive => 'Inactive';
 }

@@ -479,5 +479,10 @@
   "purchasingDashboardQuickActionsHeading": "إجراءات سريعة",
   "purchasingDashboardSuppliersAction": "الموردين",
   "purchasingDashboardOrdersAction": "الطلبات",
-  "soStatTotalSales": "إجمالي المبيعات"
+  "soStatTotalSales": "إجمالي المبيعات",
+
+  "moreEmployees": "الموظفون",
+  "employeesTitle": "الموظفون",
+  "employeesEmpty": "لا يوجد موظفون بعد. اضغط + لإضافة موظف.",
+  "employeeInactive": "غير نشط"
 }
