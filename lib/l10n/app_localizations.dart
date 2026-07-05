@@ -242,6 +242,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get commonCancel;
 
+  /// No description provided for @commonCreatedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: {date}'**
+  String commonCreatedValue(String date);
+
   /// No description provided for @authSignInSubtitle.
   ///
   /// In en, this message translates to:

@@ -154,6 +154,22 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                               _buildShippingStatusBadge(context, o.shippingStatus, l10n),
                             ],
                           ),
+                          const SizedBox(height: 16),
+                          const Divider(height: 1),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_today,
+                                  size: 16, color: scheme.onSurfaceVariant),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.commonCreatedValue(
+                                    formatDateTime(o.createdAt)),
+                                style: theme.textTheme.bodyMedium
+                                    ?.copyWith(color: scheme.onSurfaceVariant),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),

@@ -32,6 +32,8 @@
   "logoutConfirmMessage": "ستحتاج إلى تسجيل الدخول مرة أخرى للمتابعة.",
 
   "commonCancel": "إلغاء",
+  "commonCreatedValue": "أُنشئ: {date}",
+  "@commonCreatedValue": {"placeholders": {"date": {"type": "String"}}},
 
   "authSignInSubtitle": "سجّل الدخول للمتابعة",
   "authUsernameLabel": "اسم المستخدم",

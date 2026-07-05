@@ -83,6 +83,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get commonCancel => 'إلغاء';
 
   @override
+  String commonCreatedValue(String date) {
+    return 'أُنشئ: $date';
+  }
+
+  @override
   String get authSignInSubtitle => 'سجّل الدخول للمتابعة';
 
   @override

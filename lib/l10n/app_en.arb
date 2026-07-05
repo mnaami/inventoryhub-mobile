@@ -35,6 +35,8 @@
   "logoutConfirmMessage": "You will need to sign in again to continue.",
 
   "commonCancel": "Cancel",
+  "commonCreatedValue": "Created: {date}",
+  "@commonCreatedValue": {"placeholders": {"date": {"type": "String"}}},
 
   "authSignInSubtitle": "Sign in to continue",
   "authUsernameLabel": "Username",
