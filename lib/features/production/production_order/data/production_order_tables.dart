@@ -6,6 +6,8 @@ class ProductionOrders extends Table {
   TextColumn get organizationId => text().named('organization_id')();
   TextColumn get orderNumber => text().named('order_number')();
   TextColumn get productId => text().named('product_id')(); // output product
+  TextColumn get employeeId =>
+      text().named('employee_id').nullable()(); // optional attribution
   RealColumn get quantity => real()();
   TextColumn get status => text().withDefault(const Constant('planned'))();
   DateTimeColumn get startDate => dateTime().named('start_date').nullable()();
