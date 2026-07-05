@@ -17,6 +17,55 @@ class SaleOrderPaymentDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  /// Org-wide ledger of active payments joined to their order for SO number
+  /// and customer id. Newest `paymentDate` first. `to` is EXCLUSIVE. Payments
+  /// on cancelled orders are intentionally included.
+  Future<List<({SaleOrderPaymentRow payment, String soNumber, String customerId})>>
+      pagedPayments(
+    String orgId, {
+    String? method,
+    String? status,
+    DateTime? from,
+    DateTime? to,
+    String? search,
+    required int limit,
+    required int offset,
+  }) async {
+    final q = select(saleOrderPayments).join([
+      innerJoin(
+          saleOrders, saleOrders.id.equalsExp(saleOrderPayments.saleOrderId)),
+    ]);
+    q.where(saleOrderPayments.organizationId.equals(orgId) &
+        saleOrderPayments.isActive.equals(true));
+    if (method != null) q.where(saleOrderPayments.method.equals(method));
+    if (status != null) q.where(saleOrderPayments.status.equals(status));
+    if (from != null) {
+      q.where(saleOrderPayments.paymentDate.isBiggerOrEqualValue(from));
+    }
+    if (to != null) {
+      q.where(saleOrderPayments.paymentDate.isSmallerThanValue(to));
+    }
+    if (search != null && search.trim().isNotEmpty) {
+      q.where(saleOrders.soNumber.like('%${search.trim()}%'));
+    }
+    q.orderBy([
+      OrderingTerm(
+          expression: saleOrderPayments.paymentDate, mode: OrderingMode.desc),
+      OrderingTerm(
+          expression: saleOrderPayments.createdAt, mode: OrderingMode.desc),
+    ]);
+    q.limit(limit, offset: offset);
+    final rows = await q.get();
+    return [
+      for (final r in rows)
+        (
+          payment: r.readTable(saleOrderPayments),
+          soNumber: r.read(saleOrders.soNumber)!,
+          customerId: r.read(saleOrders.customerId)!,
+        ),
+    ];
+  }
+
   Future<double> completedTotal(String saleOrderId) async {
     final sum = saleOrderPayments.amount.sum();
     final q = selectOnly(saleOrderPayments)
