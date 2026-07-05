@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/format/date_format.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../employee/presentation/employee_detail_providers.dart';
@@ -36,13 +37,27 @@ class _RecordEmployeePaymentSheetState
   }
 
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: _date,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
-    if (picked != null) setState(() => _date = picked);
+    if (pickedDate == null) return;
+    if (!mounted) return;
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_date),
+    );
+    // Keep the previously chosen time if the time step is dismissed.
+    final time = pickedTime ?? TimeOfDay.fromDateTime(_date);
+    setState(() => _date = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          time.hour,
+          time.minute,
+        ));
   }
 
   Future<void> _save() async {
@@ -102,8 +117,7 @@ class _RecordEmployeePaymentSheetState
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.employeePaymentDateLabel),
-            subtitle: Text(
-                '${_date.year}-${_date.month.toString().padLeft(2, '0')}-${_date.day.toString().padLeft(2, '0')}'),
+            subtitle: Text(formatDateTime(_date)),
             trailing: const Icon(Icons.calendar_today_outlined),
             onTap: _pickDate,
           ),

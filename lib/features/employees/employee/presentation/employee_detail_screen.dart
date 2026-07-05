@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/currency/currency_controller.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/db/app_database.dart';
+import '../../../../core/format/date_format.dart';
 import '../../../../core/format/quantity_format.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -364,13 +365,9 @@ class _PaymentTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
-    final date = payment.paymentDate;
-    final dateText =
-        '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-
     return ListTile(
       title: Text(payment.paymentNumber),
-      subtitle: Text(dateText),
+      subtitle: Text(formatDateTime(payment.paymentDate)),
       trailing: Text(
         money(payment.amount),
         style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
