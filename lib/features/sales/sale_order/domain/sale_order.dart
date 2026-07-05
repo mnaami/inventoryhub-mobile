@@ -90,3 +90,22 @@ abstract class SaleOrderShippingItem with _$SaleOrderShippingItem {
     required DateTime createdAt,
   }) = _SaleOrderShippingItem;
 }
+
+@freezed
+abstract class SalePaymentListItem with _$SalePaymentListItem {
+  const factory SalePaymentListItem({
+    required String id,
+    required String organizationId,
+    required String saleOrderId,
+    required String paymentNumber,
+    required double amount,
+    required PaymentMethod method,
+    required PaymentRecordStatus status,
+    required DateTime paymentDate,
+    required bool isActive,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required String soNumber,
+    required String customerId,
+  }) = _SalePaymentListItem;
+}

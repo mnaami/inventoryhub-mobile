@@ -1437,4 +1437,297 @@ as DateTime,
 
 }
 
+/// @nodoc
+mixin _$SalePaymentListItem {
+
+ String get id; String get organizationId; String get saleOrderId; String get paymentNumber; double get amount; PaymentMethod get method; PaymentRecordStatus get status; DateTime get paymentDate; bool get isActive; DateTime get createdAt; DateTime get updatedAt; String get soNumber; String get customerId;
+/// Create a copy of SalePaymentListItem
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SalePaymentListItemCopyWith<SalePaymentListItem> get copyWith => _$SalePaymentListItemCopyWithImpl<SalePaymentListItem>(this as SalePaymentListItem, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalePaymentListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.saleOrderId, saleOrderId) || other.saleOrderId == saleOrderId)&&(identical(other.paymentNumber, paymentNumber) || other.paymentNumber == paymentNumber)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.method, method) || other.method == method)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.soNumber, soNumber) || other.soNumber == soNumber)&&(identical(other.customerId, customerId) || other.customerId == customerId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,organizationId,saleOrderId,paymentNumber,amount,method,status,paymentDate,isActive,createdAt,updatedAt,soNumber,customerId);
+
+@override
+String toString() {
+  return 'SalePaymentListItem(id: $id, organizationId: $organizationId, saleOrderId: $saleOrderId, paymentNumber: $paymentNumber, amount: $amount, method: $method, status: $status, paymentDate: $paymentDate, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt, soNumber: $soNumber, customerId: $customerId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SalePaymentListItemCopyWith<$Res>  {
+  factory $SalePaymentListItemCopyWith(SalePaymentListItem value, $Res Function(SalePaymentListItem) _then) = _$SalePaymentListItemCopyWithImpl;
+@useResult
+$Res call({
+ String id, String organizationId, String saleOrderId, String paymentNumber, double amount, PaymentMethod method, PaymentRecordStatus status, DateTime paymentDate, bool isActive, DateTime createdAt, DateTime updatedAt, String soNumber, String customerId
+});
+
+
+
+
+}
+/// @nodoc
+class _$SalePaymentListItemCopyWithImpl<$Res>
+    implements $SalePaymentListItemCopyWith<$Res> {
+  _$SalePaymentListItemCopyWithImpl(this._self, this._then);
+
+  final SalePaymentListItem _self;
+  final $Res Function(SalePaymentListItem) _then;
+
+/// Create a copy of SalePaymentListItem
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? organizationId = null,Object? saleOrderId = null,Object? paymentNumber = null,Object? amount = null,Object? method = null,Object? status = null,Object? paymentDate = null,Object? isActive = null,Object? createdAt = null,Object? updatedAt = null,Object? soNumber = null,Object? customerId = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,organizationId: null == organizationId ? _self.organizationId : organizationId // ignore: cast_nullable_to_non_nullable
+as String,saleOrderId: null == saleOrderId ? _self.saleOrderId : saleOrderId // ignore: cast_nullable_to_non_nullable
+as String,paymentNumber: null == paymentNumber ? _self.paymentNumber : paymentNumber // ignore: cast_nullable_to_non_nullable
+as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as double,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as PaymentMethod,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as PaymentRecordStatus,paymentDate: null == paymentDate ? _self.paymentDate : paymentDate // ignore: cast_nullable_to_non_nullable
+as DateTime,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,soNumber: null == soNumber ? _self.soNumber : soNumber // ignore: cast_nullable_to_non_nullable
+as String,customerId: null == customerId ? _self.customerId : customerId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [SalePaymentListItem].
+extension SalePaymentListItemPatterns on SalePaymentListItem {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SalePaymentListItem value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SalePaymentListItem() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SalePaymentListItem value)  $default,){
+final _that = this;
+switch (_that) {
+case _SalePaymentListItem():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SalePaymentListItem value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SalePaymentListItem() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String organizationId,  String saleOrderId,  String paymentNumber,  double amount,  PaymentMethod method,  PaymentRecordStatus status,  DateTime paymentDate,  bool isActive,  DateTime createdAt,  DateTime updatedAt,  String soNumber,  String customerId)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SalePaymentListItem() when $default != null:
+return $default(_that.id,_that.organizationId,_that.saleOrderId,_that.paymentNumber,_that.amount,_that.method,_that.status,_that.paymentDate,_that.isActive,_that.createdAt,_that.updatedAt,_that.soNumber,_that.customerId);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String organizationId,  String saleOrderId,  String paymentNumber,  double amount,  PaymentMethod method,  PaymentRecordStatus status,  DateTime paymentDate,  bool isActive,  DateTime createdAt,  DateTime updatedAt,  String soNumber,  String customerId)  $default,) {final _that = this;
+switch (_that) {
+case _SalePaymentListItem():
+return $default(_that.id,_that.organizationId,_that.saleOrderId,_that.paymentNumber,_that.amount,_that.method,_that.status,_that.paymentDate,_that.isActive,_that.createdAt,_that.updatedAt,_that.soNumber,_that.customerId);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String organizationId,  String saleOrderId,  String paymentNumber,  double amount,  PaymentMethod method,  PaymentRecordStatus status,  DateTime paymentDate,  bool isActive,  DateTime createdAt,  DateTime updatedAt,  String soNumber,  String customerId)?  $default,) {final _that = this;
+switch (_that) {
+case _SalePaymentListItem() when $default != null:
+return $default(_that.id,_that.organizationId,_that.saleOrderId,_that.paymentNumber,_that.amount,_that.method,_that.status,_that.paymentDate,_that.isActive,_that.createdAt,_that.updatedAt,_that.soNumber,_that.customerId);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _SalePaymentListItem implements SalePaymentListItem {
+  const _SalePaymentListItem({required this.id, required this.organizationId, required this.saleOrderId, required this.paymentNumber, required this.amount, required this.method, required this.status, required this.paymentDate, required this.isActive, required this.createdAt, required this.updatedAt, required this.soNumber, required this.customerId});
+  
+
+@override final  String id;
+@override final  String organizationId;
+@override final  String saleOrderId;
+@override final  String paymentNumber;
+@override final  double amount;
+@override final  PaymentMethod method;
+@override final  PaymentRecordStatus status;
+@override final  DateTime paymentDate;
+@override final  bool isActive;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
+@override final  String soNumber;
+@override final  String customerId;
+
+/// Create a copy of SalePaymentListItem
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SalePaymentListItemCopyWith<_SalePaymentListItem> get copyWith => __$SalePaymentListItemCopyWithImpl<_SalePaymentListItem>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SalePaymentListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.saleOrderId, saleOrderId) || other.saleOrderId == saleOrderId)&&(identical(other.paymentNumber, paymentNumber) || other.paymentNumber == paymentNumber)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.method, method) || other.method == method)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.soNumber, soNumber) || other.soNumber == soNumber)&&(identical(other.customerId, customerId) || other.customerId == customerId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,organizationId,saleOrderId,paymentNumber,amount,method,status,paymentDate,isActive,createdAt,updatedAt,soNumber,customerId);
+
+@override
+String toString() {
+  return 'SalePaymentListItem(id: $id, organizationId: $organizationId, saleOrderId: $saleOrderId, paymentNumber: $paymentNumber, amount: $amount, method: $method, status: $status, paymentDate: $paymentDate, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt, soNumber: $soNumber, customerId: $customerId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SalePaymentListItemCopyWith<$Res> implements $SalePaymentListItemCopyWith<$Res> {
+  factory _$SalePaymentListItemCopyWith(_SalePaymentListItem value, $Res Function(_SalePaymentListItem) _then) = __$SalePaymentListItemCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String organizationId, String saleOrderId, String paymentNumber, double amount, PaymentMethod method, PaymentRecordStatus status, DateTime paymentDate, bool isActive, DateTime createdAt, DateTime updatedAt, String soNumber, String customerId
+});
+
+
+
+
+}
+/// @nodoc
+class __$SalePaymentListItemCopyWithImpl<$Res>
+    implements _$SalePaymentListItemCopyWith<$Res> {
+  __$SalePaymentListItemCopyWithImpl(this._self, this._then);
+
+  final _SalePaymentListItem _self;
+  final $Res Function(_SalePaymentListItem) _then;
+
+/// Create a copy of SalePaymentListItem
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? organizationId = null,Object? saleOrderId = null,Object? paymentNumber = null,Object? amount = null,Object? method = null,Object? status = null,Object? paymentDate = null,Object? isActive = null,Object? createdAt = null,Object? updatedAt = null,Object? soNumber = null,Object? customerId = null,}) {
+  return _then(_SalePaymentListItem(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,organizationId: null == organizationId ? _self.organizationId : organizationId // ignore: cast_nullable_to_non_nullable
+as String,saleOrderId: null == saleOrderId ? _self.saleOrderId : saleOrderId // ignore: cast_nullable_to_non_nullable
+as String,paymentNumber: null == paymentNumber ? _self.paymentNumber : paymentNumber // ignore: cast_nullable_to_non_nullable
+as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as double,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as PaymentMethod,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as PaymentRecordStatus,paymentDate: null == paymentDate ? _self.paymentDate : paymentDate // ignore: cast_nullable_to_non_nullable
+as DateTime,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,soNumber: null == soNumber ? _self.soNumber : soNumber // ignore: cast_nullable_to_non_nullable
+as String,customerId: null == customerId ? _self.customerId : customerId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 // dart format on
