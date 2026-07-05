@@ -70,7 +70,7 @@ void main() {
     expect(find.byType(CustomerCreditLimitBar), findsOneWidget);
   });
 
-  testWidgets('quick actions appear above the header card, which appears above the orders section',
+  testWidgets('header card appears above quick actions, which appears above business snapshot card',
       (tester) async {
     final container = await _seededContainer();
     addTearDown(container.dispose);
@@ -83,10 +83,13 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
+    final headerY = tester.getTopLeft(find.text('Acme Co')).dy;
     final quickActionsY =
         tester.getTopLeft(find.byType(CustomerQuickActions)).dy;
     final snapshotY =
         tester.getTopLeft(find.byType(CustomerBusinessSnapshotCard)).dy;
+    
+    expect(headerY, lessThan(quickActionsY));
     expect(quickActionsY, lessThan(snapshotY));
 
     // The Orders section header sits below the fold once the new sections

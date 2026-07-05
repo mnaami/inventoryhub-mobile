@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../sales/customer/presentation/contact_selection_screen.dart';
 import '../domain/employee.dart';
 import 'employee_detail_providers.dart';
 import 'employee_providers.dart';
@@ -40,6 +42,36 @@ class _AddEditEmployeeScreenState
     _phone.dispose();
     _notes.dispose();
     super.dispose();
+  }
+
+  Future<void> _showContactImportDialog() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ContactSelectionScreen(
+          onContactSelected: (name, phone, email) {
+            setState(() {
+              if (_name.text.trim().isEmpty) {
+                _name.text = name;
+              }
+              if (phone.isNotEmpty && _phone.text.trim().isEmpty) {
+                _phone.text = phone.split(',').first.trim();
+              }
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Contact information imported successfully!'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   Future<void> _save() async {
@@ -85,6 +117,12 @@ class _AddEditEmployeeScreenState
       appBar: AppBar(
         title: Text(isEdit ? l10n.employeeEditTitle : l10n.employeeNewTitle),
         actions: [
+          if (Platform.isAndroid)
+            IconButton(
+              icon: const Icon(Icons.contact_phone),
+              tooltip: 'Import Contact',
+              onPressed: _showContactImportDialog,
+            ),
           TextButton(
             onPressed: _save,
             child: Text(l10n.employeeSaveButton),

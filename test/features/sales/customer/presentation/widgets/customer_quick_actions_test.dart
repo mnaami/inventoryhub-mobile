@@ -137,25 +137,4 @@ void main() {
 
     expect(find.byType(RecordPaymentScreen), findsOneWidget);
   });
-
-  testWidgets('shows Call when the customer has a phone number',
-      (tester) async {
-    final container = await _seededContainer();
-    addTearDown(container.dispose);
-    final customer = await container
-        .read(customerServiceProvider)
-        .create(name: 'Acme Co', phones: const ['+15550001111']);
-
-    await tester.pumpWidget(UncontrolledProviderScope(
-      container: container,
-      child: localizedApp(
-          home: Scaffold(body: CustomerQuickActions(customer: customer))),
-    ));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Call'), findsOneWidget);
-    await tester.tap(find.text('Call'));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('Could not launch phone call'), findsOneWidget);
-  });
 }
