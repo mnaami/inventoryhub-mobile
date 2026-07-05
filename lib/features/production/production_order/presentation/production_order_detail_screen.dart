@@ -30,7 +30,8 @@ class ProductionOrderDetailScreen extends ConsumerWidget {
   final String orderId;
 
   Future<void> _run(BuildContext context, WidgetRef ref,
-      Future<void> Function() action) async {
+      Future<void> Function() action,
+      {String? attributedEmployeeId}) async {
     final l10n = context.l10n;
     try {
       await action();
@@ -38,6 +39,12 @@ class ProductionOrderDetailScreen extends ConsumerWidget {
       ref.invalidate(productionOrdersProvider);
       ref.invalidate(productionOrderListProvider);
       ref.invalidate(productionDashboardProvider);
+      if (attributedEmployeeId != null) {
+        ref.invalidate(employeeBalanceProvider(attributedEmployeeId));
+        ref.invalidate(employeeEarningsProvider(attributedEmployeeId));
+        ref.invalidate(employeeListProvider);
+        ref.invalidate(_orderEarningProvider(orderId));
+      }
       if (context.mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(l10n.productionActionDone)));
@@ -495,7 +502,8 @@ class ProductionOrderDetailScreen extends ConsumerWidget {
           child: FilledButton.icon(
             icon: const Icon(Icons.check),
             label: Text(l10n.productionCompleteButton),
-            onPressed: () => _run(context, ref, () => service.complete(o)),
+            onPressed: () => _run(context, ref, () => service.complete(o),
+                attributedEmployeeId: o.employeeId),
           ),
         ),
       ],

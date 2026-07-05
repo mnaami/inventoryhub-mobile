@@ -61,7 +61,7 @@ class _EmployeeRateSheetState extends ConsumerState<EmployeeRateSheet> {
     final l10n = context.l10n;
     setState(() => _error = null);
     final rate = double.tryParse(_rate.text.trim());
-    if (_productId == null || rate == null || rate <= 0) {
+    if (_productId == null || rate == null || rate < 0) {
       setState(() => _error = l10n.employeeRateInvalidError);
       return;
     }
