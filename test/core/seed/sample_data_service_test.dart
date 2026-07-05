@@ -236,6 +236,11 @@ void main() {
         n += (await db.select(db.purchaseOrderReceipts).get()).length;
         n += (await db.select(db.purchaseOrderReceiptItems).get()).length;
         n += (await db.select(db.purchaseOrderPayments).get()).length;
+        n += (await db.select(db.employees).get()).length;
+        n += (await db.select(db.productionPayRates).get()).length;
+        n += (await db.select(db.productionEarnings).get()).length;
+        n += (await db.select(db.productionOrders).get()).length;
+        n += (await db.select(db.employeePayments).get()).length;
         return n;
       }
 
