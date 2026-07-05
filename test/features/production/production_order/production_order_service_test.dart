@@ -3,6 +3,8 @@ import 'package:inventoryhub_mobile/core/db/app_database.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/result/app_exception.dart';
 import 'package:drift/drift.dart' hide isNull;
+import 'package:inventoryhub_mobile/features/employees/rate/data/production_pay_rate_dao.dart';
+import 'package:inventoryhub_mobile/features/employees/rate/domain/production_pay_rate_service.dart';
 import 'package:inventoryhub_mobile/features/production/production_order/data/production_order_dao.dart';
 import 'package:inventoryhub_mobile/features/production/production_order/data/production_order_repository_impl.dart';
 import 'package:inventoryhub_mobile/features/production/production_order/domain/production_order_enums.dart';
@@ -34,6 +36,11 @@ void main() {
       ids: ids,
       organizationId: 'org1',
       userId: 'u1',
+      rateService: ProductionPayRateService(
+        dao: ProductionPayRateDao(db),
+        ids: ids,
+        organizationId: 'org1',
+      ),
     );
     recipes = ProductionRecipeService(
       repository: ProductionRecipeRepositoryImpl(ProductionRecipeDao(db)),

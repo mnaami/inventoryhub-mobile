@@ -16763,6 +16763,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final ProductionPayRateDao productionPayRateDao = ProductionPayRateDao(
     this as AppDatabase,
   );
+  late final ProductionEarningDao productionEarningDao = ProductionEarningDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

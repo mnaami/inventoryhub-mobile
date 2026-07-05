@@ -10,6 +10,7 @@ abstract class ProductionOrder with _$ProductionOrder {
     required String organizationId,
     required String orderNumber,
     required String productId,
+    String? employeeId,
     required double quantity,
     required ProductionOrderStatus status,
     DateTime? startDate,

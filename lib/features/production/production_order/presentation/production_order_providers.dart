@@ -3,6 +3,8 @@ import '../../../../core/paging/paged_list_notifier.dart';
 import '../../../../core/paging/paged_state.dart';
 import '../../../../core/providers.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../employees/rate/data/production_pay_rate_dao.dart';
+import '../../../employees/rate/domain/production_pay_rate_service.dart';
 import '../../../inventory/product/domain/product.dart';
 import '../../../inventory/product/presentation/product_providers.dart';
 import '../../../sales/sale_order/data/document_counter_dao.dart';
@@ -14,6 +16,11 @@ import '../data/production_order_repository_impl.dart';
 import '../domain/production_order.dart';
 import '../domain/production_order_enums.dart';
 import '../domain/production_order_usecases.dart';
+
+// NOTE: `ProductionPayRateService` is constructed directly here, minimally,
+// to keep this provider compiling after Task 4 added the dependency to
+// `ProductionOrderService`. Its own provider wiring (shared instance, DI
+// graph placement) is Task 8's responsibility.
 
 final activeRecipeForProductProvider =
     FutureProvider.family<ProductionRecipe?, String>((ref, productId) =>
@@ -35,6 +42,11 @@ final productionOrderServiceProvider =
     ids: ref.watch(idGeneratorProvider),
     organizationId: session.organizationId,
     userId: session.userId,
+    rateService: ProductionPayRateService(
+      dao: ProductionPayRateDao(db),
+      ids: ref.watch(idGeneratorProvider),
+      organizationId: session.organizationId,
+    ),
   );
 });
 

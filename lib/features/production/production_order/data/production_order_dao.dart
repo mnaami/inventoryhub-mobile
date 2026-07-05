@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import '../../../../core/db/app_database.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../employees/earning/data/production_earning_table.dart';
 import '../../../inventory/product/data/product_table.dart';
 import '../../../inventory/stock_movement/data/stock_movement_table.dart';
 import '../../recipe/data/production_recipe_tables.dart';
@@ -14,6 +15,7 @@ part 'production_order_dao.g.dart';
   ProductionRecipeItems,
   Products,
   StockMovements,
+  ProductionEarnings,
 ])
 class ProductionOrderDao extends DatabaseAccessor<AppDatabase>
     with _$ProductionOrderDaoMixin {
@@ -92,6 +94,9 @@ class ProductionOrderDao extends DatabaseAccessor<AppDatabase>
     required String outputMovementId,
     required String createdBy,
     required DateTime now,
+    String? employeeId,
+    String? earningId,
+    double? rate,
   }) {
     return transaction(() async {
       final order = await (select(productionOrders)
@@ -188,6 +193,22 @@ class ProductionOrderDao extends DatabaseAccessor<AppDatabase>
         completionDate: Value(now),
         updatedAt: Value(now),
       ));
+
+      // Emit a frozen-rate earning for the attributed employee, if any.
+      if (employeeId != null) {
+        await into(productionEarnings).insert(ProductionEarningsCompanion.insert(
+          id: earningId!,
+          organizationId: order.organizationId,
+          productionOrderId: orderId,
+          employeeId: employeeId,
+          productId: order.productId,
+          quantity: order.quantity,
+          rate: rate ?? 0,
+          amount: (rate ?? 0) * order.quantity,
+          createdAt: now,
+          updatedAt: now,
+        ));
+      }
     });
   }
 }
