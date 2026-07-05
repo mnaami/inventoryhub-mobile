@@ -81,6 +81,112 @@ class CustomerDetailScreen extends ConsumerWidget {
     );
   }
 
+  void _showContactInfoSheet(BuildContext context, Customer c) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: scheme.onSurfaceVariant.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Contact Details',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: scheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (c.email != null && c.email!.isNotEmpty) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.email_outlined, color: scheme.primary),
+                  title: Text(
+                    c.email!,
+                    style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                  ),
+                  onTap: () async {
+                    final Uri uri = Uri(scheme: 'mailto', path: c.email);
+                    try {
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    } catch (_) {}
+                  },
+                ),
+                const Divider(height: 1),
+              ],
+              if (c.phones.isNotEmpty) ...[
+                for (final phone in c.phones) ...[
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.phone_outlined, color: scheme.primary),
+                    title: Text(
+                      phone,
+                      style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                    ),
+                    trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
+                    onTap: () async {
+                      final Uri uri = Uri(scheme: 'tel', path: phone);
+                      try {
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        } else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Could not launch phone call to $phone')),
+                            );
+                          }
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error launching call: $e')),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                  const Divider(height: 1),
+                ],
+              ],
+              if (c.address != null && c.address!.isNotEmpty) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.location_on_outlined, color: scheme.primary),
+                  title: Text(
+                    c.address!,
+                    style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final money = ref.watch(moneyFormatterProvider);
@@ -224,62 +330,21 @@ class CustomerDetailScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Column(
                   children: [
-                    if (c.email != null && c.email!.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.email_outlined, color: scheme.primary),
-                        title: Text(
-                          c.email!,
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                        ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.contact_phone_outlined, color: scheme.primary),
+                      title: Text(
+                        'Contact Details',
+                        style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
                       ),
-                      const Divider(height: 1),
-                    ],
-                    if (c.phones.isNotEmpty) ...[
-                      for (final phone in c.phones) ...[
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: Icon(Icons.phone_outlined, color: scheme.primary),
-                          title: Text(
-                            phone,
-                            style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                          ),
-                          trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
-                          onTap: () async {
-                            final Uri uri = Uri(scheme: 'tel', path: phone);
-                            try {
-                              if (await canLaunchUrl(uri)) {
-                                await launchUrl(uri);
-                              } else {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Could not launch phone call to $phone')),
-                                  );
-                                }
-                              }
-                            } catch (e) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error launching call: $e')),
-                                );
-                              }
-                            }
-                          },
-                        ),
-                        const Divider(height: 1),
-                      ],
-                    ],
-                    if (c.address != null && c.address!.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.location_on_outlined, color: scheme.primary),
-                        title: Text(
-                          c.address!,
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                        ),
+                      subtitle: Text(
+                        'Phone, Email, Address',
+                        style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                       ),
-                      const Divider(height: 1),
-                    ],
+                      trailing: Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+                      onTap: () => _showContactInfoSheet(context, c),
+                    ),
+                    const Divider(height: 1),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(Icons.schedule_outlined, color: scheme.primary),
