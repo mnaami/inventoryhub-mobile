@@ -661,6 +661,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productionQuantityLabel => 'الكمية';
 
   @override
+  String get productionAssignedTo => 'مسند إلى (اختياري)';
+
+  @override
+  String get productionAssignedToNone => '— بلا —';
+
+  @override
   String get productionCreateButton => 'إنشاء';
 
   @override
@@ -711,6 +717,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get productionCancelOrderButton => 'إلغاء الأمر';
+
+  @override
+  String get productionAssignedEmployeeLabel => 'مسند إلى';
+
+  @override
+  String get productionEarningLabel => 'الأجر';
 
   @override
   String productionCreatedValue(String date) {
@@ -822,6 +834,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String productionOrderListSubtitle(String quantity, String status) {
     return '$quantity وحدة · $status';
   }
+
+  @override
+  String get pieceRatesButton => 'أجور القطعة';
+
+  @override
+  String get pieceRatesTitle => 'أجور القطعة';
+
+  @override
+  String get pieceRatesEmpty => 'لا توجد منتجات بعد.';
+
+  @override
+  String get pieceRateFieldLabel => 'السعر';
+
+  @override
+  String get pieceRateSaveAction => 'حفظ';
+
+  @override
+  String get pieceRateSavedMessage => 'تم حفظ السعر.';
+
+  @override
+  String get pieceRateInvalidError => 'أدخل سعرًا صحيحًا (0 أو أكثر).';
 
   @override
   String get recipesListTitle => 'الوصفات';

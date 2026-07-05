@@ -661,6 +661,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productionQuantityLabel => 'Quantity';
 
   @override
+  String get productionAssignedTo => 'Assigned to (optional)';
+
+  @override
+  String get productionAssignedToNone => '— none —';
+
+  @override
   String get productionCreateButton => 'Create';
 
   @override
@@ -711,6 +717,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get productionCancelOrderButton => 'Cancel order';
+
+  @override
+  String get productionAssignedEmployeeLabel => 'Assigned to';
+
+  @override
+  String get productionEarningLabel => 'Earning';
 
   @override
   String productionCreatedValue(String date) {
@@ -822,6 +834,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String productionOrderListSubtitle(String quantity, String status) {
     return '$quantity units · $status';
   }
+
+  @override
+  String get pieceRatesButton => 'Piece rates';
+
+  @override
+  String get pieceRatesTitle => 'Piece rates';
+
+  @override
+  String get pieceRatesEmpty => 'No products yet.';
+
+  @override
+  String get pieceRateFieldLabel => 'Rate';
+
+  @override
+  String get pieceRateSaveAction => 'Save';
+
+  @override
+  String get pieceRateSavedMessage => 'Rate saved.';
+
+  @override
+  String get pieceRateInvalidError => 'Enter a valid rate (0 or more).';
 
   @override
   String get recipesListTitle => 'Recipes';

@@ -279,6 +279,8 @@
   "productionOrderCreateTitle": "New production order",
   "productionOutputProductLabel": "Output product",
   "productionQuantityLabel": "Quantity",
+  "productionAssignedTo": "Assigned to (optional)",
+  "productionAssignedToNone": "— none —",
   "productionCreateButton": "Create",
   "productionChooseOutputProductError": "Choose an output product.",
   "productionEnterValidQuantityError": "Enter a valid quantity.",
@@ -299,6 +301,8 @@
   "productionStartButton": "Start",
   "productionCompleteButton": "Complete (consume + produce)",
   "productionCancelOrderButton": "Cancel order",
+  "productionAssignedEmployeeLabel": "Assigned to",
+  "productionEarningLabel": "Earning",
 
   "productionCreatedValue": "Created: {date}",
   "@productionCreatedValue": {"placeholders": {"date": {"type": "String"}}},
@@ -339,6 +343,14 @@
   "productionOrdersEmpty": "No production orders yet.",
   "productionOrderListSubtitle": "{quantity} units · {status}",
   "@productionOrderListSubtitle": {"placeholders": {"quantity": {"type": "String"}, "status": {"type": "String"}}},
+
+  "pieceRatesButton": "Piece rates",
+  "pieceRatesTitle": "Piece rates",
+  "pieceRatesEmpty": "No products yet.",
+  "pieceRateFieldLabel": "Rate",
+  "pieceRateSaveAction": "Save",
+  "pieceRateSavedMessage": "Rate saved.",
+  "pieceRateInvalidError": "Enter a valid rate (0 or more).",
 
   "recipesListTitle": "Recipes",
   "recipesEmpty": "No recipes yet. Tap + to add one.",

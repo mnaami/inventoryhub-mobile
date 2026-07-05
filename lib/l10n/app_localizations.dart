@@ -1352,6 +1352,18 @@ abstract class AppLocalizations {
   /// **'Quantity'**
   String get productionQuantityLabel;
 
+  /// No description provided for @productionAssignedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned to (optional)'**
+  String get productionAssignedTo;
+
+  /// No description provided for @productionAssignedToNone.
+  ///
+  /// In en, this message translates to:
+  /// **'— none —'**
+  String get productionAssignedToNone;
+
   /// No description provided for @productionCreateButton.
   ///
   /// In en, this message translates to:
@@ -1435,6 +1447,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel order'**
   String get productionCancelOrderButton;
+
+  /// No description provided for @productionAssignedEmployeeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned to'**
+  String get productionAssignedEmployeeLabel;
+
+  /// No description provided for @productionEarningLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Earning'**
+  String get productionEarningLabel;
 
   /// No description provided for @productionCreatedValue.
   ///
@@ -1614,6 +1638,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{quantity} units · {status}'**
   String productionOrderListSubtitle(String quantity, String status);
+
+  /// No description provided for @pieceRatesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Piece rates'**
+  String get pieceRatesButton;
+
+  /// No description provided for @pieceRatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Piece rates'**
+  String get pieceRatesTitle;
+
+  /// No description provided for @pieceRatesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No products yet.'**
+  String get pieceRatesEmpty;
+
+  /// No description provided for @pieceRateFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get pieceRateFieldLabel;
+
+  /// No description provided for @pieceRateSaveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get pieceRateSaveAction;
+
+  /// No description provided for @pieceRateSavedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate saved.'**
+  String get pieceRateSavedMessage;
+
+  /// No description provided for @pieceRateInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid rate (0 or more).'**
+  String get pieceRateInvalidError;
 
   /// No description provided for @recipesListTitle.
   ///

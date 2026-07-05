@@ -235,6 +235,8 @@
   "productionOrderCreateTitle": "أمر إنتاج جديد",
   "productionOutputProductLabel": "المنتج الناتج",
   "productionQuantityLabel": "الكمية",
+  "productionAssignedTo": "مسند إلى (اختياري)",
+  "productionAssignedToNone": "— بلا —",
   "productionCreateButton": "إنشاء",
   "productionChooseOutputProductError": "اختر منتجًا ناتجًا.",
   "productionEnterValidQuantityError": "أدخل كمية صحيحة.",
@@ -250,6 +252,8 @@
   "productionStartButton": "بدء",
   "productionCompleteButton": "إكمال (استهلاك + إنتاج)",
   "productionCancelOrderButton": "إلغاء الأمر",
+  "productionAssignedEmployeeLabel": "مسند إلى",
+  "productionEarningLabel": "الأجر",
 
   "productionCreatedValue": "أُنشئ: {date}",
   "productionOutputProductHeading": "المنتج الناتج",
@@ -282,6 +286,14 @@
   "productionOrdersListTitle": "أوامر الإنتاج",
   "productionOrdersEmpty": "لا توجد أوامر إنتاج بعد.",
   "productionOrderListSubtitle": "{quantity} وحدة · {status}",
+
+  "pieceRatesButton": "أجور القطعة",
+  "pieceRatesTitle": "أجور القطعة",
+  "pieceRatesEmpty": "لا توجد منتجات بعد.",
+  "pieceRateFieldLabel": "السعر",
+  "pieceRateSaveAction": "حفظ",
+  "pieceRateSavedMessage": "تم حفظ السعر.",
+  "pieceRateInvalidError": "أدخل سعرًا صحيحًا (0 أو أكثر).",
 
   "recipesListTitle": "الوصفات",
   "recipesEmpty": "لا توجد وصفات بعد. اضغط + لإضافة واحدة.",
