@@ -9,6 +9,7 @@ import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../customer/presentation/customer_providers.dart';
+import '../../../../core/format/date_format.dart';
 import '../domain/sale_order.dart';
 import '../domain/sale_order_enums.dart';
 import 'create_shipment_screen.dart';
@@ -239,7 +240,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                                       ),
                                       subtitle: Text(
-                                        list[i].method.wire.toUpperCase().replaceAll('_', ' '),
+                                        '${list[i].method.wire.toUpperCase().replaceAll('_', ' ')} • ${formatDateTime(list[i].paymentDate)}',
                                         style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                                       ),
                                       trailing: Text(
