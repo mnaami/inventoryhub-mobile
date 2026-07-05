@@ -15,6 +15,7 @@ import '../../payment/presentation/record_employee_payment_sheet.dart';
 import '../../rate/presentation/employee_rate_sheet.dart';
 import '../domain/employee.dart';
 import 'add_edit_employee_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'employee_detail_providers.dart';
 import 'employee_providers.dart';
 
@@ -76,6 +77,80 @@ class EmployeeDetailScreen extends ConsumerWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (_) => EmployeeRateSheet(employeeId: employeeId, existing: rate),
+    );
+  }
+
+  void _showContactInfoSheet(BuildContext context, Employee e) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: scheme.onSurfaceVariant.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Contact Details',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: scheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (e.phone != null && e.phone!.isNotEmpty) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.phone_outlined, color: scheme.primary),
+                  title: Text(
+                    e.phone!,
+                    style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                  ),
+                  trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
+                  onTap: () async {
+                    final Uri uri = Uri(scheme: 'tel', path: e.phone);
+                    try {
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Could not launch phone call to ${e.phone}')),
+                          );
+                        }
+                      }
+                    } catch (err) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error launching call: $err')),
+                        );
+                      }
+                    }
+                  },
+                ),
+              ],
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -191,6 +266,27 @@ class EmployeeDetailScreen extends ConsumerWidget {
                   onTap: () => _openRecordPayment(context, ref),
                 ),
               ),
+              if (employee.phone != null && employee.phone!.isNotEmpty) ...[
+                const SizedBox(height: AppTokens.space16),
+                AppCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(Icons.contact_phone_outlined, color: scheme.primary),
+                        title: const Text('Contact Details'),
+                        subtitle: Text(
+                          employee.phone!,
+                          style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                        ),
+                        trailing: Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+                        onTap: () => _showContactInfoSheet(context, employee),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               const SizedBox(height: AppTokens.space24),
 
               // Earnings section.
