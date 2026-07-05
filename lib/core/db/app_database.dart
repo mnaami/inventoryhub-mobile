@@ -35,6 +35,7 @@ import '../../features/employees/rate/data/production_pay_rate_dao.dart';
 import '../../features/employees/earning/data/production_earning_table.dart';
 import '../../features/employees/earning/data/production_earning_dao.dart';
 import '../../features/employees/payment/data/employee_payment_table.dart';
+import '../../features/employees/payment/data/employee_payment_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -48,7 +49,7 @@ part 'app_database.g.dart';
     ProductionRecipes, ProductionRecipeItems, ProductionOrders,
     Employees, ProductionPayRates, ProductionEarnings, EmployeePayments,
   ],
-  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao, SaleOrderDao, SaleOrderPaymentDao, SaleOrderShippingDao, SupplierDao, PurchaseOrderDao, PurchaseOrderPaymentDao, PurchaseOrderReceiptDao, ProductionRecipeDao, ProductionOrderDao, EmployeeDao, ProductionPayRateDao, ProductionEarningDao],
+  daos: [CategoryDao, UnitDao, ProductDao, StockMovementDao, DocumentCounterDao, CustomerDao, SaleOrderDao, SaleOrderPaymentDao, SaleOrderShippingDao, SupplierDao, PurchaseOrderDao, PurchaseOrderPaymentDao, PurchaseOrderReceiptDao, ProductionRecipeDao, ProductionOrderDao, EmployeeDao, ProductionPayRateDao, ProductionEarningDao, EmployeePaymentDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
