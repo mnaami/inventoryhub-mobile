@@ -190,7 +190,7 @@ class PurchaseOrderDetailScreen extends ConsumerWidget {
                                         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                                       ),
                                       subtitle: Text(
-                                        list[i].status.wire.toUpperCase(),
+                                        '${list[i].status.wire.toUpperCase()} • ${formatDateTime(list[i].receiptDate)}',
                                         style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                                       ),
                                       trailing: list[i].status == ReceiptDocStatus.draft
