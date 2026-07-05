@@ -1,6 +1,9 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inventoryhub_mobile/core/db/app_database.dart';
 import 'package:inventoryhub_mobile/core/id/id_generator.dart';
 import 'package:inventoryhub_mobile/core/result/app_exception.dart';
+import 'package:inventoryhub_mobile/core/seed/seed_service.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/data/document_counter_dao.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/data/sale_order_dao.dart';
 import 'package:inventoryhub_mobile/features/sales/sale_order/data/sale_order_payment_dao.dart';
@@ -71,5 +74,45 @@ void main() {
     final p = (await service.payments(o.id)).single;
     await service.deletePayment(p);
     expect((await service.get(o.id))!.paymentStatus, PaymentStatus.notPaid);
+  });
+
+  test('listPayments returns page 0 newest-first and honors page offset',
+      () async {
+    final db = newTestDb();
+    addTearDown(db.close);
+    final session = await SeedService(db, const IdGenerator()).ensureSeeded();
+    final service = SaleOrderService(
+      repository: SaleOrderRepositoryImpl(
+        SaleOrderDao(db),
+        SaleOrderPaymentDao(db),
+        SaleOrderShippingDao(db),
+        DocumentCounterDao(db),
+      ),
+      ids: const IdGenerator(),
+      organizationId: session.organizationId,
+      userId: session.userId,
+    );
+    final now = DateTime.utc(2026, 6, 1);
+    await db.into(db.saleOrders).insert(SaleOrdersCompanion.insert(
+          id: 'so1', organizationId: session.organizationId,
+          soNumber: 'SO-0001', customerId: 'c1', orderDate: now,
+          totalAmount: const Value(1000), createdAt: now, updatedAt: now,
+        ));
+    for (var i = 1; i <= 25; i++) {
+      await db.saleOrderPaymentDao.recordPayment(
+          SaleOrderPaymentsCompanion.insert(
+        id: 'p$i', organizationId: session.organizationId, saleOrderId: 'so1',
+        paymentNumber: 'PAY-${i.toString().padLeft(4, '0')}', amount: 1,
+        method: 'cash', status: const Value('completed'),
+        paymentDate: DateTime.utc(2026, 6, i), createdAt: now, updatedAt: now,
+      ));
+    }
+
+    final page0 = await service.listPayments(page: 0);
+    final page1 = await service.listPayments(page: 1);
+    expect(page0.length, 20); // pageSize
+    expect(page1.length, 5);
+    // Newest paymentDate first: p25 (6-25) leads page 0.
+    expect(page0.first.paymentNumber, 'PAY-0025');
   });
 }
