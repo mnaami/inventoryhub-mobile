@@ -315,6 +315,10 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                         list[i].soShippingNumber,
                                         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                                       ),
+                                      subtitle: Text(
+                                        formatDateTime(list[i].shippingDate),
+                                        style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                                      ),
                                       trailing: Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                         decoration: BoxDecoration(
