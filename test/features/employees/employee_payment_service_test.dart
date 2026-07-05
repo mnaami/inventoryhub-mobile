@@ -75,4 +75,48 @@ void main() {
     );
     expect(p.paymentNumber, startsWith('EPAY-'));
   });
+
+  test('cancel deactivates a payment: excluded from paymentsFor, paidTotal, '
+      'and balance reverts', () async {
+    await earningDao.into(earningDao.productionEarnings).insert(
+          ProductionEarningsCompanion.insert(
+            id: 'earn1',
+            organizationId: orgId,
+            productionOrderId: 'order1',
+            employeeId: employeeId,
+            productId: 'prod1',
+            quantity: 4.0,
+            rate: 3.0,
+            amount: 12.0,
+            createdAt: aDate,
+            updatedAt: aDate,
+          ),
+        );
+
+    final payment = await paymentService.record(
+      employeeId: employeeId,
+      amount: 5.0,
+      paymentDate: aDate,
+    );
+
+    // Before cancel: payment counts toward paid total, appears in list,
+    // and reduces the balance.
+    expect(await paymentDao.paidTotalForEmployee(orgId, employeeId), 5.0);
+    expect(
+      (await paymentDao.paymentsFor(employeeId)).map((r) => r.id),
+      contains(payment.id),
+    );
+    expect(await paymentService.balanceFor(employeeId), 7.0); // 12 - 5
+
+    await paymentDao.cancel(payment.id, aDate);
+
+    // After cancel: excluded from active-only queries, and balance
+    // reverts to as-if-unpaid.
+    expect(await paymentDao.paidTotalForEmployee(orgId, employeeId), 0.0);
+    expect(
+      (await paymentDao.paymentsFor(employeeId)).map((r) => r.id),
+      isNot(contains(payment.id)),
+    );
+    expect(await paymentService.balanceFor(employeeId), 12.0);
+  });
 }
