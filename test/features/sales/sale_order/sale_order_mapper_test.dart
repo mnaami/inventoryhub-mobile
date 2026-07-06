@@ -59,4 +59,31 @@ void main() {
     expect(item.soNumber, 'SO-0001');
     expect(item.customerId, 'c1');
   });
+
+  test('toSaleShipmentListItem carries shipment fields plus order context', () {
+    final row = SaleOrderShippingRow(
+      id: 's1',
+      organizationId: 'org1',
+      saleOrderId: 'so1',
+      soShippingNumber: 'SHP-0001',
+      shippingDate: DateTime.utc(2026, 6, 2),
+      carrier: 'DHL',
+      trackingNumber: '1Z999',
+      status: 'delivered',
+      isSample: false,
+      createdAt: DateTime.utc(2026, 6, 2),
+      updatedAt: DateTime.utc(2026, 6, 2),
+    );
+
+    final item =
+        toSaleShipmentListItem(row, soNumber: 'SO-0001', customerId: 'c1');
+
+    expect(item.id, 's1');
+    expect(item.soShippingNumber, 'SHP-0001');
+    expect(item.carrier, 'DHL');
+    expect(item.trackingNumber, '1Z999');
+    expect(item.status, ShipmentStatus.delivered);
+    expect(item.soNumber, 'SO-0001');
+    expect(item.customerId, 'c1');
+  });
 }
