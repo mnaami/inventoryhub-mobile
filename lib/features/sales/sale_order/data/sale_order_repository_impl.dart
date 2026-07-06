@@ -173,6 +173,25 @@ class SaleOrderRepositoryImpl implements SaleOrderRepository {
       (await _shipping.shipmentsFor(orderId)).map(toSaleOrderShipping).toList();
 
   @override
+  Future<List<SaleShipmentListItem>> pagedShipments(String orgId,
+          {ShipmentStatus? status,
+          DateTime? from,
+          DateTime? to,
+          String? search,
+          required int limit,
+          required int offset}) async =>
+      (await _shipping.pagedShipments(orgId,
+              status: status?.wire,
+              from: from,
+              to: to,
+              search: search,
+              limit: limit,
+              offset: offset))
+          .map((r) => toSaleShipmentListItem(r.shipment,
+              soNumber: r.soNumber, customerId: r.customerId))
+          .toList();
+
+  @override
   Future<int> countByDateRange(String orgId, DateTime from, DateTime to) =>
       _orders.countByDateRange(orgId, from, to);
 

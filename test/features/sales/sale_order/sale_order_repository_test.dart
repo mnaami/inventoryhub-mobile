@@ -69,4 +69,36 @@ void main() {
     expect(items.single.customerId, 'c1');
     expect(items.single.method, PaymentMethod.cash);
   });
+
+  test('pagedShipments maps DAO rows to SaleShipmentListItem with order context',
+      () async {
+    final db = newTestDb();
+    addTearDown(db.close);
+    final repo = SaleOrderRepositoryImpl(
+      SaleOrderDao(db),
+      SaleOrderPaymentDao(db),
+      SaleOrderShippingDao(db),
+      DocumentCounterDao(db),
+    );
+    final now = DateTime.utc(2026, 6, 2);
+    await db.into(db.saleOrders).insert(SaleOrdersCompanion.insert(
+          id: 'so1', organizationId: 'org1', soNumber: 'SO-0001',
+          customerId: 'c1', orderDate: now, createdAt: now, updatedAt: now,
+        ));
+    await db.into(db.saleOrderShippings).insert(SaleOrderShippingsCompanion.insert(
+          id: 's1', organizationId: 'org1', saleOrderId: 'so1',
+          soShippingNumber: 'SHP-0001', shippingDate: now,
+          carrier: const Value('DHL'), status: const Value('shipped'),
+          createdAt: now, updatedAt: now,
+        ));
+
+    final items = await repo.pagedShipments('org1', limit: 20, offset: 0);
+
+    expect(items.length, 1);
+    expect(items.single, isA<SaleShipmentListItem>());
+    expect(items.single.soNumber, 'SO-0001');
+    expect(items.single.customerId, 'c1');
+    expect(items.single.status, ShipmentStatus.shipped);
+    expect(items.single.carrier, 'DHL');
+  });
 }

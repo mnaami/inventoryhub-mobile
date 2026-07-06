@@ -57,4 +57,11 @@ abstract interface class SaleOrderRepository {
       List<ShipmentLine> lines, String createdBy);
   Future<void> setShipmentStatus(String shippingId, ShipmentStatus status);
   Future<List<SaleOrderShipping>> shipmentsFor(String orderId);
+  Future<List<SaleShipmentListItem>> pagedShipments(String orgId,
+      {ShipmentStatus? status,
+      DateTime? from,
+      DateTime? to,
+      String? search,
+      required int limit,
+      required int offset});
 }
