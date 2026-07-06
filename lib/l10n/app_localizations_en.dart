@@ -1591,4 +1591,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get spStatusRefunded => 'Refunded';
+
+  @override
+  String get shipLedgerTitle => 'Shipments';
+
+  @override
+  String get shipLedgerEmpty => 'No shipments yet.';
+
+  @override
+  String get shipFilterStatusLabel => 'Status';
+
+  @override
+  String get shipStatusAny => 'Any status';
+
+  @override
+  String get shipStatusShipped => 'Shipped';
+
+  @override
+  String get shipStatusInTransit => 'In transit';
+
+  @override
+  String get shipStatusDelivered => 'Delivered';
+
+  @override
+  String get shipStatusReturned => 'Returned';
 }

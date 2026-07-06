@@ -558,5 +558,14 @@
   "spStatusPending": "قيد الانتظار",
   "spStatusCompleted": "مكتمل",
   "spStatusFailed": "فشل",
-  "spStatusRefunded": "مسترد"
+  "spStatusRefunded": "مسترد",
+
+  "shipLedgerTitle": "الشحنات",
+  "shipLedgerEmpty": "لا توجد شحنات بعد.",
+  "shipFilterStatusLabel": "الحالة",
+  "shipStatusAny": "أي حالة",
+  "shipStatusShipped": "تم الشحن",
+  "shipStatusInTransit": "قيد النقل",
+  "shipStatusDelivered": "تم التسليم",
+  "shipStatusReturned": "مُرتجع"
 }

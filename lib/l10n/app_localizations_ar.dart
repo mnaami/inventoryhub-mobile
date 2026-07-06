@@ -1590,4 +1590,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get spStatusRefunded => 'مسترد';
+
+  @override
+  String get shipLedgerTitle => 'الشحنات';
+
+  @override
+  String get shipLedgerEmpty => 'لا توجد شحنات بعد.';
+
+  @override
+  String get shipFilterStatusLabel => 'الحالة';
+
+  @override
+  String get shipStatusAny => 'أي حالة';
+
+  @override
+  String get shipStatusShipped => 'تم الشحن';
+
+  @override
+  String get shipStatusInTransit => 'قيد النقل';
+
+  @override
+  String get shipStatusDelivered => 'تم التسليم';
+
+  @override
+  String get shipStatusReturned => 'مُرتجع';
 }

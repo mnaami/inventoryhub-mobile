@@ -623,5 +623,14 @@
   "spStatusPending": "Pending",
   "spStatusCompleted": "Completed",
   "spStatusFailed": "Failed",
-  "spStatusRefunded": "Refunded"
+  "spStatusRefunded": "Refunded",
+
+  "shipLedgerTitle": "Shipments",
+  "shipLedgerEmpty": "No shipments yet.",
+  "shipFilterStatusLabel": "Status",
+  "shipStatusAny": "Any status",
+  "shipStatusShipped": "Shipped",
+  "shipStatusInTransit": "In transit",
+  "shipStatusDelivered": "Delivered",
+  "shipStatusReturned": "Returned"
 }

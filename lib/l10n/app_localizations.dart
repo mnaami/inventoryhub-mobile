@@ -3102,6 +3102,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Refunded'**
   String get spStatusRefunded;
+
+  /// No description provided for @shipLedgerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipments'**
+  String get shipLedgerTitle;
+
+  /// No description provided for @shipLedgerEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No shipments yet.'**
+  String get shipLedgerEmpty;
+
+  /// No description provided for @shipFilterStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get shipFilterStatusLabel;
+
+  /// No description provided for @shipStatusAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any status'**
+  String get shipStatusAny;
+
+  /// No description provided for @shipStatusShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipped'**
+  String get shipStatusShipped;
+
+  /// No description provided for @shipStatusInTransit.
+  ///
+  /// In en, this message translates to:
+  /// **'In transit'**
+  String get shipStatusInTransit;
+
+  /// No description provided for @shipStatusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get shipStatusDelivered;
+
+  /// No description provided for @shipStatusReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'Returned'**
+  String get shipStatusReturned;
 }
 
 class _AppLocalizationsDelegate
