@@ -11,7 +11,7 @@ import '../helpers/test_db.dart';
 import '../helpers/l10n.dart';
 
 void main() {
-  testWidgets('More sheet opens Production', (tester) async {
+  testWidgets('Production tab is accessible', (tester) async {
     final db = newTestDb();
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();
     final container = ProviderContainer(overrides: [
@@ -26,10 +26,6 @@ void main() {
       child: localizedApp(home: const MainScaffold()),
     ));
     await tester.pumpAndSettle();
-
-    await tester.tap(find.text('More'));
-    await tester.pumpAndSettle();
-    expect(find.text('Production'), findsOneWidget);
 
     await tester.tap(find.text('Production'));
     await tester.pumpAndSettle();

@@ -71,4 +71,27 @@ void main() {
       throwsA(isA<ValidationException>()),
     );
   });
+
+  test('listShipments returns page 0 newest-first and honors page offset',
+      () async {
+    await db.into(db.saleOrders).insert(SaleOrdersCompanion.insert(
+          id: 'so1', organizationId: 'org1',
+          soNumber: 'SO-0001', customerId: 'c1', orderDate: now,
+          createdAt: now, updatedAt: now,
+        ));
+    for (var i = 1; i <= 25; i++) {
+      await db.into(db.saleOrderShippings).insert(SaleOrderShippingsCompanion.insert(
+            id: 's$i', organizationId: 'org1', saleOrderId: 'so1',
+            soShippingNumber: 'SHP-${i.toString().padLeft(4, '0')}',
+            shippingDate: DateTime.utc(2026, 6, i),
+            createdAt: now, updatedAt: now,
+          ));
+    }
+
+    final page0 = await service.listShipments(page: 0);
+    final page1 = await service.listShipments(page: 1);
+    expect(page0.length, 20); // pageSize
+    expect(page1.length, 5);
+    expect(page0.first.soShippingNumber, 'SHP-0025'); // newest shippingDate
+  });
 }

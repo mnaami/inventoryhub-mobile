@@ -54,13 +54,19 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
           String orderId,
           Map<String, String> consumptionMovementIdByIngredient,
           String outputMovementId,
-          String createdBy) =>
+          String createdBy,
+          {String? employeeId,
+          String? earningId,
+          double? rate}) =>
       _orders.complete(
         orderId: orderId,
         consumptionMovementIdByIngredient: consumptionMovementIdByIngredient,
         outputMovementId: outputMovementId,
         createdBy: createdBy,
         now: DateTime.now().toUtc(),
+        employeeId: employeeId,
+        earningId: earningId,
+        rate: rate,
       );
 
   @override

@@ -39,6 +39,123 @@ class SupplierDetailScreen extends ConsumerWidget {
     );
   }
 
+  void _showContactInfoSheet(BuildContext context, Supplier s) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: scheme.onSurfaceVariant.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Contact Details',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: scheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (s.contactPerson != null && s.contactPerson!.isNotEmpty) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.person_outline, color: scheme.primary),
+                  title: Text(
+                    s.contactPerson!,
+                    style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                  ),
+                ),
+                const Divider(height: 1),
+              ],
+              if (s.email != null && s.email!.isNotEmpty) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.email_outlined, color: scheme.primary),
+                  title: Text(
+                    s.email!,
+                    style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                  ),
+                  onTap: () async {
+                    final Uri uri = Uri(scheme: 'mailto', path: s.email);
+                    try {
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    } catch (_) {}
+                  },
+                ),
+                const Divider(height: 1),
+              ],
+              if (s.phones.isNotEmpty) ...[
+                for (final phone in s.phones) ...[
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.phone_outlined, color: scheme.primary),
+                    title: Text(
+                      phone,
+                      style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                    ),
+                    trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
+                    onTap: () async {
+                      final Uri uri = Uri(scheme: 'tel', path: phone);
+                      try {
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        } else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Could not launch phone call to $phone')),
+                            );
+                          }
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error launching call: $e')),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                  const Divider(height: 1),
+                ],
+              ],
+              if (s.address != null && s.address!.isNotEmpty) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.location_on_outlined, color: scheme.primary),
+                  title: Text(
+                    s.address!,
+                    style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final money = ref.watch(moneyFormatterProvider);
@@ -142,73 +259,21 @@ class SupplierDetailScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Column(
                   children: [
-                    if (s.contactPerson != null && s.contactPerson!.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.person_outline, color: scheme.primary),
-                        title: Text(
-                          s.contactPerson!,
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                        ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.contact_phone_outlined, color: scheme.primary),
+                      title: Text(
+                        'Contact Details',
+                        style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
                       ),
-                      const Divider(height: 1),
-                    ],
-                    if (s.email != null && s.email!.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.email_outlined, color: scheme.primary),
-                        title: Text(
-                          s.email!,
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                        ),
+                      subtitle: Text(
+                        'Person, Phone, Email, Address',
+                        style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                       ),
-                      const Divider(height: 1),
-                    ],
-                    if (s.phones.isNotEmpty) ...[
-                      for (final phone in s.phones) ...[
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: Icon(Icons.phone_outlined, color: scheme.primary),
-                          title: Text(
-                            phone,
-                            style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                          ),
-                          trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
-                          onTap: () async {
-                            final Uri uri = Uri(scheme: 'tel', path: phone);
-                            try {
-                              if (await canLaunchUrl(uri)) {
-                                await launchUrl(uri);
-                              } else {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Could not launch phone call to $phone')),
-                                  );
-                                }
-                              }
-                            } catch (e) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error launching call: $e')),
-                                );
-                              }
-                            }
-                          },
-                        ),
-                        const Divider(height: 1),
-                      ],
-                    ],
-                    if (s.address != null && s.address!.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.location_on_outlined, color: scheme.primary),
-                        title: Text(
-                          s.address!,
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                        ),
-                      ),
-                      const Divider(height: 1),
-                    ],
+                      trailing: Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+                      onTap: () => _showContactInfoSheet(context, s),
+                    ),
+                    const Divider(height: 1),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(Icons.schedule_outlined, color: scheme.primary),

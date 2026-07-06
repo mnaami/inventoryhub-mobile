@@ -127,6 +127,23 @@ class SaleOrderService {
           limit: pageSize,
           offset: page * pageSize);
 
+  Future<List<SalePaymentListItem>> listPayments({
+    int page = 0,
+    PaymentMethod? method,
+    PaymentRecordStatus? status,
+    DateTime? from,
+    DateTime? to,
+    String search = '',
+  }) =>
+      _repo.pagedPayments(_orgId,
+          method: method,
+          status: status,
+          from: from,
+          to: to,
+          search: search,
+          limit: pageSize,
+          offset: page * pageSize);
+
   Future<SaleOrder> createDraft({
     required String customerId,
     required List<NewLine> lines,
@@ -289,6 +306,21 @@ class SaleOrderService {
 
   Future<List<SaleOrderShipping>> shipments(String orderId) =>
       _repo.shipmentsFor(orderId);
+
+  Future<List<SaleShipmentListItem>> listShipments({
+    int page = 0,
+    ShipmentStatus? status,
+    DateTime? from,
+    DateTime? to,
+    String search = '',
+  }) =>
+      _repo.pagedShipments(_orgId,
+          status: status,
+          from: from,
+          to: to,
+          search: search,
+          limit: pageSize,
+          offset: page * pageSize);
 
   Future<void> createShipment(
     SaleOrder order, {

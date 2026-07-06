@@ -15,6 +15,8 @@ import '../../purchasing/purchase_order/presentation/purchase_order_providers.da
 import '../../purchasing/supplier/presentation/supplier_providers.dart';
 import '../../sales/customer/presentation/customer_providers.dart';
 import '../../sales/sale_order/presentation/sale_order_providers.dart';
+import '../../employees/employee/presentation/employee_providers.dart';
+import '../../production/production_order/presentation/production_order_providers.dart';
 
 class SampleDataSection extends ConsumerStatefulWidget {
   const SampleDataSection({super.key});
@@ -77,6 +79,10 @@ class _SampleDataSectionState extends ConsumerState<SampleDataSection> {
     ref.invalidate(purchaseOrdersProvider);
     ref.invalidate(purchaseDashboardProvider);
     ref.invalidate(suppliersProvider);
+    ref.invalidate(employeeListProvider);
+    ref.invalidate(employeeBalanceProvider);
+    ref.invalidate(productionOrderListProvider);
+    ref.invalidate(productionDashboardProvider);
   }
 
   void _toast(String msg) {
@@ -139,7 +145,8 @@ class _SampleDataSectionState extends ConsumerState<SampleDataSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Sample data loaded — ${s.products} products, ${s.sales} sales, ${s.purchases} purchases.',
+          'Sample data loaded — ${s.products} products, ${s.sales} sales, '
+          '${s.purchases} purchases, ${s.employees} employees.',
           style: theme.textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w600,
             color: scheme.onSurface,

@@ -45,6 +45,53 @@ class SaleOrderShippingDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  /// Org-wide ledger of shipments joined to their order for SO number and
+  /// customer id. Newest `shippingDate` first. `to` is EXCLUSIVE. Shipments of
+  /// soft-deleted orders are excluded via the order's `isActive` flag.
+  Future<List<({SaleOrderShippingRow shipment, String soNumber, String customerId})>>
+      pagedShipments(
+    String orgId, {
+    String? status,
+    DateTime? from,
+    DateTime? to,
+    String? search,
+    required int limit,
+    required int offset,
+  }) async {
+    final q = select(saleOrderShippings).join([
+      innerJoin(
+          saleOrders, saleOrders.id.equalsExp(saleOrderShippings.saleOrderId)),
+    ]);
+    q.where(saleOrderShippings.organizationId.equals(orgId) &
+        saleOrders.isActive.equals(true));
+    if (status != null) q.where(saleOrderShippings.status.equals(status));
+    if (from != null) {
+      q.where(saleOrderShippings.shippingDate.isBiggerOrEqualValue(from));
+    }
+    if (to != null) {
+      q.where(saleOrderShippings.shippingDate.isSmallerThanValue(to));
+    }
+    if (search != null && search.trim().isNotEmpty) {
+      q.where(saleOrders.soNumber.like('%${search.trim()}%'));
+    }
+    q.orderBy([
+      OrderingTerm(
+          expression: saleOrderShippings.shippingDate, mode: OrderingMode.desc),
+      OrderingTerm(
+          expression: saleOrderShippings.createdAt, mode: OrderingMode.desc),
+    ]);
+    q.limit(limit, offset: offset);
+    final rows = await q.get();
+    return [
+      for (final r in rows)
+        (
+          shipment: r.readTable(saleOrderShippings),
+          soNumber: r.read(saleOrders.soNumber)!,
+          customerId: r.read(saleOrders.customerId)!,
+        ),
+    ];
+  }
+
   /// Resolves the parent sale order id for a shipment, or null if the shipment
   /// no longer exists. Used to navigate from a stock movement back to its
   /// source order.

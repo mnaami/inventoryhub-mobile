@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../../app/theme/app_tokens.dart';
 import '../../../sale_order/domain/sale_order.dart';
 import '../../../sale_order/domain/sale_order_enums.dart';
@@ -75,87 +74,40 @@ class CustomerQuickActions extends ConsumerWidget {
     ref.invalidate(saleOrderPaymentsProvider(chosen.id));
   }
 
-  Future<void> _call(BuildContext context) async {
-    var phone = customer.phones.length == 1 ? customer.phones.first : null;
-    phone ??= await showModalBottomSheet<String>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (_) => Container(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text('Call which number?',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            ),
-            const Divider(),
-            for (final p in customer.phones)
-              ListTile(
-                leading: const Icon(Icons.phone_outlined),
-                title: Text(p),
-                onTap: () => Navigator.pop(context, p),
-              ),
-          ],
-        ),
-      ),
-    );
-    if (phone == null) return;
-    final uri = Uri(scheme: 'tel', path: phone);
-    try {
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri);
-      } else if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Could not launch phone call to $phone')));
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error launching call: $e')));
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final outstanding = ref.watch(customerOutstandingProvider(customer.id));
     final showRecordPayment =
         outstanding.maybeWhen(data: (v) => v > 0, orElse: () => false);
-    final showCall = customer.phones.isNotEmpty;
+
+    if (showRecordPayment) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          FilledButton.icon(
+            onPressed: () => _newOrder(context, ref),
+            icon: const Icon(Icons.add_shopping_cart_outlined, size: 18),
+            label: const Text('New Order'),
+          ),
+          const SizedBox(height: AppTokens.space8),
+          OutlinedButton.icon(
+            onPressed: () => _recordPayment(context, ref),
+            icon: const Icon(Icons.payment_outlined, size: 18),
+            label: const Text('Record Payment'),
+          ),
+        ],
+      );
+    }
 
     return Row(
       children: [
         Expanded(
-          child: OutlinedButton.icon(
+          child: FilledButton.icon(
             onPressed: () => _newOrder(context, ref),
             icon: const Icon(Icons.add_shopping_cart_outlined, size: 18),
             label: const Text('New Order'),
           ),
         ),
-        if (showRecordPayment) ...[
-          const SizedBox(width: AppTokens.space8),
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: () => _recordPayment(context, ref),
-              icon: const Icon(Icons.payment_outlined, size: 18),
-              label: const Text('Record Payment'),
-            ),
-          ),
-        ],
-        if (showCall) ...[
-          const SizedBox(width: AppTokens.space8),
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: () => _call(context),
-              icon: const Icon(Icons.call_outlined, size: 18),
-              label: const Text('Call'),
-            ),
-          ),
-        ],
       ],
     );
   }

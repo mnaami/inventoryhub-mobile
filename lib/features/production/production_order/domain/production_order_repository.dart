@@ -18,7 +18,10 @@ abstract interface class ProductionOrderRepository {
       String orderId,
       Map<String, String> consumptionMovementIdByIngredient,
       String outputMovementId,
-      String createdBy);
+      String createdBy,
+      {String? employeeId,
+      String? earningId,
+      double? rate});
   Future<int> countByStatuses(String orgId, List<ProductionOrderStatus> s);
 
   // Recipe access needed to drive completion.

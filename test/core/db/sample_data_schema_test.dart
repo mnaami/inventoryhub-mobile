@@ -3,10 +3,10 @@ import 'package:inventoryhub_mobile/core/db/app_database.dart';
 import '../../helpers/test_db.dart';
 
 void main() {
-  test('schemaVersion is 5', () {
+  test('schemaVersion is 6', () {
     final db = AppDatabase.forTesting();
     addTearDown(db.close);
-    expect(db.schemaVersion, 5);
+    expect(db.schemaVersion, 6);
   });
 
   test('is_sample defaults to false on newly created tables', () async {

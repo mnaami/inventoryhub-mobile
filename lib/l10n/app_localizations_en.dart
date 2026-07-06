@@ -83,6 +83,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonCancel => 'Cancel';
 
   @override
+  String commonCreatedValue(String date) {
+    return 'Created: $date';
+  }
+
+  @override
   String get authSignInSubtitle => 'Sign in to continue';
 
   @override
@@ -661,6 +666,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productionQuantityLabel => 'Quantity';
 
   @override
+  String get productionAssignedTo => 'Assigned to (optional)';
+
+  @override
+  String get productionAssignedToNone => '— none —';
+
+  @override
   String get productionCreateButton => 'Create';
 
   @override
@@ -711,6 +722,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get productionCancelOrderButton => 'Cancel order';
+
+  @override
+  String get productionAssignedEmployeeLabel => 'Assigned to';
+
+  @override
+  String get productionEarningLabel => 'Earning';
 
   @override
   String productionCreatedValue(String date) {
@@ -822,6 +839,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String productionOrderListSubtitle(String quantity, String status) {
     return '$quantity units · $status';
   }
+
+  @override
+  String get pieceRatesButton => 'Piece rates';
+
+  @override
+  String get pieceRatesTitle => 'Piece rates';
+
+  @override
+  String get pieceRatesEmpty => 'No products yet.';
+
+  @override
+  String get pieceRateFieldLabel => 'Rate';
+
+  @override
+  String get pieceRateSaveAction => 'Save';
+
+  @override
+  String get pieceRateSavedMessage => 'Rate saved.';
+
+  @override
+  String get pieceRateInvalidError => 'Enter a valid rate (0 or more).';
 
   @override
   String get recipesListTitle => 'Recipes';
@@ -1350,6 +1388,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soAmountPaidLabel => 'Amount Paid';
 
   @override
+  String get soTotalLabel => 'Total';
+
+  @override
+  String get soPaidLabel => 'Paid';
+
+  @override
+  String get soRemainingLabel => 'Remaining';
+
+  @override
   String get soPaymentMethodLabel => 'Payment Method';
 
   @override
@@ -1375,4 +1422,197 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get soStatTotalSales => 'Total Sales';
+
+  @override
+  String get moreEmployees => 'Employees';
+
+  @override
+  String get employeesTitle => 'Employees';
+
+  @override
+  String get employeesEmpty => 'No employees yet. Tap + to add one.';
+
+  @override
+  String get employeeInactive => 'Inactive';
+
+  @override
+  String get employeeDetailTitle => 'Employee';
+
+  @override
+  String get employeeNotFound => 'Employee not found';
+
+  @override
+  String get employeeOwedLabel => 'Owed';
+
+  @override
+  String get employeeCreditLabel => 'Credit';
+
+  @override
+  String get employeeActiveLabel => 'Active';
+
+  @override
+  String get employeeRecordPaymentAction => 'Record Payment';
+
+  @override
+  String get employeeEarningsHeading => 'Earnings';
+
+  @override
+  String get employeeEarningsEmpty => 'No earnings yet.';
+
+  @override
+  String get employeePaymentsHeading => 'Payments';
+
+  @override
+  String get employeePaymentsEmpty => 'No payments yet.';
+
+  @override
+  String get employeeRatesHeading => 'Piece rates (overrides)';
+
+  @override
+  String get employeeRatesEmpty => 'No overrides yet.';
+
+  @override
+  String get employeeRateAddAction => 'Add override';
+
+  @override
+  String employeeQtyRateLine(String qty, String rate) {
+    return '$qty × $rate';
+  }
+
+  @override
+  String get employeeNewTitle => 'New Employee';
+
+  @override
+  String get employeeEditTitle => 'Edit Employee';
+
+  @override
+  String get employeeNameLabel => 'Name';
+
+  @override
+  String get employeePhoneLabel => 'Phone';
+
+  @override
+  String get employeeNotesLabel => 'Notes';
+
+  @override
+  String get employeeSaveButton => 'Save';
+
+  @override
+  String get employeeNameRequiredError => 'Employee name is required.';
+
+  @override
+  String get employeeRecordPaymentTitle => 'Record Payment';
+
+  @override
+  String get employeePaymentAmountLabel => 'Amount';
+
+  @override
+  String get employeePaymentDateLabel => 'Date';
+
+  @override
+  String get employeePaymentNotesLabel => 'Notes';
+
+  @override
+  String get employeePaymentInvalidAmountError =>
+      'Enter a valid amount greater than zero.';
+
+  @override
+  String get employeeRateSheetAddTitle => 'Add piece rate override';
+
+  @override
+  String get employeeRateSheetEditTitle => 'Edit piece rate override';
+
+  @override
+  String get employeeRateProductLabel => 'Product';
+
+  @override
+  String get employeeRateRateLabel => 'Rate';
+
+  @override
+  String employeeRateDefaultHint(String rate) {
+    return 'Product default: $rate';
+  }
+
+  @override
+  String get employeeRateRemoveAction => 'Remove override';
+
+  @override
+  String get employeeRateInvalidError =>
+      'Select a product and enter a rate greater than zero.';
+
+  @override
+  String get employeeRateNoProductsAvailable =>
+      'All products already have an override for this employee.';
+
+  @override
+  String get spLedgerTitle => 'Payments';
+
+  @override
+  String get spLedgerEmpty => 'No payments yet.';
+
+  @override
+  String get spFilterMethodLabel => 'Method';
+
+  @override
+  String get spFilterStatusLabel => 'Status';
+
+  @override
+  String get spMethodAny => 'Any method';
+
+  @override
+  String get spStatusAny => 'Any status';
+
+  @override
+  String get spMethodCash => 'Cash';
+
+  @override
+  String get spMethodCreditCard => 'Credit card';
+
+  @override
+  String get spMethodBankTransfer => 'Bank transfer';
+
+  @override
+  String get spMethodCheck => 'Check';
+
+  @override
+  String get spMethodDigitalWallet => 'Digital wallet';
+
+  @override
+  String get spMethodOther => 'Other';
+
+  @override
+  String get spStatusPending => 'Pending';
+
+  @override
+  String get spStatusCompleted => 'Completed';
+
+  @override
+  String get spStatusFailed => 'Failed';
+
+  @override
+  String get spStatusRefunded => 'Refunded';
+
+  @override
+  String get shipLedgerTitle => 'Shipments';
+
+  @override
+  String get shipLedgerEmpty => 'No shipments yet.';
+
+  @override
+  String get shipFilterStatusLabel => 'Status';
+
+  @override
+  String get shipStatusAny => 'Any status';
+
+  @override
+  String get shipStatusShipped => 'Shipped';
+
+  @override
+  String get shipStatusInTransit => 'In transit';
+
+  @override
+  String get shipStatusDelivered => 'Delivered';
+
+  @override
+  String get shipStatusReturned => 'Returned';
 }

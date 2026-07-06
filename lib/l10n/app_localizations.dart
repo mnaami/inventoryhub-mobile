@@ -242,6 +242,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get commonCancel;
 
+  /// No description provided for @commonCreatedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: {date}'**
+  String commonCreatedValue(String date);
+
   /// No description provided for @authSignInSubtitle.
   ///
   /// In en, this message translates to:
@@ -1352,6 +1358,18 @@ abstract class AppLocalizations {
   /// **'Quantity'**
   String get productionQuantityLabel;
 
+  /// No description provided for @productionAssignedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned to (optional)'**
+  String get productionAssignedTo;
+
+  /// No description provided for @productionAssignedToNone.
+  ///
+  /// In en, this message translates to:
+  /// **'— none —'**
+  String get productionAssignedToNone;
+
   /// No description provided for @productionCreateButton.
   ///
   /// In en, this message translates to:
@@ -1435,6 +1453,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel order'**
   String get productionCancelOrderButton;
+
+  /// No description provided for @productionAssignedEmployeeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned to'**
+  String get productionAssignedEmployeeLabel;
+
+  /// No description provided for @productionEarningLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Earning'**
+  String get productionEarningLabel;
 
   /// No description provided for @productionCreatedValue.
   ///
@@ -1614,6 +1644,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{quantity} units · {status}'**
   String productionOrderListSubtitle(String quantity, String status);
+
+  /// No description provided for @pieceRatesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Piece rates'**
+  String get pieceRatesButton;
+
+  /// No description provided for @pieceRatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Piece rates'**
+  String get pieceRatesTitle;
+
+  /// No description provided for @pieceRatesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No products yet.'**
+  String get pieceRatesEmpty;
+
+  /// No description provided for @pieceRateFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get pieceRateFieldLabel;
+
+  /// No description provided for @pieceRateSaveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get pieceRateSaveAction;
+
+  /// No description provided for @pieceRateSavedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate saved.'**
+  String get pieceRateSavedMessage;
+
+  /// No description provided for @pieceRateInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid rate (0 or more).'**
+  String get pieceRateInvalidError;
 
   /// No description provided for @recipesListTitle.
   ///
@@ -2635,6 +2707,24 @@ abstract class AppLocalizations {
   /// **'Amount Paid'**
   String get soAmountPaidLabel;
 
+  /// No description provided for @soTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get soTotalLabel;
+
+  /// No description provided for @soPaidLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get soPaidLabel;
+
+  /// No description provided for @soRemainingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get soRemainingLabel;
+
   /// No description provided for @soPaymentMethodLabel.
   ///
   /// In en, this message translates to:
@@ -2688,6 +2778,378 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Sales'**
   String get soStatTotalSales;
+
+  /// No description provided for @moreEmployees.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees'**
+  String get moreEmployees;
+
+  /// No description provided for @employeesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees'**
+  String get employeesTitle;
+
+  /// No description provided for @employeesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No employees yet. Tap + to add one.'**
+  String get employeesEmpty;
+
+  /// No description provided for @employeeInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get employeeInactive;
+
+  /// No description provided for @employeeDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee'**
+  String get employeeDetailTitle;
+
+  /// No description provided for @employeeNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee not found'**
+  String get employeeNotFound;
+
+  /// No description provided for @employeeOwedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Owed'**
+  String get employeeOwedLabel;
+
+  /// No description provided for @employeeCreditLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit'**
+  String get employeeCreditLabel;
+
+  /// No description provided for @employeeActiveLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get employeeActiveLabel;
+
+  /// No description provided for @employeeRecordPaymentAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Payment'**
+  String get employeeRecordPaymentAction;
+
+  /// No description provided for @employeeEarningsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings'**
+  String get employeeEarningsHeading;
+
+  /// No description provided for @employeeEarningsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No earnings yet.'**
+  String get employeeEarningsEmpty;
+
+  /// No description provided for @employeePaymentsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get employeePaymentsHeading;
+
+  /// No description provided for @employeePaymentsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments yet.'**
+  String get employeePaymentsEmpty;
+
+  /// No description provided for @employeeRatesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Piece rates (overrides)'**
+  String get employeeRatesHeading;
+
+  /// No description provided for @employeeRatesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No overrides yet.'**
+  String get employeeRatesEmpty;
+
+  /// No description provided for @employeeRateAddAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add override'**
+  String get employeeRateAddAction;
+
+  /// No description provided for @employeeQtyRateLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{qty} × {rate}'**
+  String employeeQtyRateLine(String qty, String rate);
+
+  /// No description provided for @employeeNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Employee'**
+  String get employeeNewTitle;
+
+  /// No description provided for @employeeEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Employee'**
+  String get employeeEditTitle;
+
+  /// No description provided for @employeeNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get employeeNameLabel;
+
+  /// No description provided for @employeePhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get employeePhoneLabel;
+
+  /// No description provided for @employeeNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get employeeNotesLabel;
+
+  /// No description provided for @employeeSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get employeeSaveButton;
+
+  /// No description provided for @employeeNameRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee name is required.'**
+  String get employeeNameRequiredError;
+
+  /// No description provided for @employeeRecordPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Payment'**
+  String get employeeRecordPaymentTitle;
+
+  /// No description provided for @employeePaymentAmountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get employeePaymentAmountLabel;
+
+  /// No description provided for @employeePaymentDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get employeePaymentDateLabel;
+
+  /// No description provided for @employeePaymentNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get employeePaymentNotesLabel;
+
+  /// No description provided for @employeePaymentInvalidAmountError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid amount greater than zero.'**
+  String get employeePaymentInvalidAmountError;
+
+  /// No description provided for @employeeRateSheetAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add piece rate override'**
+  String get employeeRateSheetAddTitle;
+
+  /// No description provided for @employeeRateSheetEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit piece rate override'**
+  String get employeeRateSheetEditTitle;
+
+  /// No description provided for @employeeRateProductLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get employeeRateProductLabel;
+
+  /// No description provided for @employeeRateRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get employeeRateRateLabel;
+
+  /// No description provided for @employeeRateDefaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Product default: {rate}'**
+  String employeeRateDefaultHint(String rate);
+
+  /// No description provided for @employeeRateRemoveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove override'**
+  String get employeeRateRemoveAction;
+
+  /// No description provided for @employeeRateInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a product and enter a rate greater than zero.'**
+  String get employeeRateInvalidError;
+
+  /// No description provided for @employeeRateNoProductsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'All products already have an override for this employee.'**
+  String get employeeRateNoProductsAvailable;
+
+  /// No description provided for @spLedgerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get spLedgerTitle;
+
+  /// No description provided for @spLedgerEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments yet.'**
+  String get spLedgerEmpty;
+
+  /// No description provided for @spFilterMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Method'**
+  String get spFilterMethodLabel;
+
+  /// No description provided for @spFilterStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get spFilterStatusLabel;
+
+  /// No description provided for @spMethodAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any method'**
+  String get spMethodAny;
+
+  /// No description provided for @spStatusAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any status'**
+  String get spStatusAny;
+
+  /// No description provided for @spMethodCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get spMethodCash;
+
+  /// No description provided for @spMethodCreditCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit card'**
+  String get spMethodCreditCard;
+
+  /// No description provided for @spMethodBankTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank transfer'**
+  String get spMethodBankTransfer;
+
+  /// No description provided for @spMethodCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get spMethodCheck;
+
+  /// No description provided for @spMethodDigitalWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital wallet'**
+  String get spMethodDigitalWallet;
+
+  /// No description provided for @spMethodOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get spMethodOther;
+
+  /// No description provided for @spStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get spStatusPending;
+
+  /// No description provided for @spStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get spStatusCompleted;
+
+  /// No description provided for @spStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get spStatusFailed;
+
+  /// No description provided for @spStatusRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get spStatusRefunded;
+
+  /// No description provided for @shipLedgerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipments'**
+  String get shipLedgerTitle;
+
+  /// No description provided for @shipLedgerEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No shipments yet.'**
+  String get shipLedgerEmpty;
+
+  /// No description provided for @shipFilterStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get shipFilterStatusLabel;
+
+  /// No description provided for @shipStatusAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any status'**
+  String get shipStatusAny;
+
+  /// No description provided for @shipStatusShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipped'**
+  String get shipStatusShipped;
+
+  /// No description provided for @shipStatusInTransit.
+  ///
+  /// In en, this message translates to:
+  /// **'In transit'**
+  String get shipStatusInTransit;
+
+  /// No description provided for @shipStatusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get shipStatusDelivered;
+
+  /// No description provided for @shipStatusReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'Returned'**
+  String get shipStatusReturned;
 }
 
 class _AppLocalizationsDelegate

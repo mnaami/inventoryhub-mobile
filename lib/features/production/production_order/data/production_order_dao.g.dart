@@ -12,6 +12,8 @@ mixin _$ProductionOrderDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.productionRecipeItems;
   $ProductsTable get products => attachedDatabase.products;
   $StockMovementsTable get stockMovements => attachedDatabase.stockMovements;
+  $ProductionEarningsTable get productionEarnings =>
+      attachedDatabase.productionEarnings;
   ProductionOrderDaoManager get managers => ProductionOrderDaoManager(this);
 }
 
@@ -39,5 +41,10 @@ class ProductionOrderDaoManager {
       $$StockMovementsTableTableManager(
         _db.attachedDatabase,
         _db.stockMovements,
+      );
+  $$ProductionEarningsTableTableManager get productionEarnings =>
+      $$ProductionEarningsTableTableManager(
+        _db.attachedDatabase,
+        _db.productionEarnings,
       );
 }

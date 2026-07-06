@@ -11,7 +11,7 @@ import '../helpers/test_db.dart';
 import '../helpers/l10n.dart';
 
 void main() {
-  testWidgets('More sheet opens Purchasing', (tester) async {
+  testWidgets('More screen opens Purchasing', (tester) async {
     final db = newTestDb();
     final session = await SeedService(db, const IdGenerator()).ensureSeeded();
     final container = ProviderContainer(overrides: [

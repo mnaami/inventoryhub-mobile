@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../employees/employee/presentation/employee_providers.dart';
 import 'production_order_providers.dart';
 
 class CreateProductionOrderScreen extends ConsumerStatefulWidget {
@@ -16,6 +17,7 @@ class _CreateProductionOrderScreenState
     extends ConsumerState<CreateProductionOrderScreen> {
   final _qty = TextEditingController(text: '1');
   String? _productId;
+  String? _employeeId;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _CreateProductionOrderScreenState
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final products = ref.watch(allProductsProvider);
+    final employees = ref.watch(employeeListProvider);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.productionOrderCreateTitle)),
       body: Padding(
@@ -64,6 +67,26 @@ class _CreateProductionOrderScreenState
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(labelText: l10n.productionQuantityLabel),
             ),
+            const SizedBox(height: 12),
+            employees.when(
+              data: (list) {
+                final active = list.where((e) => e.isActive).toList();
+                return DropdownButtonFormField<String?>(
+                  initialValue: _employeeId,
+                  decoration:
+                      InputDecoration(labelText: l10n.productionAssignedTo),
+                  items: [
+                    DropdownMenuItem<String?>(
+                        value: null, child: Text(l10n.productionAssignedToNone)),
+                    for (final e in active)
+                      DropdownMenuItem<String?>(value: e.id, child: Text(e.name)),
+                  ],
+                  onChanged: (v) => setState(() => _employeeId = v),
+                );
+              },
+              loading: () => const LinearProgressIndicator(),
+              error: (e, _) => Text('$e'),
+            ),
             const Spacer(),
             FilledButton(
                 onPressed: _save, child: Text(l10n.productionCreateButton)),
@@ -88,9 +111,8 @@ class _CreateProductionOrderScreenState
       return;
     }
     try {
-      await ref
-          .read(productionOrderServiceProvider)
-          .createPlanned(productId: productId, quantity: qty);
+      await ref.read(productionOrderServiceProvider).createPlanned(
+          productId: productId, quantity: qty, employeeId: _employeeId);
       ref.invalidate(productionOrdersProvider);
       ref.invalidate(productionOrderListProvider);
       ref.invalidate(productionDashboardProvider);

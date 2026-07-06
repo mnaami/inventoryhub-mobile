@@ -7,6 +7,7 @@ import '../../../../app/theme/app_tokens.dart';
 import '../../sale_order/domain/sale_order_enums.dart';
 import '../../sale_order/presentation/sale_order_providers.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/format/date_format.dart';
 import '../domain/customer.dart';
 import 'add_edit_customer_screen.dart';
 import 'customer_providers.dart';
@@ -39,6 +40,150 @@ class CustomerDetailScreen extends ConsumerWidget {
         orderStatusLabel(AppLocalizations.of(context), status),
         style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
       ),
+    );
+  }
+
+  Widget _buildPaymentStatusBadge(BuildContext context, PaymentStatus status) {
+    final color = switch (status) {
+      PaymentStatus.notPaid => Colors.red.shade700,
+      PaymentStatus.partial => Colors.amber.shade700,
+      PaymentStatus.paid => Colors.green.shade700,
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        paymentStatusLabel(AppLocalizations.of(context), status),
+        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildShippingStatusBadge(BuildContext context, ShippingStatus status) {
+    final color = switch (status) {
+      ShippingStatus.notShipped => Colors.blueGrey.shade600,
+      ShippingStatus.partiallyShipped => Colors.purple.shade600,
+      ShippingStatus.fullyShipped => Colors.green.shade700,
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        shippingStatusLabel(AppLocalizations.of(context), status),
+        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  void _showContactInfoSheet(BuildContext context, Customer c) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: scheme.onSurfaceVariant.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Contact Details',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: scheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (c.email != null && c.email!.isNotEmpty) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.email_outlined, color: scheme.primary),
+                  title: Text(
+                    c.email!,
+                    style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                  ),
+                  onTap: () async {
+                    final Uri uri = Uri(scheme: 'mailto', path: c.email);
+                    try {
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    } catch (_) {}
+                  },
+                ),
+                const Divider(height: 1),
+              ],
+              if (c.phones.isNotEmpty) ...[
+                for (final phone in c.phones) ...[
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.phone_outlined, color: scheme.primary),
+                    title: Text(
+                      phone,
+                      style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                    ),
+                    trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
+                    onTap: () async {
+                      final Uri uri = Uri(scheme: 'tel', path: phone);
+                      try {
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        } else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Could not launch phone call to $phone')),
+                            );
+                          }
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error launching call: $e')),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                  const Divider(height: 1),
+                ],
+              ],
+              if (c.address != null && c.address!.isNotEmpty) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.location_on_outlined, color: scheme.primary),
+                  title: Text(
+                    c.address!,
+                    style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -78,12 +223,21 @@ class CustomerDetailScreen extends ConsumerWidget {
           if (c == null) return const Center(child: Text('Not found'));
           final initial = c.name.isNotEmpty ? c.name[0].toUpperCase() : '?';
 
-          return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            children: [
-              CustomerQuickActions(customer: c),
-              const SizedBox(height: AppTokens.space16),
-
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(customerProvider(customerId));
+              ref.invalidate(customerOutstandingProvider(customerId));
+              ref.invalidate(customerOrdersProvider(customerId));
+              await Future.wait([
+                ref.read(customerProvider(customerId).future),
+                ref.read(customerOutstandingProvider(customerId).future),
+                ref.read(customerOrdersProvider(customerId).future),
+              ]);
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              children: [
               // Header Highlight Card (Initial + Name + Outstanding Balance)
               AppCard(
                 padding: const EdgeInsets.all(20),
@@ -158,6 +312,9 @@ class CustomerDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppTokens.space16),
 
+              CustomerQuickActions(customer: c),
+              const SizedBox(height: AppTokens.space16),
+
               // Business Snapshot Card (lifetime value + order trend)
               Consumer(builder: (context, ref, _) {
                 final orders = ref.watch(customerOrdersProvider(customerId));
@@ -173,62 +330,21 @@ class CustomerDetailScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Column(
                   children: [
-                    if (c.email != null && c.email!.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.email_outlined, color: scheme.primary),
-                        title: Text(
-                          c.email!,
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                        ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.contact_phone_outlined, color: scheme.primary),
+                      title: Text(
+                        'Contact Details',
+                        style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
                       ),
-                      const Divider(height: 1),
-                    ],
-                    if (c.phones.isNotEmpty) ...[
-                      for (final phone in c.phones) ...[
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: Icon(Icons.phone_outlined, color: scheme.primary),
-                          title: Text(
-                            phone,
-                            style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                          ),
-                          trailing: Icon(Icons.phone_forwarded, color: scheme.primary.withOpacity(0.7), size: 20),
-                          onTap: () async {
-                            final Uri uri = Uri(scheme: 'tel', path: phone);
-                            try {
-                              if (await canLaunchUrl(uri)) {
-                                await launchUrl(uri);
-                              } else {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Could not launch phone call to $phone')),
-                                  );
-                                }
-                              }
-                            } catch (e) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error launching call: $e')),
-                                );
-                              }
-                            }
-                          },
-                        ),
-                        const Divider(height: 1),
-                      ],
-                    ],
-                    if (c.address != null && c.address!.isNotEmpty) ...[
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.location_on_outlined, color: scheme.primary),
-                        title: Text(
-                          c.address!,
-                          style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
-                        ),
+                      subtitle: Text(
+                        'Phone, Email, Address',
+                        style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                       ),
-                      const Divider(height: 1),
-                    ],
+                      trailing: Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+                      onTap: () => _showContactInfoSheet(context, c),
+                    ),
+                    const Divider(height: 1),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(Icons.schedule_outlined, color: scheme.primary),
@@ -315,10 +431,27 @@ class CustomerDetailScreen extends ConsumerWidget {
                                 ),
                               ),
                               subtitle: Padding(
-                                padding: const EdgeInsets.only(top: 4),
-                                child: Row(
+                                padding: const EdgeInsets.only(top: 6),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildStatusBadge(context, displayList[i].status),
+                                    Text(
+                                      formatDate(displayList[i].orderDate),
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: scheme.onSurfaceVariant,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Wrap(
+                                      spacing: 6,
+                                      runSpacing: 4,
+                                      children: [
+                                        _buildStatusBadge(context, displayList[i].status),
+                                        _buildPaymentStatusBadge(context, displayList[i].paymentStatus),
+                                        _buildShippingStatusBadge(context, displayList[i].shippingStatus),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
@@ -347,7 +480,8 @@ class CustomerDetailScreen extends ConsumerWidget {
                 );
               }),
             ],
-          );
+          ),
+        );
         },
       ),
     );

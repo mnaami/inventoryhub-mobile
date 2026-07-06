@@ -98,6 +98,12 @@ class _V4Setup extends GeneratedDatabase {
               'CREATE TABLE $t (id TEXT NOT NULL PRIMARY KEY);',
             );
           }
+          // production_orders exists since v4 (before is_sample and before
+          // employee_id); later onUpgrade steps (v6) alter it, so the
+          // fixture must include it to accurately represent a v4 device.
+          await customStatement(
+            'CREATE TABLE production_orders (id TEXT NOT NULL PRIMARY KEY);',
+          );
         },
       );
 }

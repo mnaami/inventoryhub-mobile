@@ -9,6 +9,7 @@ import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../customer/presentation/customer_providers.dart';
+import '../../../../core/format/date_format.dart';
 import '../domain/sale_order.dart';
 import '../domain/sale_order_enums.dart';
 import 'create_shipment_screen.dart';
@@ -153,6 +154,22 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                               _buildShippingStatusBadge(context, o.shippingStatus, l10n),
                             ],
                           ),
+                          const SizedBox(height: 16),
+                          const Divider(height: 1),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_today,
+                                  size: 16, color: scheme.onSurfaceVariant),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.commonCreatedValue(
+                                    formatDateTime(o.createdAt)),
+                                style: theme.textTheme.bodyMedium
+                                    ?.copyWith(color: scheme.onSurfaceVariant),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -210,7 +227,14 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                     const SizedBox(height: AppTokens.space8),
                     AsyncValueView<List<SaleOrderPayment>>(
                       value: payments,
-                      data: (list) => list.isEmpty
+                      data: (list) {
+                        final paid = list
+                            .where((p) =>
+                                p.status == PaymentRecordStatus.completed &&
+                                p.isActive)
+                            .fold<double>(0, (sum, p) => sum + p.amount);
+                        final remaining = o.totalAmount - paid;
+                        final paymentsCard = list.isEmpty
                           ? AppCard(
                               child: Center(
                                 child: Padding(
@@ -239,7 +263,7 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                                       ),
                                       subtitle: Text(
-                                        list[i].method.wire.toUpperCase().replaceAll('_', ' '),
+                                        '${list[i].method.wire.toUpperCase().replaceAll('_', ' ')} • ${formatDateTime(list[i].paymentDate)}',
                                         style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                                       ),
                                       trailing: Text(
@@ -255,7 +279,30 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                   ],
                                 ],
                               ),
+                            );
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            paymentsCard,
+                            const SizedBox(height: AppTokens.space8),
+                            AppCard(
+                              child: Column(
+                                children: [
+                                  _summaryRow(theme, l10n.soTotalLabel,
+                                      money(o.totalAmount)),
+                                  const SizedBox(height: 6),
+                                  _summaryRow(
+                                      theme, l10n.soPaidLabel, money(paid)),
+                                  const Divider(height: 20),
+                                  _summaryRow(theme, l10n.soRemainingLabel,
+                                      money(remaining),
+                                      emphasize: true),
+                                ],
+                              ),
                             ),
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: AppTokens.space24),
 
@@ -297,6 +344,10 @@ class SaleOrderDetailScreen extends ConsumerWidget {
                                       title: Text(
                                         list[i].soShippingNumber,
                                         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                                      ),
+                                      subtitle: Text(
+                                        formatDateTime(list[i].shippingDate),
+                                        style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                                       ),
                                       trailing: Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -575,6 +626,23 @@ class SaleOrderDetailScreen extends ConsumerWidget {
         OrderStatus.delivered => Icons.task_alt_rounded,
         OrderStatus.cancelled => Icons.cancel_outlined,
       };
+
+  Widget _summaryRow(ThemeData theme, String label, String value,
+      {bool emphasize = false}) {
+    final style = emphasize
+        ? theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)
+        : theme.textTheme.bodyMedium;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: style),
+          Text(value, style: style),
+        ],
+      ),
+    );
+  }
 
   Widget _buildStatusIcon(OrderStatus status) {
     final color = _orderStatusColor(status);

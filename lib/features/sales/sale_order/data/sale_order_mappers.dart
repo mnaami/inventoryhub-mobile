@@ -78,6 +78,27 @@ SaleOrderPayment toSaleOrderPayment(SaleOrderPaymentRow r) => SaleOrderPayment(
       updatedAt: r.updatedAt,
     );
 
+SalePaymentListItem toSalePaymentListItem(
+  SaleOrderPaymentRow r, {
+  required String soNumber,
+  required String customerId,
+}) =>
+    SalePaymentListItem(
+      id: r.id,
+      organizationId: r.organizationId,
+      saleOrderId: r.saleOrderId,
+      paymentNumber: r.paymentNumber,
+      amount: r.amount,
+      method: PaymentMethod.fromWire(r.method),
+      status: PaymentRecordStatus.fromWire(r.status),
+      paymentDate: r.paymentDate,
+      isActive: r.isActive,
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
+      soNumber: soNumber,
+      customerId: customerId,
+    );
+
 SaleOrderPaymentsCompanion saleOrderPaymentInsert(SaleOrderPayment p) =>
     SaleOrderPaymentsCompanion.insert(
       id: p.id,
@@ -105,6 +126,26 @@ SaleOrderShipping toSaleOrderShipping(SaleOrderShippingRow r) =>
       status: ShipmentStatus.fromWire(r.status),
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
+    );
+
+SaleShipmentListItem toSaleShipmentListItem(
+  SaleOrderShippingRow r, {
+  required String soNumber,
+  required String customerId,
+}) =>
+    SaleShipmentListItem(
+      id: r.id,
+      organizationId: r.organizationId,
+      saleOrderId: r.saleOrderId,
+      soShippingNumber: r.soShippingNumber,
+      shippingDate: r.shippingDate,
+      carrier: r.carrier,
+      trackingNumber: r.trackingNumber,
+      status: ShipmentStatus.fromWire(r.status),
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
+      soNumber: soNumber,
+      customerId: customerId,
     );
 
 SaleOrderShippingsCompanion saleOrderShippingInsert(SaleOrderShipping s) =>

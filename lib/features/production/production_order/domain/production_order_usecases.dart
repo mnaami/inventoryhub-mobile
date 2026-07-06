@@ -1,5 +1,6 @@
 import '../../../../core/id/id_generator.dart';
 import '../../../../core/result/app_exception.dart';
+import '../../../employees/rate/domain/production_pay_rate_service.dart';
 import 'production_order.dart';
 import 'production_order_enums.dart';
 import 'production_order_repository.dart';
@@ -21,10 +22,12 @@ class ProductionOrderService {
     required IdGenerator ids,
     required String organizationId,
     required String userId,
+    required ProductionPayRateService rateService,
   })  : _repo = repository,
         _ids = ids,
         _orgId = organizationId,
-        _userId = userId;
+        _userId = userId,
+        _rateService = rateService;
 
   static const int pageSize = 20;
 
@@ -32,6 +35,7 @@ class ProductionOrderService {
   final IdGenerator _ids;
   final String _orgId;
   final String _userId;
+  final ProductionPayRateService _rateService;
 
   Future<ProductionOrder?> get(String id) => _repo.getOrder(id);
 
@@ -44,6 +48,7 @@ class ProductionOrderService {
     required String productId,
     required double quantity,
     String? notes,
+    String? employeeId,
   }) async {
     if (productId.trim().isEmpty) {
       throw const ValidationException('An output product is required.');
@@ -58,6 +63,7 @@ class ProductionOrderService {
       organizationId: _orgId,
       orderNumber: number,
       productId: productId,
+      employeeId: employeeId,
       quantity: quantity,
       status: ProductionOrderStatus.planned,
       notes: notes,
@@ -101,7 +107,24 @@ class ProductionOrderService {
     final movementIds = <String, String>{
       for (final i in items) i.ingredientProductId: _ids.newId()
     };
-    await _repo.complete(order.id, movementIds, _ids.newId(), _userId);
+
+    String? earningId;
+    double? rate;
+    if (order.employeeId != null) {
+      rate = await _rateService.resolveRate(
+          employeeId: order.employeeId!, productId: order.productId);
+      earningId = _ids.newId();
+    }
+
+    await _repo.complete(
+      order.id,
+      movementIds,
+      _ids.newId(),
+      _userId,
+      employeeId: order.employeeId,
+      earningId: earningId,
+      rate: rate,
+    );
   }
 
   Future<ProductionKpis> dashboard() async => ProductionKpis(

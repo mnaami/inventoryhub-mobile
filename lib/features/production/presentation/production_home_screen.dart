@@ -6,6 +6,7 @@ import '../../../core/widgets/stat_tile.dart';
 import '../production_order/presentation/production_order_list_screen.dart';
 import '../production_order/presentation/production_order_providers.dart';
 import '../recipe/presentation/production_recipe_list_screen.dart';
+import 'piece_rates_screen.dart';
 
 class ProductionHomeScreen extends ConsumerWidget {
   const ProductionHomeScreen({super.key});
@@ -57,6 +58,13 @@ class ProductionHomeScreen extends ConsumerWidget {
                 label: Text(l10n.recipesButton),
                 onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => const ProductionRecipeListScreen())),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.payments_outlined),
+                label: Text(l10n.pieceRatesButton),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const PieceRatesScreen())),
               ),
             ],
           ),

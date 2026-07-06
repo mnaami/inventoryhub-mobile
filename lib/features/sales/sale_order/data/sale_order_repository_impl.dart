@@ -129,6 +129,27 @@ class SaleOrderRepositoryImpl implements SaleOrderRepository {
       (await _payments.paymentsFor(orderId)).map(toSaleOrderPayment).toList();
 
   @override
+  Future<List<SalePaymentListItem>> pagedPayments(String orgId,
+          {PaymentMethod? method,
+          PaymentRecordStatus? status,
+          DateTime? from,
+          DateTime? to,
+          String? search,
+          required int limit,
+          required int offset}) async =>
+      (await _payments.pagedPayments(orgId,
+              method: method?.wire,
+              status: status?.wire,
+              from: from,
+              to: to,
+              search: search,
+              limit: limit,
+              offset: offset))
+          .map((r) => toSalePaymentListItem(r.payment,
+              soNumber: r.soNumber, customerId: r.customerId))
+          .toList();
+
+  @override
   Future<double> completedTotal(String orderId) =>
       _payments.completedTotal(orderId);
 
@@ -150,6 +171,25 @@ class SaleOrderRepositoryImpl implements SaleOrderRepository {
   @override
   Future<List<SaleOrderShipping>> shipmentsFor(String orderId) async =>
       (await _shipping.shipmentsFor(orderId)).map(toSaleOrderShipping).toList();
+
+  @override
+  Future<List<SaleShipmentListItem>> pagedShipments(String orgId,
+          {ShipmentStatus? status,
+          DateTime? from,
+          DateTime? to,
+          String? search,
+          required int limit,
+          required int offset}) async =>
+      (await _shipping.pagedShipments(orgId,
+              status: status?.wire,
+              from: from,
+              to: to,
+              search: search,
+              limit: limit,
+              offset: offset))
+          .map((r) => toSaleShipmentListItem(r.shipment,
+              soNumber: r.soNumber, customerId: r.customerId))
+          .toList();
 
   @override
   Future<int> countByDateRange(String orgId, DateTime from, DateTime to) =>

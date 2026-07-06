@@ -83,6 +83,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get commonCancel => 'إلغاء';
 
   @override
+  String commonCreatedValue(String date) {
+    return 'أُنشئ: $date';
+  }
+
+  @override
   String get authSignInSubtitle => 'سجّل الدخول للمتابعة';
 
   @override
@@ -661,6 +666,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productionQuantityLabel => 'الكمية';
 
   @override
+  String get productionAssignedTo => 'مسند إلى (اختياري)';
+
+  @override
+  String get productionAssignedToNone => '— بلا —';
+
+  @override
   String get productionCreateButton => 'إنشاء';
 
   @override
@@ -711,6 +722,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get productionCancelOrderButton => 'إلغاء الأمر';
+
+  @override
+  String get productionAssignedEmployeeLabel => 'مسند إلى';
+
+  @override
+  String get productionEarningLabel => 'الأجر';
 
   @override
   String productionCreatedValue(String date) {
@@ -822,6 +839,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String productionOrderListSubtitle(String quantity, String status) {
     return '$quantity وحدة · $status';
   }
+
+  @override
+  String get pieceRatesButton => 'أجور القطعة';
+
+  @override
+  String get pieceRatesTitle => 'أجور القطعة';
+
+  @override
+  String get pieceRatesEmpty => 'لا توجد منتجات بعد.';
+
+  @override
+  String get pieceRateFieldLabel => 'السعر';
+
+  @override
+  String get pieceRateSaveAction => 'حفظ';
+
+  @override
+  String get pieceRateSavedMessage => 'تم حفظ السعر.';
+
+  @override
+  String get pieceRateInvalidError => 'أدخل سعرًا صحيحًا (0 أو أكثر).';
 
   @override
   String get recipesListTitle => 'الوصفات';
@@ -1350,6 +1388,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get soAmountPaidLabel => 'المبلغ المدفوع';
 
   @override
+  String get soTotalLabel => 'الإجمالي';
+
+  @override
+  String get soPaidLabel => 'المدفوع';
+
+  @override
+  String get soRemainingLabel => 'المتبقي';
+
+  @override
   String get soPaymentMethodLabel => 'طريقة الدفع';
 
   @override
@@ -1375,4 +1422,196 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get soStatTotalSales => 'إجمالي المبيعات';
+
+  @override
+  String get moreEmployees => 'الموظفون';
+
+  @override
+  String get employeesTitle => 'الموظفون';
+
+  @override
+  String get employeesEmpty => 'لا يوجد موظفون بعد. اضغط + لإضافة موظف.';
+
+  @override
+  String get employeeInactive => 'غير نشط';
+
+  @override
+  String get employeeDetailTitle => 'الموظف';
+
+  @override
+  String get employeeNotFound => 'الموظف غير موجود';
+
+  @override
+  String get employeeOwedLabel => 'مستحق';
+
+  @override
+  String get employeeCreditLabel => 'رصيد';
+
+  @override
+  String get employeeActiveLabel => 'نشط';
+
+  @override
+  String get employeeRecordPaymentAction => 'تسجيل دفعة';
+
+  @override
+  String get employeeEarningsHeading => 'الأرباح';
+
+  @override
+  String get employeeEarningsEmpty => 'لا توجد أرباح بعد.';
+
+  @override
+  String get employeePaymentsHeading => 'الدفعات';
+
+  @override
+  String get employeePaymentsEmpty => 'لا توجد دفعات بعد.';
+
+  @override
+  String get employeeRatesHeading => 'أسعار القطعة (استثناءات)';
+
+  @override
+  String get employeeRatesEmpty => 'لا توجد استثناءات بعد.';
+
+  @override
+  String get employeeRateAddAction => 'إضافة استثناء';
+
+  @override
+  String employeeQtyRateLine(String qty, String rate) {
+    return '$qty × $rate';
+  }
+
+  @override
+  String get employeeNewTitle => 'موظف جديد';
+
+  @override
+  String get employeeEditTitle => 'تعديل الموظف';
+
+  @override
+  String get employeeNameLabel => 'الاسم';
+
+  @override
+  String get employeePhoneLabel => 'الهاتف';
+
+  @override
+  String get employeeNotesLabel => 'ملاحظات';
+
+  @override
+  String get employeeSaveButton => 'حفظ';
+
+  @override
+  String get employeeNameRequiredError => 'اسم الموظف مطلوب.';
+
+  @override
+  String get employeeRecordPaymentTitle => 'تسجيل دفعة';
+
+  @override
+  String get employeePaymentAmountLabel => 'المبلغ';
+
+  @override
+  String get employeePaymentDateLabel => 'التاريخ';
+
+  @override
+  String get employeePaymentNotesLabel => 'ملاحظات';
+
+  @override
+  String get employeePaymentInvalidAmountError =>
+      'أدخل مبلغًا صحيحًا أكبر من صفر.';
+
+  @override
+  String get employeeRateSheetAddTitle => 'إضافة استثناء سعر القطعة';
+
+  @override
+  String get employeeRateSheetEditTitle => 'تعديل استثناء سعر القطعة';
+
+  @override
+  String get employeeRateProductLabel => 'المنتج';
+
+  @override
+  String get employeeRateRateLabel => 'السعر';
+
+  @override
+  String employeeRateDefaultHint(String rate) {
+    return 'السعر الافتراضي للمنتج: $rate';
+  }
+
+  @override
+  String get employeeRateRemoveAction => 'إزالة الاستثناء';
+
+  @override
+  String get employeeRateInvalidError => 'اختر منتجًا وأدخل سعرًا أكبر من صفر.';
+
+  @override
+  String get employeeRateNoProductsAvailable =>
+      'جميع المنتجات لديها بالفعل استثناء لهذا الموظف.';
+
+  @override
+  String get spLedgerTitle => 'المدفوعات';
+
+  @override
+  String get spLedgerEmpty => 'لا توجد مدفوعات بعد.';
+
+  @override
+  String get spFilterMethodLabel => 'الطريقة';
+
+  @override
+  String get spFilterStatusLabel => 'الحالة';
+
+  @override
+  String get spMethodAny => 'أي طريقة';
+
+  @override
+  String get spStatusAny => 'أي حالة';
+
+  @override
+  String get spMethodCash => 'نقداً';
+
+  @override
+  String get spMethodCreditCard => 'بطاقة ائتمان';
+
+  @override
+  String get spMethodBankTransfer => 'تحويل بنكي';
+
+  @override
+  String get spMethodCheck => 'شيك';
+
+  @override
+  String get spMethodDigitalWallet => 'محفظة رقمية';
+
+  @override
+  String get spMethodOther => 'أخرى';
+
+  @override
+  String get spStatusPending => 'قيد الانتظار';
+
+  @override
+  String get spStatusCompleted => 'مكتمل';
+
+  @override
+  String get spStatusFailed => 'فشل';
+
+  @override
+  String get spStatusRefunded => 'مسترد';
+
+  @override
+  String get shipLedgerTitle => 'الشحنات';
+
+  @override
+  String get shipLedgerEmpty => 'لا توجد شحنات بعد.';
+
+  @override
+  String get shipFilterStatusLabel => 'الحالة';
+
+  @override
+  String get shipStatusAny => 'أي حالة';
+
+  @override
+  String get shipStatusShipped => 'تم الشحن';
+
+  @override
+  String get shipStatusInTransit => 'قيد النقل';
+
+  @override
+  String get shipStatusDelivered => 'تم التسليم';
+
+  @override
+  String get shipStatusReturned => 'مُرتجع';
 }

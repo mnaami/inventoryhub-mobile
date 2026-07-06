@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../app/currency/currency_controller.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../core/db/app_database.dart';
 import '../../../../core/format/quantity_format.dart';
 import '../../../../core/l10n/l10n_ext.dart';
 import '../../../../core/result/app_exception.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../employees/employee/presentation/employee_detail_providers.dart';
+import '../../../employees/employee/presentation/employee_providers.dart';
 import '../../../inventory/product/presentation/product_providers.dart';
 import '../../../inventory/unit/presentation/unit_providers.dart';
 import '../../recipe/domain/production_recipe.dart';
@@ -15,12 +19,19 @@ import '../domain/production_order.dart';
 import '../domain/production_order_enums.dart';
 import 'production_order_providers.dart';
 
+/// The frozen-rate earning row for a completed, employee-attributed order —
+/// `null` if the order wasn't attributed to an employee (no earning exists).
+final _orderEarningProvider = FutureProvider.family<ProductionEarningRow?, String>(
+    (ref, orderId) =>
+        ref.watch(productionEarningDaoProvider).earningForOrder(orderId));
+
 class ProductionOrderDetailScreen extends ConsumerWidget {
   const ProductionOrderDetailScreen({super.key, required this.orderId});
   final String orderId;
 
   Future<void> _run(BuildContext context, WidgetRef ref,
-      Future<void> Function() action) async {
+      Future<void> Function() action,
+      {String? attributedEmployeeId}) async {
     final l10n = context.l10n;
     try {
       await action();
@@ -28,6 +39,12 @@ class ProductionOrderDetailScreen extends ConsumerWidget {
       ref.invalidate(productionOrdersProvider);
       ref.invalidate(productionOrderListProvider);
       ref.invalidate(productionDashboardProvider);
+      if (attributedEmployeeId != null) {
+        ref.invalidate(employeeBalanceProvider(attributedEmployeeId));
+        ref.invalidate(employeeEarningsProvider(attributedEmployeeId));
+        ref.invalidate(employeeListProvider);
+        ref.invalidate(_orderEarningProvider(orderId));
+      }
       if (context.mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(l10n.productionActionDone)));
@@ -158,6 +175,61 @@ class ProductionOrderDetailScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
+                    ],
+                    if (o.employeeId != null) ...[
+                      const SizedBox(height: 8),
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final employeeAsync =
+                              ref.watch(employeeProvider(o.employeeId!));
+                          final name = employeeAsync.value?.name;
+                          return Row(
+                            children: [
+                              Icon(Icons.badge_outlined,
+                                  size: 16, color: scheme.onSurfaceVariant),
+                              const SizedBox(width: 8),
+                              Text(
+                                name == null
+                                    ? l10n.productionAssignedEmployeeLabel
+                                    : '${l10n.productionAssignedEmployeeLabel}: $name',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: scheme.onSurfaceVariant),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      if (o.status == ProductionOrderStatus.completed)
+                        Consumer(
+                          builder: (context, ref, _) {
+                            final earningAsync = ref.watch(
+                                _orderEarningProvider(o.id));
+                            final money = ref.watch(moneyFormatterProvider);
+                            return earningAsync.maybeWhen(
+                              data: (row) => row == null
+                                  ? const SizedBox.shrink()
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.payments_outlined,
+                                              size: 16,
+                                              color: scheme.onSurfaceVariant),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            '${l10n.productionEarningLabel}: ${money(row.amount)}',
+                                            style: theme.textTheme.bodyMedium
+                                                ?.copyWith(
+                                                    color: scheme
+                                                        .onSurfaceVariant),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                              orElse: () => const SizedBox.shrink(),
+                            );
+                          },
+                        ),
                     ],
                   ],
                 ),
@@ -430,7 +502,8 @@ class ProductionOrderDetailScreen extends ConsumerWidget {
           child: FilledButton.icon(
             icon: const Icon(Icons.check),
             label: Text(l10n.productionCompleteButton),
-            onPressed: () => _run(context, ref, () => service.complete(o)),
+            onPressed: () => _run(context, ref, () => service.complete(o),
+                attributedEmployeeId: o.employeeId),
           ),
         ),
       ],

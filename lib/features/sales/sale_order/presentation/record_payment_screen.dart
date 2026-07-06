@@ -50,6 +50,8 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
     final money = ref.watch(moneyFormatterProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final paymentsAsync =
+        ref.watch(saleOrderPaymentsProvider(widget.order.id));
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.soRecordPaymentTitle)),
@@ -76,6 +78,28 @@ class _RecordPaymentState extends ConsumerState<RecordPaymentScreen> {
                         l10n.poOrderTotalLine(
                             widget.order.soNumber, money(widget.order.totalAmount)),
                         style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      paymentsAsync.maybeWhen(
+                        data: (list) {
+                          final paid = list
+                              .where((p) =>
+                                  p.status == PaymentRecordStatus.completed &&
+                                  p.isActive)
+                              .fold<double>(0, (sum, p) => sum + p.amount);
+                          final remaining =
+                              widget.order.totalAmount - paid;
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              '${l10n.soRemainingLabel}: ${money(remaining)}',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: scheme.primary,
+                              ),
+                            ),
+                          );
+                        },
+                        orElse: () => const SizedBox.shrink(),
                       ),
                     ],
                   ),

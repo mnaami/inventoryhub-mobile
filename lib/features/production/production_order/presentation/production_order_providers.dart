@@ -3,6 +3,7 @@ import '../../../../core/paging/paged_list_notifier.dart';
 import '../../../../core/paging/paged_state.dart';
 import '../../../../core/providers.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../employees/employee/presentation/employee_providers.dart';
 import '../../../inventory/product/domain/product.dart';
 import '../../../inventory/product/presentation/product_providers.dart';
 import '../../../sales/sale_order/data/document_counter_dao.dart';
@@ -35,6 +36,7 @@ final productionOrderServiceProvider =
     ids: ref.watch(idGeneratorProvider),
     organizationId: session.organizationId,
     userId: session.userId,
+    rateService: ref.watch(employeePayRateServiceProvider),
   );
 });
 

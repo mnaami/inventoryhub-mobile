@@ -5,6 +5,7 @@ import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/empty_state.dart';
 import 'package:inventoryhub_mobile/app/currency/currency_controller.dart';
 import '../../../../core/l10n/l10n_ext.dart';
+import '../../../../core/widgets/filter_pill.dart';
 import '../../../../core/widgets/paginated_list_view.dart';
 import '../../../../core/widgets/search_field.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -275,7 +276,7 @@ class _Filters extends ConsumerWidget {
               builder: (context, ref, _) {
                 final customerVal = ref.watch(customerProvider(criteria.customerId!));
                 final name = customerVal.asData?.value?.name ?? 'Loading...';
-                return _FilterPill<String?>(
+                return FilterPill<String?>(
                   label: 'Customer',
                   isActive: true,
                   displayValue: name,
@@ -287,7 +288,7 @@ class _Filters extends ConsumerWidget {
             ),
             const SizedBox(width: 8),
           ],
-          _FilterPill<OrderStatus?>(
+          FilterPill<OrderStatus?>(
             label: l10n.soFilterStatusLabel,
             isActive: criteria.status != null,
             displayValue: criteria.status != null
@@ -302,7 +303,7 @@ class _Filters extends ConsumerWidget {
             ],
           ),
           const SizedBox(width: 8),
-          _FilterPill<DatePreset>(
+          FilterPill<DatePreset>(
             label: l10n.soFilterDateLabel,
             isActive: criteria.datePreset != DatePreset.all,
             displayValue: _datePresetLabel(l10n, criteria.datePreset),
@@ -316,7 +317,7 @@ class _Filters extends ConsumerWidget {
             ],
           ),
           const SizedBox(width: 8),
-          _FilterPill<PaymentStatus?>(
+          FilterPill<PaymentStatus?>(
             label: l10n.soFilterPaymentLabel,
             isActive: criteria.paymentStatus != null,
             displayValue: criteria.paymentStatus != null
@@ -331,7 +332,7 @@ class _Filters extends ConsumerWidget {
             ],
           ),
           const SizedBox(width: 8),
-          _FilterPill<ShippingStatus?>(
+          FilterPill<ShippingStatus?>(
             label: l10n.soFilterShippingLabel,
             isActive: criteria.shippingStatus != null,
             displayValue: criteria.shippingStatus != null
@@ -358,100 +359,3 @@ class _Filters extends ConsumerWidget {
       };
 }
 
-
-class _FilterPill<T> extends StatelessWidget {
-  const _FilterPill({
-    required this.label,
-    required this.isActive,
-    required this.displayValue,
-    required this.items,
-    required this.onChanged,
-    required this.onClear,
-  });
-
-  final String label;
-  final bool isActive;
-  final String displayValue;
-  final List<PopupMenuEntry<T>> items;
-  final ValueChanged<T> onChanged;
-  final VoidCallback onClear;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: isActive
-            ? scheme.primary.withOpacity(0.08)
-            : scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isActive
-              ? scheme.primary
-              : scheme.outlineVariant.withOpacity(0.5),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          PopupMenuButton<T>(
-            onSelected: onChanged,
-            itemBuilder: (_) => items,
-            child: Padding(
-              padding: EdgeInsetsDirectional.only(
-                start: 12,
-                end: isActive ? 6 : 12,
-                top: 6,
-                bottom: 6,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    isActive ? '$label: ' : label,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,
-                      color: isActive ? scheme.primary : scheme.onSurfaceVariant,
-                    ),
-                  ),
-                  if (isActive)
-                    Text(
-                      displayValue,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: scheme.primary,
-                      ),
-                    )
-                  else ...[
-                    const SizedBox(width: 4),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      size: 16,
-                      color: scheme.onSurfaceVariant,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          if (isActive)
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 8),
-              child: InkWell(
-                onTap: onClear,
-                borderRadius: BorderRadius.circular(100),
-                child: Icon(
-                  Icons.cancel,
-                  size: 16,
-                  color: scheme.primary,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
