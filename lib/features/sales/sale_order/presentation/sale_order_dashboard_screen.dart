@@ -12,6 +12,7 @@ import 'sale_order_edit_screen.dart';
 import 'sale_order_list_screen.dart';
 import 'sale_order_providers.dart';
 import 'sale_payment_list_screen.dart';
+import 'sale_shipment_list_screen.dart';
 import 'widgets/swipeable_statistics_section.dart';
 import '../../customer/presentation/customer_list_screen.dart';
 import '../../customer/presentation/customer_providers.dart';
@@ -84,6 +85,10 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, st) => Text('Error loading shipping status distribution: $e'),
             ),
+            const SizedBox(height: AppTokens.space24),
+
+            // All shipments ledger
+            _buildAllShipmentsTile(context, ref),
             const SizedBox(height: AppTokens.space16),
           ],
         ),
@@ -172,6 +177,41 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
           Expanded(
             child: Text(
               context.l10n.spLedgerTitle,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: scheme.onSurface,
+              ),
+            ),
+          ),
+          Icon(Icons.chevron_right_rounded,
+              color: scheme.onSurfaceVariant.withOpacity(0.5)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAllShipmentsTile(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.space16),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => const SaleShipmentListScreen())),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(AppTokens.space12),
+            decoration: BoxDecoration(
+              color: scheme.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.local_shipping_rounded,
+                color: scheme.primary, size: 24),
+          ),
+          const SizedBox(width: AppTokens.space16),
+          Expanded(
+            child: Text(
+              context.l10n.shipLedgerTitle,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: scheme.onSurface,
