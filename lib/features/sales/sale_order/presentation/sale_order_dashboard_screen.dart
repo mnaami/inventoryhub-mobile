@@ -66,10 +66,6 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppTokens.space24),
 
-            // All payments ledger
-            _buildAllPaymentsTile(context, ref),
-            const SizedBox(height: AppTokens.space24),
-
             // Payment Status distribution
             allOrdersAsync.when(
               data: (orders) => _buildPaymentStatusDistribution(context, ref, orders, l10n),
@@ -77,7 +73,11 @@ class SaleOrderDashboardScreen extends ConsumerWidget {
               error: (e, st) => Text('Error loading payment status distribution: $e'),
             ),
             const SizedBox(height: AppTokens.space24),
-  
+
+            // All payments ledger
+            _buildAllPaymentsTile(context, ref),
+            const SizedBox(height: AppTokens.space24),
+
             // Shipping Status distribution
             allOrdersAsync.when(
               data: (orders) => _buildShippingStatusDistribution(context, ref, orders, l10n),
