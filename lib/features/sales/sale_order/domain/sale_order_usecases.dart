@@ -307,6 +307,21 @@ class SaleOrderService {
   Future<List<SaleOrderShipping>> shipments(String orderId) =>
       _repo.shipmentsFor(orderId);
 
+  Future<List<SaleShipmentListItem>> listShipments({
+    int page = 0,
+    ShipmentStatus? status,
+    DateTime? from,
+    DateTime? to,
+    String search = '',
+  }) =>
+      _repo.pagedShipments(_orgId,
+          status: status,
+          from: from,
+          to: to,
+          search: search,
+          limit: pageSize,
+          offset: page * pageSize);
+
   Future<void> createShipment(
     SaleOrder order, {
     required List<ShipLine> lines,
