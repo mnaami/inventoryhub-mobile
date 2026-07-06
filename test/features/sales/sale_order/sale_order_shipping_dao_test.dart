@@ -194,4 +194,104 @@ void main() {
         await (db.select(db.saleOrders)..where((o) => o.id.equals('so1'))).getSingle();
     expect(order.status, 'delivered');
   });
+
+  test('pagedShipments returns shipments across orders, newest first, with order context',
+      () async {
+    // second, live order
+    await db.into(db.saleOrders).insert(SaleOrdersCompanion.insert(
+          id: 'so2', organizationId: 'org1', soNumber: 'SO-0002',
+          customerId: 'c2', orderDate: now, status: const Value('processing'),
+          createdAt: now, updatedAt: now,
+        ));
+    await db.into(db.saleOrderShippings).insert(SaleOrderShippingsCompanion.insert(
+          id: 's_old', organizationId: 'org1', saleOrderId: 'so1',
+          soShippingNumber: 'SHP-0001', shippingDate: DateTime.utc(2026, 6, 1),
+          status: const Value('shipped'), createdAt: now, updatedAt: now,
+        ));
+    await db.into(db.saleOrderShippings).insert(SaleOrderShippingsCompanion.insert(
+          id: 's_new', organizationId: 'org1', saleOrderId: 'so2',
+          soShippingNumber: 'SHP-0002', shippingDate: DateTime.utc(2026, 6, 5),
+          status: const Value('delivered'), createdAt: now, updatedAt: now,
+        ));
+
+    final rows = await db.saleOrderShippingDao
+        .pagedShipments('org1', limit: 20, offset: 0);
+
+    expect(rows.length, 2);
+    expect(rows.first.shipment.id, 's_new'); // newest shippingDate first
+    expect(rows.first.soNumber, 'SO-0002');
+    expect(rows.first.customerId, 'c2');
+    expect(rows.last.shipment.id, 's_old');
+    expect(rows.last.soNumber, 'SO-0001');
+  });
+
+  test('pagedShipments excludes shipments of soft-deleted orders', () async {
+    await db.into(db.saleOrderShippings).insert(SaleOrderShippingsCompanion.insert(
+          id: 's1', organizationId: 'org1', saleOrderId: 'so1',
+          soShippingNumber: 'SHP-0001', shippingDate: now,
+          createdAt: now, updatedAt: now,
+        ));
+    // soft-delete the order
+    await db.saleOrderDao.softDelete('so1', now);
+
+    final rows = await db.saleOrderShippingDao
+        .pagedShipments('org1', limit: 20, offset: 0);
+
+    expect(rows, isEmpty);
+  });
+
+  test('pagedShipments filters by status, search, and date range', () async {
+    await db.into(db.saleOrderShippings).insert(SaleOrderShippingsCompanion.insert(
+          id: 's1', organizationId: 'org1', saleOrderId: 'so1',
+          soShippingNumber: 'SHP-0001', shippingDate: DateTime.utc(2026, 6, 2),
+          status: const Value('shipped'), createdAt: now, updatedAt: now,
+        ));
+    await db.into(db.saleOrderShippings).insert(SaleOrderShippingsCompanion.insert(
+          id: 's2', organizationId: 'org1', saleOrderId: 'so1',
+          soShippingNumber: 'SHP-0002', shippingDate: DateTime.utc(2026, 6, 4),
+          status: const Value('delivered'), createdAt: now, updatedAt: now,
+        ));
+
+    expect(
+        (await db.saleOrderShippingDao.pagedShipments('org1',
+                status: 'shipped', limit: 20, offset: 0))
+            .map((r) => r.shipment.id),
+        ['s1']);
+    expect(
+        (await db.saleOrderShippingDao.pagedShipments('org1',
+                search: 'SO-0001', limit: 20, offset: 0))
+            .length,
+        2);
+    expect(
+        (await db.saleOrderShippingDao.pagedShipments('org1',
+                search: 'SO-9999', limit: 20, offset: 0))
+            .length,
+        0);
+    // to is EXCLUSIVE: window [6-01, 6-04) excludes the 6-04 shipment.
+    expect(
+        (await db.saleOrderShippingDao.pagedShipments('org1',
+                from: DateTime.utc(2026, 6, 1),
+                to: DateTime.utc(2026, 6, 4),
+                limit: 20, offset: 0))
+            .map((r) => r.shipment.id),
+        ['s1']);
+  });
+
+  test('pagedShipments applies limit and offset', () async {
+    for (var i = 1; i <= 3; i++) {
+      await db.into(db.saleOrderShippings).insert(SaleOrderShippingsCompanion.insert(
+            id: 's$i', organizationId: 'org1', saleOrderId: 'so1',
+            soShippingNumber: 'SHP-000$i', shippingDate: DateTime.utc(2026, 6, i),
+            createdAt: now, updatedAt: now,
+          ));
+    }
+    final page0 = await db.saleOrderShippingDao
+        .pagedShipments('org1', limit: 2, offset: 0);
+    final page1 = await db.saleOrderShippingDao
+        .pagedShipments('org1', limit: 2, offset: 2);
+    expect(page0.length, 2);
+    expect(page1.length, 1);
+    expect(page0.first.shipment.shippingDate.toUtc(), DateTime.utc(2026, 6, 3));
+    expect(page1.single.shipment.shippingDate.toUtc(), DateTime.utc(2026, 6, 1));
+  });
 }
