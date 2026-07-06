@@ -184,4 +184,25 @@ void main() {
     expect(page0.first.payment.paymentDate.toUtc(), DateTime.utc(2026, 6, 3));
     expect(page1.single.payment.paymentDate.toUtc(), DateTime.utc(2026, 6, 1));
   });
+
+  test('pagedPayments includes payments on cancelled orders', () async {
+    await db.saleOrderDao.setStatus('so1', 'cancelled', now);
+    await db.saleOrderPaymentDao.recordPayment(pay('1', 40));
+
+    final rows = await db.saleOrderPaymentDao
+        .pagedPayments('org1', limit: 20, offset: 0);
+
+    expect(rows.length, 1);
+    expect(rows.single.payment.id, '1');
+  });
+
+  test('pagedPayments excludes payments on soft-deleted orders', () async {
+    await db.saleOrderPaymentDao.recordPayment(pay('1', 40));
+    await db.saleOrderDao.softDelete('so1', now);
+
+    final rows = await db.saleOrderPaymentDao
+        .pagedPayments('org1', limit: 20, offset: 0);
+
+    expect(rows, isEmpty);
+  });
 }

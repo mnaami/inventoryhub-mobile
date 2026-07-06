@@ -36,7 +36,8 @@ class SaleOrderPaymentDao extends DatabaseAccessor<AppDatabase>
           saleOrders, saleOrders.id.equalsExp(saleOrderPayments.saleOrderId)),
     ]);
     q.where(saleOrderPayments.organizationId.equals(orgId) &
-        saleOrderPayments.isActive.equals(true));
+        saleOrderPayments.isActive.equals(true) &
+        saleOrders.isActive.equals(true));
     if (method != null) q.where(saleOrderPayments.method.equals(method));
     if (status != null) q.where(saleOrderPayments.status.equals(status));
     if (from != null) {
